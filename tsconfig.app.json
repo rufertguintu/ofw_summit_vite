@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    // "baseUrl": ".",
+    "allowJs": true,       
+    "checkJs": false,
     "paths": {
       "@/*": [
         "./src/*"
       ]
     },
-    
+
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "es2023",
     "lib": ["ES2023", "DOM"],

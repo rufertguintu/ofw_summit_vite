@@ -1,0 +1,1473 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+body .userlayout input[type=text].wpcf7-not-valid, body .userlayout input[type=email].wpcf7-not-valid, body .userlayout input[type=tel].wpcf7-not-valid, body .userlayout textarea.wpcf7-not-valid {
+border: 1px solid #ec3c06;
+}
+
+body .userlayout span.wpcf7-not-valid-tip {
+display: none !important;
+color: #ec3c06;
+border: none;
+position: relative;
+top: auto;
+left: auto;
+padding: 0;
+margin-top: 2px;
+background: none;
+font-size: 15px;
+}
+
+body .userlayout div.wpcf7-validation-errors {
+background: #ffe2e2;
+border: 1px solid #ff8a8a;
+color: #ec3c06;
+}
+
+body .userlayout div.wpcf7-response-output {
+margin: 10px 0;
+padding: 20px;
+box-sizing: border-box;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+border-radius: 5px;
+}
+
+body .userlayout .wpcf7-mail-sent-ng {
+background: #fff2e2;
+border: 1px solid #ffbc8a;
+color: #e17731;
+}
+
+body .userlayout .wpcf7-mail-sent-ok {
+background: #e8ffe2;
+border: 1px solid #6fdf51;
+color: #1ea524;
+}
+
+
+
+body{
+	position: relative;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 31.5px;
+	color: #fff;
+}
+
+.userlayout h1{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 2.125rem;
+	font-weight: 200;
+	line-height: 40px;
+	color: #A5854F;
+}
+
+.userlayout h2{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 28.25px;
+	color: #A5854F;
+}
+
+.userlayout h3{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1.125rem;
+	font-weight: 700;
+	line-height: 22.75px;
+	color: #fff;
+}
+
+.userlayout h4{
+	font-family: 'Playfair Display', serif;
+	font-size: 1rem;
+	font-weight: 700;
+	line-height: 22px;
+	color: #fff;
+}
+
+.userlayout h5{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 18px;
+	color: #fff;
+}
+
+.userlayout h6{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.75rem;
+	font-weight: 400;
+	line-height: 16px;
+	color: #fff;
+}
+
+.userlayout p{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.833rem;
+	font-weight: 400;
+	line-height: 18px;
+	color: #fff;
+}
+
+.userlayout .custom-btn{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.889rem;
+	font-weight: 400;
+	padding: 16px 32px;
+	border: 1px solid #fff;
+	color: #fff;
+	text-transform: uppercase;
+}
+
+.userlayout .required-field{
+	color: red;
+}
+
+.userlayout .disabled{
+	cursor: not-allowed !important;
+	background-color: #ababab !important;
+	border: 1px solid #ababab !important;
+}
+
+.userlayout .email-error{
+	color: red;
+}
+
+.userlayout a{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 0.889rem;
+	font-weight: 400;
+}
+
+.userlayout input[type="file"], .userlayout input[type="text"], .userlayout textarea, input[type=email], .userlayout input[type="password"], .userlayout select, input[type="date"], .userlayout input[type="number"]{
+	width: 100%;
+	padding: 8px 12px;
+	border-radius: 5px;
+	border: 1px solid #D6D9C7;
+	color: #000;
+}
+
+.userlayout input[type="submit"], button{
+	padding: 8px 12px;
+	border: 1px solid #000;
+	background-color: #000;
+	color: #fff;
+}
+
+/*#message{
+	color: red;
+}*/
+
+/*
+font-family: 'Karla', sans-serif;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Nunito Sans', sans-serif;
+*/
+
+.userlayout .slick-next, .slick-prev{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 0;
+	background-color: transparent;
+}
+
+.userlayout .slick-next:before, .slick-prev:before{
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	font-size: 26px;
+	color: #A5854F;
+}
+
+.userlayout .slick-next{
+	right: -50px;
+}
+
+.userlayout .slick-prev{
+	left: -50px;
+}
+
+.userlayout .slick-next:before{
+	content: "\f105";
+}
+
+.userlayout .slick-prev:before{
+	content: "\f104";
+}
+
+
+.userlayout .invalid .wpcf7-response-output {
+    border-color: #b94a48 !important;
+    background-color: #f2dede !important;
+    color: #b94a48 !important;
+}
+
+.userlayout .sent .wpcf7-response-output {
+    border-color: #46b450 !important;
+    background-color: #d5f5d8 !important;
+    color: #46b450 !important;
+}
+
+.userlayout .no-padding{
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+
+.userlayout .custom-container{
+	width: 95%;
+	margin: 0 auto;
+}
+
+.userlayout .img-cloud{
+	width: 100%;
+}
+
+header{
+	position: fixed;
+	padding: 20px 0;
+	background-color: rgba(238, 96, 34, 0.9);
+	display: none;
+	width: 100%;
+	z-index: 999999;
+}
+
+header .custom-container{
+	width: 90%;
+}
+
+header .main-header{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header .main-header .header-nav ul{
+	padding-left: 0;
+	margin-bottom: 0;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+header .main-header .header-nav ul li a, header .main-header .header-nav ul li button{
+	color: #fff;
+	text-decoration: none;
+	padding: 12px;
+	text-transform: uppercase;
+	background-color: transparent;
+	border: 0;
+	font-size: 16px;
+	transition: all 0.5s;
+}
+
+header .main-header .header-nav ul li{
+	position: relative;
+}
+
+header .main-header .header-nav ul li.has-child ul{
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	position: absolute;
+	top: 130%;
+	margin: 0;
+	transition: all 0.5s;
+	left: 0;
+	min-width: 230px;
+	z-index: 9999;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+
+header .main-header .header-nav ul li.has-child ul li{
+	background-color: rgba(238, 96, 34, 1);
+}
+
+header .main-header .header-nav ul li.has-child ul li a{
+	width: 100%;
+	background-color: rgba(238, 96, 34, 1) !important;
+	color: #fff !important;
+	transition: all 0.5s;
+}
+
+header .main-header .header-nav ul li.has-child ul li:hover a{
+	background-color: #fff !important;
+	color: rgba(238, 96, 34, 1) !important;
+	transition: all 0.5s;
+}
+
+
+
+header .main-header .header-nav ul li.has-child:hover ul{
+	visibility: visible;
+	top: 100%;
+	opacity: 1;
+	transition: opacity 0.5s;
+}
+
+header .main-header .header-nav ul li.current-menu-item a, header .main-header .header-nav > ul li:hover a{
+	background-color: #fff;
+	color: rgb(238, 96, 34);
+	transition: all 0.5s;
+}
+
+nav{
+	display: block;
+}
+
+.userlayout .reg_fields .two-column_field .two-column_inner-wrapper{
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.userlayout .reg_fields .two-column_field .two-column_inner-wrapper .reg_field-cont{
+	flex: 45%;
+}
+
+.userlayout .reg_fields label{
+	color: #6A6A6A;
+	font-size: 0.875em;
+}
+
+.userlayout .reg_fields .required-field{
+	color: red;
+}
+
+.userlayout .reg_fields .reg_radio{
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+}
+
+.userlayout .reg_fields .reg_radio .reg_radio-list{
+	flex: 0 15%;
+	color: #000;
+}
+
+.userlayout .reg_fields p{
+	color: #000;
+}
+
+.userlayout .reg_fields .agreement-field{
+	color: #000;
+	margin-bottom: 30px;
+}
+
+.userlayout .reg_fields input[type="radio"], .userlayout .reg_fields input[type="checkbox"]{
+	appearance: auto;
+}
+
+.userlayout .reg_fields input[type="text"], .userlayout .reg_fields input[type='email'], .userlayout .reg_fields input[type='password'], .userlayout .userlayout .reg_fields select{
+	color: #000;
+}
+
+.userlayout .profile-wrapper{
+	padding: 90px 30px 30px 30px;
+	border-radius: 20px;
+	box-shadow: 0 2px 15px -3px rgba(0,0,0,0.07),0 10px 20px -2px rgba(0,0,0,0.04);
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.userlayout .profile-wrapper .custom-alert{
+	width: 300px;
+	margin: 0 auto;
+}
+
+.userlayout .profile-wrapper .profile-info{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 20px;
+}
+
+.userlayout .profile-wrapper .profile-info #source{
+	margin-bottom: 20px;
+}
+
+.userlayout .profile-wrapper .profile-info h5{
+	color: #000;
+}
+
+.userlayout .no-fill{
+	display: none !important;
+}
+
+.userlayout .profile-wrapper h3{
+	color: #000;
+}
+
+.userlayout .field-wrap{
+	flex: 75%;
+	width: 100%;
+}
+
+.userlayout .fill-info{
+	display: flex;
+	gap: 20px;
+	align-items: center;
+}
+
+.userlayout .fill-info h5{
+	margin-bottom: 0;
+}
+
+.userlayout .hide-field{
+	display: none !important;
+}
+
+.userlayout .show-field{
+	display: block;
+}
+
+
+.userlayout .profile-wrapper .profile-info label{
+	flex: 25%;
+	color: #000;
+	font-weight: 600;
+}
+
+.userlayout .profile-wrapper .profile-info input[type='text'], .userlayout .profile-wrapper .profile-info input[type='email'], .userlayout .profile-wrapper .profile-info select, .userlayout .profile-wrapper input[type="password"], .userlayout .profile-wrapper input[type="number"]{
+	width: 100%;
+	flex: 0 50%;
+	color: #000;
+	padding: 7px 12px;
+	border: 1px solid #000;
+}
+
+.userlayout .profile-wrapper .profile-info input[type="submit"]{
+	color: #fff;
+	padding: 8px 12px;
+	background-color: #000;
+}
+
+.userlayout .reg_field-cont{
+	position: relative;
+	color: #000;
+	margin-bottom: 20px;
+}
+
+.userlayout .show-field{
+	display: block !important;
+}
+
+.userlayout .hide-field{
+	display: none !important;
+}
+
+.userlayout .login-section{
+	background-color: #F4F4F4;
+}
+
+
+
+.userlayout .login-section .login-banner{
+	width: 100%;
+	padding: 100px 0 50px 0;
+	height: 500px;
+	background-color: #EE6022;
+	text-align: center;
+}
+
+.userlayout .login-section .login-wrapper{
+	position: relative;
+	top: -150px;
+	width: 100%;
+	margin: 0 auto;
+	padding: 50px 30px;
+	background-color: #fff;
+	border-radius: 8px;
+}
+
+.userlayout .login-section .login-wrapper h2{
+	font-weight: 400;
+	color: #000;
+	margin-bottom: 20px;
+}
+
+.userlayout .login-section .login-wrapper label{
+	color: #6A6A6A;
+	font-size: 0.875em;
+}
+
+.userlayout .login-section .login-wrapper a{
+	color: #FF9900;
+	text-decoration: none;
+}
+
+.userlayout .login-section .login-wrapper input[type="submit"], .userlayout .login-section .login-wrapper button{
+	width: 100%;
+	background-color: #FE6500;
+	color: #fff;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.userlayout .login-section .login-wrapper p{
+	color: #6A6A6A;
+}
+
+.userlayout .login-section .login-wrapper .text-center{
+	text-align: center;
+}
+
+
+
+.userlayout .profile-section{
+	padding: 150px 0 50px 0;
+	background-color: #eee;
+}
+
+.userlayout .profile-section h2{
+	font-weight: 400;
+	color: #000;
+}
+
+.userlayout .profile-info-wrapper{
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic{
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic .inner-prof-pic{
+	position: relative;
+	width: 150px;
+	margin: 0 auto;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic .inner-prof-pic .upload-profile-picture{
+	position: absolute;
+	top: 5px;
+	right: -20px;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic .inner-prof-pic .upload-profile-picture:before{
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 8px;
+	font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f030";
+    font-size: 24px;
+    color: #000;
+    padding: 8px 12px;
+    background-color: #eee;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic .inner-prof-pic .upload-profile-picture #picture{
+	opacity: 0;
+	cursor: pointer;
+}
+
+.userlayout .profile-info-wrapper .basic-prof-pic img{
+	border-radius: 500px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.userlayout .profile-info-wrapper .basic-info{
+	position: relative;
+	flex: 30%;
+}
+
+.userlayout .profile-info-wrapper .basic-info .verified-acct{
+	position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.userlayout .profile-info-wrapper .basic-info .verified-acct img{
+	width: 180px;
+	transform: rotate(344deg);
+}
+
+.userlayout .profile-info-wrapper .basic-info .basic-info-inner{
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 0 2px 15px -3px rgba(0,0,0,0.07),0 10px 20px -2px rgba(0,0,0,0.04);
+	background-color: #fff;
+}
+
+.userlayout .profile-info-wrapper .basic-info .basic-info-inner .userlayout .profile-info{
+	text-align: center;
+}
+
+.userlayout .profile-info-wrapper .basic-info .basic-info-inner label, .userlayout .profile-info-wrapper .basic-info .basic-info-inner h5{
+	color: #757575!important;
+}
+
+
+.userlayout .profile-info-wrapper .required-info{
+	position: relative;
+	flex: 70%;
+}
+
+.userlayout .profile-info-wrapper .required-info .update_profile-btn{
+	position: absolute;
+	top: 20px;
+	right: 50px;
+	padding: 8px 12px;
+	border: 1px solid #000;
+	color: #000;
+	border-radius: 5px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 1.2em;
+}
+
+.userlayout .profile-info-wrapper .required-info form{
+	
+}
+
+.userlayout .hid-msg, .hid-alt-mail{
+	font-size: 14px;
+}
+
+.userlayout .alt-email-note{
+	padding: 10px;
+	background-color: #eee;
+	border-radius: 10px;
+	color: #000;
+	font-style: italic;
+	font-size: 12px;
+    display: block;
+    width: 400px;
+    line-height: 120%;
+    margin-bottom: 30px;
+}
+
+.userlayout .instruction-cont{
+	position: relative;
+	width: 90%;
+	max-width: 700px;
+	height: 900px;
+	max-height: 500px;
+	margin: auto;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.userlayout .instruction-inner-cont{
+	padding: 50px 30px;
+	border-radius: 10px;
+	background-color: #EA5D02;
+}
+
+.userlayout .instruction-inner-cont .inst-img{
+	width: 50%;
+	height: 400px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.userlayout .instruction-inner-cont .inst-img img{
+	width: 100%;
+	height: 100%;
+	object-fit: scale-down;
+}
+
+.userlayout .instruction-inner-cont h4{
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 400;
+	display: block;
+	width: 90%;
+	max-width: 400px;
+	margin: 30px auto 0 auto;
+	text-align: center;
+}
+
+.userlayout .instruction-cont ul{
+	padding-left: 0;
+	margin-bottom: 0;
+}
+
+.userlayout .instruction-list .slick-dots li button:before{
+	font-size: 0;
+	background-color: #fff;
+	width: 15px;
+	height: 15px;
+	border-radius: 20px;
+}
+
+.userlayout .help-icon{
+	border: 1px solid #000;
+	padding: 10px 12px;
+	color: #000;
+	border-radius: 50px;
+}
+
+.userlayout .join-now-page{
+	background-color: #FE6602;
+}
+
+.userlayout .registration-page{
+	padding: 100px 0 0px 0;
+}
+
+.userlayout .join-now-page.registration-page .registration-info{
+	flex: 40%;
+}
+
+.userlayout .networker-page.registration-page .registration-info{
+	flex: 45%;
+}
+
+.userlayout .networker-page.registration-page #regform{
+	flex: 45%;
+}
+
+.userlayout .registration-page .reg-form-section{
+	position: relative;
+	flex: 60%;
+	padding: 40px 30px;
+	background-color: #fff;
+	border-radius: 25px;
+	overflow: hidden;
+}
+
+@media (min-width: 1300px){
+	.userlayout .registration-page .reg-form-section{
+		padding: 109px 76px;
+		flex: 0 40%;
+	}
+}
+
+.userlayout .loading-scrn{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	background-color: #fff;
+	z-index: 999999;
+
+}
+
+.userlayout .match-record-result h3{
+	color: #000;
+}
+
+.userlayout .registration-page .reg-form-section .match-record-result{
+	text-align: center;
+}
+
+.userlayout .registration-page .reg-form-section .match-record-result a{
+	display: block;
+	width: 100%;
+	padding: 8px;
+	background-color: #FE6500;
+	text-align: center;
+	color: #fff;
+	font-weight: 400;
+	text-decoration: none;
+}
+
+.userlayout .registration-page .reg-form-section .match-record-result h2, .userlayout .registration-page .reg-form-section .match-record-result h3, .userlayout .registration-page .reg-form-section .match-record-result h4{
+	color: #000;
+}
+
+.userlayout .registration-page .reg-form-section .match-record-result h2{
+	margin-bottom: 40px;
+}
+
+.userlayout .registration-page .reg-form-section h2{
+	font-weight: 600;
+}
+
+.userlayout .registration-page .join-event-instruction{}
+
+.userlayout .registration-page .join-event-instruction img{
+	margin-bottom: 60px;
+}
+
+.userlayout .registration-page .join-event-instruction ul{
+	padding-left: 73px;
+}
+
+@media (min-width: 768px){
+	.userlayout .registration-page .join-event-instruction ul{
+		padding-left: 40px;
+	}
+}
+
+.userlayout .registration-page .join-event-instruction ul li{
+	position: relative;
+	margin-bottom: 65px;
+	opacity: 1;
+}
+
+.userlayout .registration-page .join-event-instruction ul li:nth-child(2){
+	opacity: 0.8;
+}
+
+.userlayout .registration-page .join-event-instruction ul li:last-child{
+	opacity: 0.5;
+}
+
+.userlayout .registration-page .join-event-instruction ul li:before{
+	position: absolute;
+	left: -64px;
+	top: 0px;
+	width: 50px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	content: " ";
+}
+
+.userlayout .registration-page .join-event-instruction ul li:first-child:before{
+	background-image: url('../images/step-1.svg');
+}
+
+.userlayout .registration-page .join-event-instruction ul li:nth-child(2):before{
+	background-image: url('../images/step-2.svg');
+}
+
+.userlayout .registration-page .join-event-instruction ul li:nth-child(3):before{
+	background-image: url('../images/step-3.svg');
+}
+
+.userlayout .registration-page .join-event-instruction ul li:nth-child(4):before{
+	background-image: url('../images/step-4.svg');
+}
+
+.userlayout .registration-page .join-event-instruction ul li h3{
+	color: #fff;
+	font-size: 1.75em;
+	font-weight: 600;
+	text-transform: uppercase;
+	margin-bottom: 5;
+}
+
+.userlayout .registration-page .join-event-instruction ul li h5{
+	color: #fff;
+	margin-bottom: 15px;
+}
+
+.userlayout .registration-page .join-event-instruction ul li p{
+	color: #fff;
+}
+
+.userlayout .registration-page h2{
+	font-weight: 400;
+	color: #000;
+}
+
+.userlayout .registration-page .custom-container{
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.userlayout .registration-info h3, .userlayout .registration-info h4, .userlayout .registration-info h5, .userlayout .registration-info h6{
+	color: #ff6600;
+	margin-bottom: 30px;
+}
+
+.userlayout .registration-info p{
+	color: #808080;
+}
+
+.userlayout .register-instruction{
+	padding: 30px;
+	border: 1px solid #000;
+	margin-bottom: 20px;
+}
+
+.userlayout .register-instruction p{
+	color: #000;
+}
+
+.userlayout .register-instruction ol{
+	color: #000;
+}
+
+.userlayout .other-page-banner{
+	text-align: center;
+	width: 100%;
+	height: 400px;
+	padding-top: 100px;
+	padding-bottom: 50px;
+	background-color: #EE6022;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.userlayout .other-page-banner img{
+	width: 80%;
+}
+
+.userlayout .other-page-main-content p{
+	color: #000;
+}
+
+.userlayout .other-page-main-content h1{
+	padding: 50px 0;
+	font-weight: 600;
+}
+
+.userlayout .upload-msg{
+	margin-top: 10px;
+	color: #000;
+	font-style: italic;
+	padding: 6px 12px;
+    font-size: 16px;
+}
+
+.userlayout footer{
+	padding: 20px 0;
+	
+	background-color: #313131;
+}
+
+.userlayout .footer-wrapper{
+	text-align: left;
+}
+
+.userlayout .footer-wrapper p{
+	color: #fff;
+}
+
+.userlayout .profile-center{
+	justify-content: center;
+}
+
+.userlayout .documents-note{
+	padding: 12px 25px;
+	background-color: #ff6600;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom: 0;
+}
+
+.userlayout .documents-note h5{
+	color: #fff;
+}
+
+.userlayout .supp-docs-wrapper .supp-docs-list{
+	color: #000;
+}
+
+.userlayout .supp-docs-wrapper input[type="checkbox"]{
+	appearance: auto;
+}
+
+.userlayout .cstm_bg-orange{
+	background-color: #FE6500;
+}
+
+.cstm_bg-orange h4, .cstm_bg-orange h5, .cstm_bg-orange h6{
+	color: #fff !important;
+}
+
+.userlayout .profile-recover{
+	padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 2px 15px -3px rgba(0,0,0,0.07), 0 10px 20px -2px rgba(0,0,0,0.04);
+    background-color: #fff;
+    margin-bottom: 30px;
+}
+
+.userlayout .profile-recover h4{
+	font-family: 'Montserrat', sans-serif;
+	color: #000;
+}
+
+.userlayout .profile-recover h5{
+	color: #000;
+}
+
+.userlayout .profile-recover button{
+	padding: 7px 12px;
+	color: #fff;
+	background-color: #000;
+}
+
+.userlayout .profile-recover .recover-btn{
+	display: flex;
+	flex-direction: row;
+	gap: 15px;
+}
+
+.userlayout .other-page-main-content{
+	background-color: #F3F3F3;
+}
+
+.userlayout .about-wrapper{
+	padding: 20px 30px;
+	position: relative;
+	top: 10px;
+	background-color: #fff;
+	border-radius: 21px;
+}
+
+.userlayout .about-wrapper h1{
+	text-align: center;
+	display: block;
+	color: #FE6700;
+	font-weight: 600;
+}
+
+.userlayout .event-masonry-wrapper-three{
+	display: grid;
+	  grid-template-columns: repeat(3, 1fr);
+	  grid-template-rows: masonry;
+	  gap: 10px;
+	  margin-bottom: 10px;
+}
+
+.userlayout .event-masonry-wrapper-three img{
+	cursor: pointer;
+}
+
+.userlayout .event-masonry-wrapper{
+	display: grid;
+	  grid-template-columns: repeat(4, 1fr);
+	  grid-template-rows: masonry;
+	  gap: 10px;
+}
+
+.userlayout .event-gallery-section{
+	margin-top: 50px;
+	padding-bottom: 60px;
+}
+
+.userlayout .event-gallery-section h2{
+	color: #FE6700;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+.userlayout .about-more-details{
+	text-align: center;
+	background-color: #fff;
+	padding: 60px 0;
+}
+
+.userlayout .about-more-details p{
+	color: #000;
+}
+
+.userlayout .about-more-details a{
+	color: #FE6500;
+}
+
+.userlayout .sponsors-section{
+	position: relative;
+	padding: 50px 0;
+	text-align: center;
+}
+
+.userlayout .sponsors-section h3{
+	color: #ff6600;
+	font-weight: 700;
+	margin-bottom: 50px;
+}
+
+.userlayout .sponsors-section ul{
+	padding-left: 0;
+	margin-bottom: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-content: flex-start;
+	gap: 30px;
+}
+
+.userlayout .page-id-55 #zz_frame{
+	position: fixed !important;
+}
+
+.userlayout .user-guide-wrapper{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.8);
+	z-index: 9999999999;
+}
+
+.userlayout .user-guide-wrapper button{
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 20px;
+	color: #fff;
+	background-color: transparent;
+}
+
+.userlayout .user-guide-wrapper .user-guide-inner{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.userlayout .registration-closing{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	background-image: url('../images/closing-registration.png');
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.userlayout .registration-closing-note{
+	position: absolute;
+	bottom: 250px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	background-color: #fff;
+	border: 2px solid #FE6500;
+	border-radius: 20px;
+	padding: 36px 50px;
+}
+
+.userlayout .registration-closing h3{
+	
+	text-align: center;
+	color: #FE6500;
+}
+
+.userlayout .tooltip-error{
+	font-size: 14px;
+	padding: 10px 20px;
+}
+
+.userlayout .error-message{
+	font-size: 14px;
+	padding: 10px;
+	margin-top: 10px;
+}
+
+.userlayout .error{
+	border: 1px solid red;
+	border-radius: 10px;
+	background-color: #fef2f2;
+	color: #991b1b;
+}
+
+.userlayout .required_fill{
+	position: relative;
+}
+
+.userlayout .tool-tip-error{
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	padding: 10px 20px;
+	border: 1px solid red;
+	border-radius: 10px;
+	background-color: #fef2f2;
+	color: #991b1b;
+}
+
+.userlayout .tool-tip-error h6{
+	color: #991b1b;
+	line-height: 100%;
+
+}
+
+
+@media (min-width: 570px) {
+	
+}
+
+@media (min-width: 768px) {
+	.userlayout h1{
+		font-size: 2.5rem;
+		line-height: 48px;
+		/*40*/
+	}
+
+	.userlayout h2{
+		font-size: 1.5rem;
+		line-height: 24px;
+		/*45*/
+	}
+
+	.userlayout h3{
+		font-size: 1.25rem;
+		line-height: 24px;
+		/*38*/
+	}
+
+	.userlayout h4{
+		font-size: 1.125rem;
+		line-height: 20px;
+		/*28*/
+	}
+
+	.userlayout h5{
+		font-size: 1rem;
+		line-height: 24px;
+	}
+
+	.userlayout h6{
+		font-size: 0.875rem;
+		line-height: 18px;
+	}
+
+	.userlayout p{
+		font-size: 0.889rem;
+		line-height: 20px;
+		/*16*/
+	}
+	header{
+		display: block;
+	}
+
+	nav{
+		display: none;
+	}
+	.userlayout .login-section .login-wrapper{
+		width: 90%;
+		padding: 80px;
+	}
+	.userlayout .profile-info-wrapper .basic-info .verified-acct img{
+		width: 280px;
+	}
+	.userlayout .about-wrapper{
+		top: -30px;
+		padding: 20px 70px;
+	}
+
+	.userlayout .other-page-banner img{
+		width: auto;
+	}
+}
+
+@media (min-width: 992px) {
+	
+}	
+
+
+@media (min-width: 1024px) {
+	
+}
+
+@media (min-width: 1100px) {
+	.userlayout .img-cloud{
+		margin-left: 50px;
+	}
+	.userlayout .profile-wrapper{
+		padding: 30px;
+	}
+	.userlayout .profile-wrapper .profile-info{
+		flex-direction: row;
+	}
+	.userlayout .login-section .login-wrapper{
+		width: 50%;
+	}
+	.userlayout .join-now-page.registration-page .custom-container{
+		flex-direction: row;
+		align-items: center;
+/*		gap: 450px;*/
+	}
+
+	.userlayout .networker-page.registration-page .custom-container{
+		flex-direction: row;
+		align-items: center;
+		gap: 30px;
+	}
+	.userlayout .about-wrapper{
+		top: -50px;
+	}
+}
+
+@media (min-width: 1200px) {
+	.custom-container{
+		width: 1140px;
+		margin: 0 auto;
+	}
+	.userlayout h1{
+		font-size: 3rem;
+		line-height: 58px;
+	}
+
+	.userlayout h2{
+		font-size: 2.5rem;
+		line-height: 48px;
+	}
+
+	.userlayout h3{
+		font-size: 1.5rem;
+		line-height: 30px;
+	}
+
+	.userlayout h4{
+		font-size: 1.25rem;
+		line-height: 24px;
+	}
+
+	.userlayout h5{
+		font-size: 1rem;
+		line-height: 24px;
+	}
+
+	.userlayout h6{
+		font-size: 0.875rem;
+		line-height: 18px;
+	}
+
+	.userlayout p{
+		font-size: 1rem;
+		line-height: 24px;
+	}
+	.userlayout .profile-info-wrapper .basic-info .verified-acct{
+	    top: 25px;
+	    left: -64px;
+	}
+}
+
+.userlayout .open-qr{
+	position: relative;
+}
+
+.userlayout .open-qr:before{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	content: " ";
+	z-index: 9999999;
+}
+
+
+.userlayout .open-qr .popup-qrcode{
+	transform: translate(-50%, -50%) scale(1);
+	transition: all 0.5s;
+}
+
+.userlayout .popup-qrcode{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	width: 256px;
+	height: 256px;
+	z-index: 99999999;
+	transition: all 0.5s;
+}
+
+.userlayout .qrcode-scann{
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 20px;
+}
+
+.userlayout .qrcode-scann h5{
+	color: rgba(238, 96, 34, 0.9);
+	display: block;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.userlayout .popup-qrcode .close-btn{
+	position: absolute;
+	top: -30px;
+	right: -30px;
+	font-size: 30px;
+	color: #fff;
+}
+
+.userlayout .not-found{
+	position: relative;
+	padding: 120px 0;
+	height: 100vh
+}
+
+.userlayout .not-found h3{
+	color: #000;
+}
+
+.userlayout .qr-container{
+	display: flex;
+	margin: 20px 0;
+	flex-direction: row;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
+}
+
+.userlayout .popup-btn{
+	padding: 8px 36px;
+	background-color: rgba(238, 96, 34, 1);
+	color: #fff;
+	text-align: center;
+	border-radius: 5px;
+}
+
+.userlayout .validate_data .reg_fields .reg_radio .reg_radio-list{
+	flex: 0 20%;
+}
+
+.userlayout .vczapi-jvb-countdown-content{
+	align-items: center;
+}
+
+.userlayout .vczapi-join-via-browser-main-wrapper h1, .userlayout .vczapi-join-via-browser-main-wrapper h2, .userlayout .vczapi-join-via-browser-main-wrapper h3, .userlayout .vczapi-join-via-browser-main-wrapper h4, .userlayout .vczapi-join-via-browser-main-wrapper h5, .userlayout .vczapi-join-via-browser-main-wrapper h6, .userlayout .vczapi-join-via-browser-main-wrapper p{
+	color: #000;
+}
+
+.userlayout .vczapi-jvb-countdown-content-description-time{
+	display: none;
+}
+
+.userlayout .vczapi-jvb-countdown-content-description-timezone{
+	color: #000;
+}
+
+.userlayout .leaving-zoom{
+	position: relative;
+	padding: 300px 0 200px 0;
+	height: 100vh;
+}
+
+.userlayout  .leaving-zoom .leaving-zoom-wrapper{
+	text-align: center;
+}
+
+.leaving-zoom .leaving-zoom-wrapper a{
+	font-size: 24px;
+	color: #fff;
+    padding: 8px 12px;
+    background-color: #ff6600;
+    border-radius: 8px;
+    text-decoration: none;
+}

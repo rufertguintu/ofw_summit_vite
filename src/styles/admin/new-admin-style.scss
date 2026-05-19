@@ -1,0 +1,50 @@
+.admin-wrapper{
+    .heading{
+        background-color: #35394b;
+        padding: 20px;
+
+        img{
+            width: 200px;
+        }
+    }
+
+    main{
+
+        h1, h2, h3, h4, h5, h6, p, strong{
+            color: #000;
+        }
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+
+        .admin-sidebar{
+            flex: 15%;
+            border-right: 1px solid #c4c4c4;
+
+            ul{
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+
+                li{
+                    a{
+                        color: #000;
+                    }
+                }
+            }
+        }
+
+        .main-admin-content{
+            flex: 85%;
+            
+        }
+    }
+
+    .modalbody{
+        overflow-y: scroll;
+        height: 700px;
+    }
+}
+

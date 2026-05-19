@@ -14,7 +14,6 @@ import Records from "./pages/Records";
 import './App.css'
 
 function App() {
-
   const role = localStorage.getItem("role");
   return (
     <Router>
@@ -34,7 +33,7 @@ function App() {
         {/* ✅ ADMIN PAGES */}
         <Route
           element={
-            <ProtectedRoute role="contributor">
+            <ProtectedRoute >
               <AdminLayout />
             </ProtectedRoute>
           }

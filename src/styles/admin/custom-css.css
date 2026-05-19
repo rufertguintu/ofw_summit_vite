@@ -1,0 +1,303 @@
+.dataTables_wrapper{
+    overflow-x: scroll;
+}
+
+.dataTables_wrapper .dataTables_paginate a{
+	position: relative;
+    float: left;
+    padding: 7px 18px;
+    line-height: 1.52857143;
+    text-decoration: none;
+    color: #515253;
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    margin-left: -1px;
+    outline: none;
+    text-decoration: none;
+    transition: all 0.5s;
+}
+
+.dataTables_wrapper .dataTables_paginate a.current, .dataTables_wrapper .dataTables_paginate a:hover{
+	z-index: 2;
+    color: #ffffff;
+    background-color: #0094cb;
+    border-color: #0094cb;
+    cursor: default;
+    transition: all 0.5s;
+}
+
+.dataTables_wrapper .dataTables_paginate a:hover{
+	text-decoration: none;
+	cursor: pointer;
+}
+
+/* padding-bottom and top for image */
+.mfp-no-margins img.mfp-img {
+    padding: 0;
+}
+/* position of shadow behind the image */
+.mfp-no-margins .mfp-figure:after {
+    top: 0;
+    bottom: 0;
+}
+/* padding for main container */
+.mfp-no-margins .mfp-container {
+    padding: 0;
+}
+
+
+.form-group img{
+    cursor: pointer;
+}
+
+fieldset{
+    margin-bottom: 30px;
+}
+
+/* 
+
+for zoom animation 
+uncomment this part if you haven't added this code anywhere else
+
+*/
+
+
+.mfp-with-zoom .mfp-container,
+.mfp-with-zoom.mfp-bg {
+    opacity: 0;
+    -webkit-backface-visibility: hidden;
+    -webkit-transition: all 0.3s ease-out; 
+    -moz-transition: all 0.3s ease-out; 
+    -o-transition: all 0.3s ease-out; 
+    transition: all 0.3s ease-out;
+}
+
+.mfp-with-zoom.mfp-ready .mfp-container {
+        opacity: 1;
+}
+.mfp-with-zoom.mfp-ready.mfp-bg {
+        opacity: 0.8;
+}
+
+.mfp-with-zoom.mfp-removing .mfp-container, 
+.mfp-with-zoom.mfp-removing.mfp-bg {
+    opacity: 0;
+}
+
+.custom-chart{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.custom-chart .c-chart-list{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.custom-chart .c-chart-list .chart-label{
+    flex: 10%;
+    width: 10%;
+    text-align: right;
+}
+
+.custom-chart .c-chart-list .chart-line{
+    flex: 90%;
+    width: 90%;
+}
+
+.custom-chart .c-chart-list .chart-line .chart-number{
+    position: relative;
+    color: #fff;
+}
+
+.custom-chart .c-chart-list .chart-line .char-barline{
+    background-color: #FE6500;
+    padding: 12px;
+    text-align: center;
+}
+
+.flex-center{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.raffledraw-wrapper{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+}
+
+.raffledraw-wrapper .raffledraw-col1{
+    flex: 60%;
+}
+
+.raffledraw-wrapper .entry-list-col2{
+    flex: 40%;
+    background-color: #fff;
+    padding: 60px;
+    border-radius: 10px;
+}
+
+.raffledraw-wrapper .entry-list-col2 h2{
+    font-size: 3rem;
+}
+
+.raffledraw-wrapper .entry-list-col2 ul{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid #E2E2E2;
+    padding: 40px;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.raffledraw-wrapper .entry-list-col2 ul li{
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E2E2E2;
+    font-size: 2rem;
+}
+
+.raffle-prizes{
+    position: relative;
+    width: 450px;
+    margin: 20px auto;
+}
+
+.raffledraw-cont{
+    position: relative;
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid #E2E2E2;
+    background-color: #EEF1F8;
+    border-radius: 10px;
+}
+
+.raffledraw-cont h1{
+    text-transform: uppercase;
+    font-size: 4rem;
+    margin-bottom: 0;
+}
+
+.raffle-prizes select{
+    padding: 15px 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.raffle-container{
+    width: 100%;
+    max-width: 800px;
+    margin: 80px auto;
+    background: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+}
+
+.raffle-container h2{
+    font-size: 3rem;
+    margin-top: 0;
+}
+
+#winnersTable tbody tr td{
+    font-size: 2rem;
+}
+
+body.show-confirm-box:before{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100vh;
+    content: " ";
+    z-index: 9999;
+}
+
+body.show-confirm-box .confirmationDialog{
+    display: block;
+}
+
+.confirmationDialog{
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+    z-index: 999999;
+    display: none;
+}
+
+.confirmationDialog #dialogText{
+    font-size: 4rem;
+    text-align: center;
+    display: block;
+}
+
+.confirmationDialog .confirmation-btn{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.confirmationDialog .confirmation-btn button{
+    flex: 50%;
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    border: 0;
+    border-radius: 15px;
+}
+
+.confirmationDialog .confirmation-btn button.yes{
+    background-color: #1fc12a;
+}
+
+.confirmationDialog .confirmation-btn button.no{
+    background-color: #c11f1f;
+}
+
+@media (max-width: 700px){
+    .cstm-update-records{width: 100%;padding: 10px !important; margin-top: 20px;font-size: 24px !important;}
+}
+
+.page-id-219{
+    background-image: url('../images/raffle-draw-background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.basket-grocery{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.disabled{
+    background-color: #b9b9b9 !important;
+    cursor: not-allowed !important;
+}
+
+@media (min-width: 1100px){
+    .raffledraw-cont{
+        width: 800px;
+    }
+}
