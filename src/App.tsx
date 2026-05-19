@@ -14,21 +14,21 @@ import Records from "./pages/Records";
 import './App.css'
 
 function App() {
-  const role = localStorage.getItem("role");
+  // const role = localStorage.getItem("role");
   return (
     <Router>
       <Routes>
 
         {/* ✅ PUBLIC PAGES */}
-          <Route element={<Users />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/login" element={<Login />} />
-          </Route>
+        <Route element={<Users />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
 
 
         {/* ✅ LOGIN (no layout or optional) */}
-       
+
 
         {/* ✅ ADMIN PAGES */}
         <Route
