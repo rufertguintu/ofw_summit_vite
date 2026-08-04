@@ -25,17 +25,25 @@ const HeaderLayout = () => {
                     <ul>
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/about-us">About Us</Link></li>
-                    <li className="has-child">
-                        <Link to="/">Join Event</Link>
-                        <ul className="child-nav">
-                        <li><Link to="/">Online Register</Link></li>
-                        <li><Link to="/">Mall Register</Link></li>
-                        <li><Link to="/">On-site Register</Link></li>
-                        <li><Link to="/">Networker</Link></li>
-                        </ul>
-                    </li>
-                    <li><Link to="/">Profile</Link></li>
-                    <li>{token ? <button onClick={logout}>Logout</button> : <Link to="/login">Login</Link>}</li>
+                    {token ? (
+                        <>
+                        <li><Link to="/">Profile</Link></li>
+                        <li><button onClick={logout}>Logout</button></li>
+                        </>
+                    ) : (
+                        <>
+                        <li className="has-child">
+                            <Link to="/">Join Event</Link>
+                            <ul className="child-nav">
+                            <li><Link to="/online-register">Online Register</Link></li>
+                            <li><Link to="/">Mall Register</Link></li>
+                            <li><Link to="/">On-site Register</Link></li>
+                            <li><Link to="/">Networker</Link></li>
+                            </ul>
+                        </li>
+                        <li><Link to="/login">Login</Link></li>
+                        </>
+                    )}
                     </ul>
                 </div>
                 </div>

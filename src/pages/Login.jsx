@@ -23,7 +23,7 @@ function Login() {
     if (user_role == "contributor") {
       return <Navigate to="/dashboard" />;
     } else {
-      return <Navigate to="/" />;
+      return <Navigate to="/profile-dashboard" />;
     }
   }
 
@@ -65,7 +65,7 @@ function Login() {
       if (user_role == "contributor") {
         navigate("/dashboard");
       } else {
-        navigate("/");
+        navigate("/profile-dashboard");
       }
 
     } catch (error) {
@@ -89,7 +89,7 @@ function Login() {
         <div className="login-wrapper">
           <h2>Login</h2>
           <div className="reg_fields">
-            <div className="one-column_field mb-30">
+            <div className="one-column_field">
               <div className="reg_field-cont">
                 <label htmlFor="username">Email Address</label>
                 <input type="email" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter Email Address" />

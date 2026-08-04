@@ -1,7 +1,7 @@
 
 import { Outlet, useNavigate, Link } from "react-router-dom";
 import Logo from "../assets/2024-logo.svg";
-
+import "../styles/admin/new-admin-style.scss";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -12,13 +12,13 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="admin-wrapper">
-      <div className="heading">
-        <div className="logo"><img src={Logo} alt="" /></div>
+    <div className="admin-wrapper text-[#000]">
+      <div className="p-[24px] bg-[#000]">
+        <div className="logo"><img src={Logo} alt="" className="w-50"/></div>
       </div>
-      <main>
-        <div className="admin-sidebar">
-          <ul>
+      <main className="flex flex-row">
+        <div className="w-1/6 admin-sidebar">
+          <ul className="p-[20px]">
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/Records">Records</Link></li>
             <li><a href="">Global Records</a></li>
@@ -32,7 +32,7 @@ export default function AdminLayout() {
             </li>
           </ul>
         </div>
-        <div className="main-admin-content">
+        <div className="w-5/6 main-admin-content">
           <Outlet />
         </div>
       </main>

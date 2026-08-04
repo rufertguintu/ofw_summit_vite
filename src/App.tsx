@@ -8,8 +8,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
+import Online_Register from "./pages/Online_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
+import ProfileDashboard from "./pages/ProfileDashboard";
 // import { Button } from "@/components/ui/button"
 import './App.css'
 
@@ -24,6 +26,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/online-register" element={<Online_Register />} />
+          <Route path="/profile-dashboard" element={<ProfileDashboard />} />
         </Route>
 
 

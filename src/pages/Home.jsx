@@ -65,7 +65,7 @@ const Home = () => {
 
                         <div className="section-qr">
                             <h2>SALI NA! LIBRE ANG REGISTRATION AT ENTRANCE!</h2>
-                            <img src="qrcode-2024.jpg" alt="" width="350"/>
+                            <img src="/src/assets/qrcode-2024.jpg" alt="" width="350"/>
                         </div>
                     </div>
                     <div className="section-list">
