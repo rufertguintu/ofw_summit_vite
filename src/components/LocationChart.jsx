@@ -2,16 +2,36 @@ import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { fetchApi } from "../store/api";
 
-export default function LocationChart({filter}) {
+export default function LocationChart({ filter, onLoadingChange }) {
 
     const [location_data, setLocationData] = useState([]);
-    const [data, setData] = useState(0);
     useEffect(() => {
+        let isMounted = true;
+
+        onLoadingChange?.(true);
+
         fetchApi(`/wp-json/custom/v1/location-data?location=${filter}`)
             .then(res => res.json())
-            .then(json => setLocationData(json))
-            .catch(err => console.error(err));
-    }, [filter]);
+            .then(json => {
+                if (!isMounted) {
+                    return;
+                }
+
+                setLocationData(json);
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+                if (!isMounted) {
+                    return;
+                }
+
+                onLoadingChange?.(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [filter, onLoadingChange]);
 
     const dynamicHeight = location_data.length * 50;
 

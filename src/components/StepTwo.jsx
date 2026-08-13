@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function StepTwo({nextStep, prevStep, handleChange, values}) {
@@ -16,6 +16,14 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
         setErrorField(field);
         setEmailError(message);
     };
+
+    useEffect(() => {
+        setHasRelativeCompany(values.relative_company === "yes");
+    }, [values.relative_company]);
+
+    useEffect(() => {
+        setHasRelativeOFW(values.ofw_type === "1");
+    }, [values.ofw_type]);
 
     const validateEmailAddress = async (email) => {
         if (!email?.trim()) {
@@ -260,7 +268,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                     </div>
                     <div className="reg_field-cont">
                         <label>Date of Birth (Araw ng kapanganakan) <span className="required-field">*</span></label>
-                        <input type="text" name="date_birth" className="dob" placeholder="YYYY/MM/DD" required  value={values.date_birth} onChange={handleChange("date_birth")}  readonly/>
+                        <input type="text" name="date_birth" className="dob" placeholder="YYYY/MM/DD" required  value={values.date_birth} onChange={handleChange("date_birth")} readOnly/>
                     </div>
                 </div>
             </div>

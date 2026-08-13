@@ -6,6 +6,7 @@ import DashboardTitle from "../components/DashboardTitle";
 import { fetchApi } from "../store/api";
 import OFWtypeChart from "../components/OFWtypeChart";
 import LocationChart from "../components/LocationChart";
+import Loading from "../assets/loading-reg.gif";
 
 
 const Dashboard = () => {
@@ -76,13 +77,23 @@ const Dashboard = () => {
     const metro_manila = data?.metro_manila;
     
     const [filter, setFilter] = useState("Metro Manila");
+    const [isLocationLoading, setIsLocationLoading] = useState(false);
+
+    const handleFilterChange = (nextFilter) => {
+        if (nextFilter === filter || isLocationLoading) {
+            return;
+        }
+
+        setIsLocationLoading(true);
+        setFilter(nextFilter);
+    };
 
 
     return <>
         <div className="p-[40px]">
             <DashboardTitle />
 
-            <h3 className="text-2xl text-primary font-medium block mt-10">Validation Type</h3>
+            <h3 className="text-1xl font-medium block mt-10">Validation Type</h3>
             <div className="flex flex-row gap-10 mt-10">
 
                 <div className="w-4/12 relative size-60">
@@ -90,13 +101,13 @@ const Dashboard = () => {
                         
                         <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary" stroke-width="1.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl text-primary block">{verified_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl text-primary font-bold block">Verified</span>
-                        <span className="text-primary block">{verified?.toLocaleString()}</span>
+                        <span className="text-2xl  block">{verified_percentage?.toFixed(2)}%</span>
+                        <span className="text-2xl  font-bold block">Verified</span>
+                        <span className=" block">{verified?.toLocaleString()}</span>
                     </div>
                 </div>
 
@@ -105,13 +116,13 @@ const Dashboard = () => {
                         
                         <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary" stroke-width="1.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl text-primary block">{incomplete_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl text-primary font-bold block">Incomplete</span>
-                        <span className="text-primary block">{incomplete?.toLocaleString()}</span>
+                        <span className="text-2xl  block">{incomplete_percentage?.toFixed(2)}%</span>
+                        <span className="text-2xl  font-bold block">Incomplete</span>
+                        <span className=" block">{incomplete?.toLocaleString()}</span>
                     </div>
                 </div>
 
@@ -120,13 +131,13 @@ const Dashboard = () => {
                         
                         <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary" stroke-width="1.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl text-primary block">{returned_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl text-primary font-bold block">Returned</span>
-                        <span className="text-primary block">{returned?.toLocaleString()}</span>
+                        <span className="text-2xl  block">{returned_percentage?.toFixed(2)}%</span>
+                        <span className="text-2xl  font-bold block">Returned</span>
+                        <span className=" block">{returned?.toLocaleString()}</span>
                     </div>
                 </div>
 
@@ -135,13 +146,13 @@ const Dashboard = () => {
                         
                         <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current text-primary" stroke-width="1.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl text-primary block">{reject_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl text-primary font-bold block">Rejected</span>
-                        <span className="text-primary block">{reject?.toLocaleString()}</span>
+                        <span className="text-2xl  block">{reject_percentage?.toFixed(2)}%</span>
+                        <span className="text-2xl  font-bold block">Rejected</span>
+                        <span className=" block">{reject?.toLocaleString()}</span>
                     </div>
                 </div>
 
@@ -181,7 +192,7 @@ const Dashboard = () => {
                 
             </div>
 
-            <h3 className="text-2xl text-primary font-medium block mt-10">Registrant Type</h3>
+            <h3 className="text-2xl font-medium block pt-6">Registrant Type</h3>
             <div className="grid grid-cols-5 gap-4 mt-10">
                 <div className="p-8 bg-[#ff902b] rounded">
                     <h2 className="text-4xl text-white font-medium block">{online_registrant?.toLocaleString()}</h2>
@@ -205,7 +216,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <h3 className="text-2xl text-primary font-medium block mt-10">OFW Type</h3>
+            <h3 className="text-2xl  font-medium block pt-10">OFW Type</h3>
                 
                 {ofw && relative_ofw ? (
                 <OFWtypeChart ofw={ofw} relativeOfw={relative_ofw} />
@@ -214,15 +225,18 @@ const Dashboard = () => {
                 <div class="animate-pulse w-96 h-96 block !bg-[#e3e3e3] rounded-full m-auto"></div>
                 )}
 
-            <h3 className="text-2xl text-primary font-medium block mt-10">Location</h3>
-            {/* <h4 className="text-lg text-primary font-medium block mb-5">Metro Manila: {metro_manila?.toLocaleString()}</h4> */}
+            <h3 className="text-2xl  font-medium block mt-10">Location</h3>
+            {/* <h4 className="text-lg  font-medium block mb-5">Metro Manila: {metro_manila?.toLocaleString()}</h4> */}
 
             <div className="flex justify-center gap-4 mb-5">
                 
                 {["Country", "Region", "Province", "City"].map((item) => (
                     <button
                     key={item}
-                    onClick={() => setFilter(item)} style={{ pointerEvents: "auto" }}
+                    type="button"
+                    onClick={() => handleFilterChange(item)}
+                    disabled={isLocationLoading}
+                    style={{ pointerEvents: "auto" }}
                     className={`text-white font-medium py-2 px-4 rounded pointer-events-auto 
                         ${filter === item 
                         ? "!bg-blue-600"   // ✅ active
@@ -234,7 +248,10 @@ const Dashboard = () => {
                 ))}
 
                 <button
-                    onClick={() => setFilter("Metro Manila")} style={{ pointerEvents: "auto" }}
+                    type="button"
+                    onClick={() => handleFilterChange("Metro Manila")}
+                    disabled={isLocationLoading}
+                    style={{ pointerEvents: "auto" }}
                     className={`text-white font-medium py-2 px-4 rounded pointer-events-auto
                     ${filter === "Metro Manila"
                         ? "!bg-blue-600"
@@ -245,7 +262,14 @@ const Dashboard = () => {
                 </button>
 
             </div>
-            <LocationChart filter={filter}/>
+            {isLocationLoading ? (
+                <div className="flex justify-center py-8">
+                    <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading location data" />
+                </div>
+            ) : null}
+            <div style={{ display: isLocationLoading ? "none" : "block" }}>
+                <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
+            </div>
         </div>
     </>
 }

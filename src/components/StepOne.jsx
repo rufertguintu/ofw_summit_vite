@@ -1,7 +1,7 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function StepOne({ nextStep, handleChange, values }) {
+export default function StepOne({ nextStep, handleChange, values, checkError = "", checkingExisting = false }) {
     
     // const isValid =
     // values.firstname.trim() !== "" &&
@@ -70,9 +70,18 @@ export default function StepOne({ nextStep, handleChange, values }) {
 
             <div className="one-column_field mb-5">
                 <div className="reg_field-cont">
-                    <button onClick={nextStep} 
-                        disabled={!isValid} className={!isValid ? "validate_submit disabled" : "validate_submit"}
-                        >Next</button>
+                    <button
+                        onClick={nextStep}
+                        disabled={!isValid || checkingExisting}
+                        className={!isValid || checkingExisting ? "validate_submit disabled" : "validate_submit"}
+                    >
+                        {checkingExisting ? "Checking..." : "Next"}
+                    </button>
+                    {checkError && (
+                        <p style={{ color: "red", marginTop: "8px" }}>
+                            {checkError}
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

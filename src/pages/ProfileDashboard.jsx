@@ -33,8 +33,131 @@ const OFW_INCOME_OPTIONS = [
 ];
 
 const REVIEW_MODE_STORAGE_PREFIX = "profile-dashboard.review-mode";
+const RETRIEVED_ACCOUNT_STORAGE_KEY = "retrievedAccountContext";
 const PASSPORT_ID_REGEX = /^[A-Z][A-Z0-9]{1}[0-9]{6}[A-Z0-9]$/;
 const PASSPORT_VALIDATION_URL = "/wp-json/custom/v1/passport-validation";
+
+const getRetrievedAccountContext = () => {
+  try {
+    return JSON.parse(localStorage.getItem(RETRIEVED_ACCOUNT_STORAGE_KEY) || "null");
+  } catch {
+    return null;
+  }
+};
+
+const getWordPressBaseUrl = (user) => {
+  const candidates = [user?.doc_base_url, user?.profile_image_base_url];
+
+  for (const candidate of candidates) {
+    const value = String(candidate || "").trim();
+    if (!value) {
+      continue;
+    }
+
+    const uploadsIndex = value.toLowerCase().indexOf("/wp-content/uploads");
+    if (uploadsIndex > -1) {
+      return value.slice(0, uploadsIndex).replace(/\/$/, "");
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+      return value.replace(/\/$/, "");
+    }
+  }
+
+  return "";
+};
+
+const getDocumentPathMetaValue = (metaKey, sourceMeta = {}) => {
+  const pathMetaKeys = [
+    `${metaKey}_path`,
+    `_${metaKey}_path`,
+    `${metaKey}_url`,
+    `_${metaKey}_url`,
+  ];
+
+  for (const pathMetaKey of pathMetaKeys) {
+    const value = String(sourceMeta?.[pathMetaKey] || "").trim();
+    if (value && value !== "[object File]") {
+      return value;
+    }
+  }
+
+  return "";
+};
+
+const resolveDocumentPathMetaToUrl = (pathMetaValue, wordpressBaseUrl) => {
+  const trimmedPath = String(pathMetaValue || "").trim();
+  if (!trimmedPath) {
+    return "";
+  }
+
+  if (/^https?:\/\//i.test(trimmedPath)) {
+    return trimmedPath;
+  }
+
+  if (!wordpressBaseUrl) {
+    return "";
+  }
+
+  if (trimmedPath.startsWith("/")) {
+    return `${wordpressBaseUrl}${trimmedPath}`;
+  }
+
+  const normalizedPath = trimmedPath.replace(/^[./\\]+/, "").replace(/\\/g, "/");
+  const lowerPath = normalizedPath.toLowerCase();
+
+  if (lowerPath.startsWith("wp-content/")) {
+    return `${wordpressBaseUrl}/${normalizedPath}`;
+  }
+
+  if (lowerPath.startsWith("uploads/")) {
+    return `${wordpressBaseUrl}/wp-content/${normalizedPath}`;
+  }
+
+  return `${wordpressBaseUrl}/wp-content/uploads/${normalizedPath}`;
+};
+
+const extractDocumentFileName = (value) => {
+  const trimmedValue = String(value || "").trim();
+  if (!trimmedValue || trimmedValue === "[object File]") {
+    return "";
+  }
+
+  const normalizedValue = trimmedValue.replace(/\\/g, "/");
+  const parsedPath = (() => {
+    try {
+      const url = new URL(normalizedValue, "http://placeholder.local");
+      return url.pathname || normalizedValue;
+    } catch {
+      return normalizedValue;
+    }
+  })();
+
+  const fileName = parsedPath.split("/").filter(Boolean).pop() || "";
+
+  try {
+    return decodeURIComponent(fileName);
+  } catch {
+    return fileName;
+  }
+};
+
+const isDocumentPathLikeValue = (value) => {
+  const trimmedValue = String(value || "").trim();
+  if (!trimmedValue || trimmedValue === "[object File]") {
+    return false;
+  }
+
+  if (/^https?:\/\//i.test(trimmedValue)) {
+    return true;
+  }
+
+  const normalizedValue = trimmedValue.replace(/\\/g, "/").toLowerCase();
+  return normalizedValue.startsWith("/")
+    || normalizedValue.startsWith("wp-content/")
+    || normalizedValue.startsWith("uploads/")
+    || normalizedValue.includes("/");
+};
 
 const getUserReviewModeStorageKey = (userId) => {
   if (!userId) {
@@ -90,6 +213,7 @@ const ProfileDashboard = () => {
   const [submitMessage, setSubmitMessage] = useState("");
   const [step, setStep] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(getInitialReviewMode);
+  const [retrievedAccountContext, setRetrievedAccountContext] = useState(getRetrievedAccountContext);
   const profileImageUrl = user?.profile_picture_url || `${imgsrc}unknown.jpg`;
   const meta = user?.meta || {};
 
@@ -138,6 +262,14 @@ const ProfileDashboard = () => {
     select_docs5: "allotment",
     select_docs6: "seaman_book",
   };
+  const nextButtonContent = isSubmitting ? (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
+      <span className="spinner-border spinner-border-sm" aria-hidden="true" />
+      <span>Loading...</span>
+    </span>
+  ) : (
+    "Next"
+  );
 
   const handleSupportingDocToggle = (event) => {
     const { name, checked } = event.target;
@@ -175,7 +307,11 @@ const ProfileDashboard = () => {
 
   const hasDocumentData = (metaKey, sourceMeta = meta) => {
     const rawValue = String(sourceMeta?.[metaKey] || "").trim();
-    return rawValue !== "" && rawValue !== "[object File]";
+    const pathMetaValue = getDocumentPathMetaValue(metaKey, sourceMeta);
+    return (
+      (rawValue !== "" && rawValue !== "[object File]")
+      || pathMetaValue !== ""
+    );
   };
 
   const isSelectedDocFlagEnabled = (value) => {
@@ -190,22 +326,60 @@ const ProfileDashboard = () => {
 
   const resolveDocumentUrl = (metaKey) => {
     const rawValue = String(meta?.[metaKey] || "").trim();
-    if (!rawValue || rawValue === "[object File]") {
+    const pathMetaValue = getDocumentPathMetaValue(metaKey, meta);
+    const resolvedFileName = extractDocumentFileName(pathMetaValue || rawValue);
+    const hasRawValue = rawValue !== "" && rawValue !== "[object File]";
+    const hasPathMetaValue = pathMetaValue !== "";
+    if (!hasRawValue && !hasPathMetaValue) {
       return "";
     }
 
-    if (/^https?:\/\//i.test(rawValue)) {
+    // Already a full URL (new uploads or old records that stored full URLs)
+    if (hasRawValue && /^https?:\/\//i.test(rawValue)) {
       return rawValue;
     }
 
+    const isRetrievedAccount = Boolean(retrievedAccountContext?.isRetrieved);
+    const retrievedYear = String(retrievedAccountContext?.registeredYear || "").trim();
+    const retrievedDisplayName = String(
+      user?.name || user?.display_name || user?.username || retrievedAccountContext?.displayName || ""
+    ).trim();
+    const wordpressBaseUrl = getWordPressBaseUrl(user);
+
+    if (hasRawValue && isDocumentPathLikeValue(rawValue)) {
+      const resolvedUrlFromRawValue = resolveDocumentPathMetaToUrl(rawValue, wordpressBaseUrl);
+      if (resolvedUrlFromRawValue) {
+        return resolvedUrlFromRawValue;
+      }
+    }
+
+    if (isRetrievedAccount && hasPathMetaValue) {
+      const resolvedUrlFromPathMeta = resolveDocumentPathMetaToUrl(pathMetaValue, wordpressBaseUrl);
+      if (resolvedUrlFromPathMeta) {
+        return resolvedUrlFromPathMeta;
+      }
+    }
+
+    if (isRetrievedAccount && resolvedFileName && retrievedYear && retrievedDisplayName && wordpressBaseUrl) {
+      return `${wordpressBaseUrl}/wp-content/uploads/register-records-${encodeURIComponent(retrievedYear)}/${encodeURIComponent(retrievedDisplayName)}/${encodeURIComponent(resolvedFileName)}`;
+    }
+
+    // doc_base_url already includes the year folder + display_name subfolder,
+    // e.g. http://host/wp-content/uploads/register-records-2025/John Doe/
+    // It is set for migrated users; for regular users it equals profile_image_base_url + name.
+    const docBaseUrl = String(user?.doc_base_url || "").trim();
+    if (resolvedFileName && docBaseUrl) {
+      return `${docBaseUrl.replace(/\/$/, "")}/${encodeURIComponent(resolvedFileName)}`;
+    }
+
+    // Fallback: build from profile_image_base_url + display name
     const profileImageBaseUrl = String(user?.profile_image_base_url || "").trim();
     const folderName = String(user?.name || user?.username || "").trim();
-
-    if (!profileImageBaseUrl || !folderName) {
+    if (!resolvedFileName || !profileImageBaseUrl || !folderName) {
       return "";
     }
 
-    return `${profileImageBaseUrl}${encodeURIComponent(folderName)}/${encodeURIComponent(rawValue)}`;
+    return `${profileImageBaseUrl}${encodeURIComponent(folderName)}/${encodeURIComponent(resolvedFileName)}`;
   };
 
   const renderDocumentPreview = (metaKey, label) => {
@@ -605,6 +779,12 @@ const ProfileDashboard = () => {
         if (fileUrl) {
           acc[key] = fileUrl;
         }
+
+        const filePath = typeof fileInfo === "object" && fileInfo ? fileInfo.path : "";
+        if (filePath) {
+          acc[`${key}_path`] = filePath;
+        }
+
         return acc;
       }, {});
       const mergedMeta = { ...sanitizedPayload, ...uploadedFileMeta };
@@ -704,6 +884,20 @@ const ProfileDashboard = () => {
 
         const data = await response.json();
         setUser(data);
+        const storedRetrievedContext = getRetrievedAccountContext();
+        const storedEmail = String(storedRetrievedContext?.userEmail || "").trim().toLowerCase();
+        const currentUserEmail = String(data?.user_email || "").trim().toLowerCase();
+        const isRetrievedForCurrentUser = Boolean(storedRetrievedContext?.isRetrieved)
+          && storedEmail !== ""
+          && storedEmail === currentUserEmail;
+
+        if (isRetrievedForCurrentUser) {
+          setRetrievedAccountContext(storedRetrievedContext);
+        } else {
+          localStorage.removeItem(RETRIEVED_ACCOUNT_STORAGE_KEY);
+          setRetrievedAccountContext(null);
+        }
+
         const reviewModeKey = getUserReviewModeStorageKey(data?.id);
         setIsReviewMode(reviewModeKey ? localStorage.getItem(reviewModeKey) === "true" : false);
         const attendValue = String(data?.meta?.attend || "").trim().toLowerCase();
@@ -1070,7 +1264,9 @@ const ProfileDashboard = () => {
                     </div>
 
                     <div className="profile-info">
-                      <button type="button" onClick={nextStep} disabled={isSubmitting}>Next</button>
+                      <button type="button" onClick={nextStep} disabled={isSubmitting} aria-busy={isSubmitting}>
+                        {nextButtonContent}
+                      </button>
                     </div>
                   </>
                 ) : null}
@@ -1911,7 +2107,9 @@ const ProfileDashboard = () => {
                     <div className="profile-info">
                       <div style={{ display: "flex", gap: "10px" }}>
                         <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting}>Next</button>
+                        <button type="button" onClick={nextStep} disabled={isSubmitting} aria-busy={isSubmitting}>
+                          {nextButtonContent}
+                        </button>
                       </div>
                     </div>
                   </>
@@ -2728,7 +2926,9 @@ const ProfileDashboard = () => {
                     <div className="profile-info">
                       <div style={{ display: "flex", gap: "10px" }}>
                         <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting || isPassportValidationBlocking}>Next</button>
+                        <button type="button" onClick={nextStep} disabled={isSubmitting || isPassportValidationBlocking} aria-busy={isSubmitting}>
+                          {nextButtonContent}
+                        </button>
                       </div>
                     </div>
                   </>

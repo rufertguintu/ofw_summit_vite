@@ -153,8 +153,8 @@ const Records = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : "Returned"}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.user_registered}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                    <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-primary hover:text-primary-hover focus:outline-hidden focus:text-primary-focus disabled:opacity-50 " onClick={() => handleUserClick(user.id)}>View</button>
-                                    &nbsp;| <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-primary hover:text-primary-hover focus:outline-hidden focus:text-primary-focus disabled:opacity-50 " key={user.id} onClick={() => UpdateUserClick(user.id)}>Edit</button></td>
+                                    <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " onClick={() => handleUserClick(user.id)}>View</button>
+                                    &nbsp;| <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " key={user.id} onClick={() => UpdateUserClick(user.id)}>Edit</button></td>
                             </tr>
                         ))
                     )}

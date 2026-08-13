@@ -12,6 +12,8 @@ function DashboardTitle() {
         "/login": "Login",
         "/dashboard": "Dashboard",
         "/records": "Records",
+        "/global-records": "Global Records",
+        "/2024-records": "2024 Records",
     };
 
     const currentTitle = titles[location.pathname] || "Page";

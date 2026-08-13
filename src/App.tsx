@@ -11,6 +11,8 @@ import Login from "./pages/Login";
 import Online_Register from "./pages/Online_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
+import GlobalRecords from "./pages/GlobalRecords";
+import Records2024 from "./pages/Records2024";
 import ProfileDashboard from "./pages/ProfileDashboard";
 // import { Button } from "@/components/ui/button"
 import './App.css'
@@ -44,6 +46,8 @@ function App() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/records" element={<Records />} />
+          <Route path="/global-records" element={<GlobalRecords />} />
+          <Route path="/2024-records" element={<Records2024 />} />
         </Route>
 
       </Routes>
