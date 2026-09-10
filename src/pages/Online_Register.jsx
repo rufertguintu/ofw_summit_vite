@@ -5,7 +5,7 @@ import StepOne from "../components/StepOne";
 import StepTwo from "../components/StepTwo";
 import { fetchApi } from "../store/api";
 
-import logo from "../assets/2025-assets/section1-logo.png";
+import logo from "../assets/ofw-summit-15th.svg";
 import Loading from "../assets/loading-reg.gif";
 
 const RETRIEVED_ACCOUNT_STORAGE_KEY = "retrievedAccountContext";
@@ -15,6 +15,8 @@ const Online_Register = () => {
     const [step, setStep] = useState(1);
     const [checkingExisting, setCheckingExisting] = useState(false);
     const [checkError, setCheckError] = useState("");
+    const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+    const [alreadyRegisteredEmail, setAlreadyRegisteredEmail] = useState("");
     const [showExistingPrompt, setShowExistingPrompt] = useState(false);
     const [existingPromptError, setExistingPromptError] = useState("");
     const [retrievingExistingData, setRetrievingExistingData] = useState(false);
@@ -33,6 +35,7 @@ const Online_Register = () => {
         relative_company: "",
         company_relationship: "",
         company_relative_fullname: "",
+        type_registrant: 0,
         ofw_type: "",
         relationship: "",
         firstname_relative: "",
@@ -93,6 +96,8 @@ const Online_Register = () => {
     const handleStepOneNext = async () => {
         setCheckError("");
         setExistingPromptError("");
+        setAlreadyRegistered(false);
+        setAlreadyRegisteredEmail("");
         resetExistingPasswordStep();
 
         try {
@@ -108,6 +113,15 @@ const Online_Register = () => {
             const data = await response.json();
             if (!response.ok) {
                 setCheckError(data?.message || "Unable to validate existing registration.");
+                return;
+            }
+
+            // Stop the registration flow entirely when a matching account
+            // already exists in the current database, so the user can't
+            // spam duplicate registrations.
+            if (data?.already_registered) {
+                setAlreadyRegistered(true);
+                setAlreadyRegisteredEmail(data?.user_email || "");
                 return;
             }
 
@@ -205,143 +219,163 @@ const Online_Register = () => {
     return <>
         <div className="registration-page join-now-page join-register">
             <div className="custom-container">
-                <div className="registration-info">
-                    <div className="join-event-instruction">
-                        <img src={logo} alt=""/>
-                        <ul>
-                            <li>
-                                <h3>Step 1</h3>
-                                <h5>Pre-registration (Checking)</h5>
-                            </li>
-                            <li>
-                                <h3>Step 2</h3>
-                                <h5>Event Registration including Profile Update</h5>
-                            </li>
-                            <li>
-                                <h3>Step 3</h3>
-                                <h5>Account and Document Verification</h5>
-                            </li>
-                            <li>
-                                <h3>Step 4</h3>
-                                <h5>Attend the Event</h5>
-                            </li>
-                        </ul>
+                <div className="registration-wrapper">
+                    <div className="registration-info">
+                        <div className="join-event-instruction">
+                            <img src={logo} alt=""/>
+
+                            <h2>How to create an <span>Online Account</span></h2>
+                            <ul>
+                                <li><h5>1</h5>
+                                    <h4><strong>Pre-registration Checking</strong> — Verify user information and eligibility before registration.</h4>
+                                </li>
+                                <li>
+                                    <h5>2</h5>
+                                    <h4><strong>Complete your event registration</strong> while reviewing and updating your profile to keep your information accurate and up to date.</h4>
+                                </li>
+                                <li>
+                                    <h5>3</h5>
+                                    <h4><strong>Verify your account details and required documents</strong> to confirm your identity and ensure all information is accurate and valid.</h4>
+                                </li>
+                                <li>
+                                    <h5>4</h5>
+                                    <h4><strong>Join the fun, enjoy the event</strong>, and get a chance to win exciting prizes along the way!</h4>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="reg-form-section">
+                        {alreadyRegistered ? (
+                            <div className="match-record-result">
+                                <h3>You already have an account</h3>
+                                <p>
+                                    We found an existing registration{alreadyRegisteredEmail ? ` for ${alreadyRegisteredEmail}` : ""} in our current records.
+                                    To prevent duplicate registrations, please log in to your account or reset your password instead.
+                                </p>
+                                <div className="match-record-actions">
+                                    <button type="button" onClick={() => navigate("/login")}>
+                                        Go to Login
+                                    </button>
+                                    <button type="button" onClick={() => navigate("/forgot-password")}>
+                                        Reset Password
+                                    </button>
+                                </div>
+                            </div>
+                        ) : showExistingPrompt ? (
+                            <div className="match-record-result">
+                                <h3>You have been previously registered</h3>
+                                <p>
+                                    We found your record{matchedYear ? ` in ${matchedYear}` : ""}. Do you want to proceed with your previous data?
+                                </p>
+                                {existingPromptError && (
+                                    <p style={{ color: "red" }}>{existingPromptError}</p>
+                                )}
+                                {!showExistingPasswordStep ? (
+                                    <div className="match-record-actions">
+                                        <button type="button" onClick={handlePrepareExistingRegistration} disabled={retrievingExistingData}>
+                                            Proceed
+                                        </button>
+                                        <button type="button" onClick={handleManualRegister} disabled={retrievingExistingData}>
+                                            Manual Register
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="existing-account-password-step reg_fields">
+                                        <p className="existing-account-password-note">
+                                            Set a new password first. The Retrieve Account button will be enabled once your password is valid.
+                                        </p>
+                                        <div className="two-column_field">
+                                            <div className="two-column_inner-wrapper">
+                                                <div className="reg_field-cont">
+                                                    <label htmlFor="existing-password">New Password <span className="required-field">*</span></label>
+                                                    <input
+                                                        id="existing-password"
+                                                        type="password"
+                                                        value={existingPassword}
+                                                        onChange={(e) => {
+                                                            setExistingPassword(e.target.value);
+                                                            setExistingPasswordError("");
+                                                        }}
+                                                        placeholder="Enter new password"
+                                                    />
+                                                </div>
+                                                <div className="reg_field-cont">
+                                                    <label htmlFor="existing-confirm-password">Confirm Password <span className="required-field">*</span></label>
+                                                    <input
+                                                        id="existing-confirm-password"
+                                                        type="password"
+                                                        value={existingConfirmPassword}
+                                                        onChange={(e) => {
+                                                            setExistingConfirmPassword(e.target.value);
+                                                            setExistingPasswordError("");
+                                                        }}
+                                                        placeholder="Confirm new password"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {(existingPasswordError || shouldShowExistingPasswordValidation) && (existingPasswordError || getExistingPasswordValidationError()) && (
+                                            <p className="existing-account-password-error">
+                                                {existingPasswordError || getExistingPasswordValidationError()}
+                                            </p>
+                                        )}
+                                        {retrievingExistingData ? (
+                                            <div className="existing-account-loader">
+                                                <img src={Loading} width="160" alt="Retrieving account" />
+                                                <p>Retrieving account...</p>
+                                            </div>
+                                        ) : (
+                                            <div className="match-record-actions">
+                                                <button
+                                                    type="button"
+                                                    onClick={handleProceedExistingRegistration}
+                                                    disabled={!canRetrieveExistingAccount || retrievingExistingData}
+                                                    className={!canRetrieveExistingAccount || retrievingExistingData ? "disabled" : ""}
+                                                >
+                                                    Retrieve Account
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={handleManualRegister}
+                                                    disabled={retrievingExistingData}
+                                                >
+                                                    Manual Register
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <>
+                                {step === 1 && (
+                                    <StepOne
+                                        nextStep={handleStepOneNext}
+                                        handleChange={handleChange}
+                                        values={formData}
+                                        checkError={checkError}
+                                        checkingExisting={checkingExisting}
+                                    />
+                                )}
+                                {step === 2 && (
+                                    <StepTwo
+                                        nextStep={nextStep}
+                                        prevStep={prevStep}
+                                        handleChange={handleChange}
+                                        values={formData}
+                                    />
+                                )}
+                            </>
+                        )}
+
+
+                
+
+                        {/* DIto lalagay */}
                     </div>
                 </div>
-
-                <div className="reg-form-section">
-                    {showExistingPrompt ? (
-                        <div className="match-record-result">
-                            <h3>You have been previously registered</h3>
-                            <p>
-                                We found your record{matchedYear ? ` in ${matchedYear}` : ""}. Do you want to proceed with your previous data?
-                            </p>
-                            {existingPromptError && (
-                                <p style={{ color: "red" }}>{existingPromptError}</p>
-                            )}
-                            {!showExistingPasswordStep ? (
-                                <div className="match-record-actions">
-                                    <button type="button" onClick={handlePrepareExistingRegistration} disabled={retrievingExistingData}>
-                                        Proceed
-                                    </button>
-                                    <button type="button" onClick={handleManualRegister} disabled={retrievingExistingData}>
-                                        Manual Register
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="existing-account-password-step reg_fields">
-                                    <p className="existing-account-password-note">
-                                        Set a new password first. The Retrieve Account button will be enabled once your password is valid.
-                                    </p>
-                                    <div className="two-column_field">
-                                        <div className="two-column_inner-wrapper">
-                                            <div className="reg_field-cont">
-                                                <label htmlFor="existing-password">New Password <span className="required-field">*</span></label>
-                                                <input
-                                                    id="existing-password"
-                                                    type="password"
-                                                    value={existingPassword}
-                                                    onChange={(e) => {
-                                                        setExistingPassword(e.target.value);
-                                                        setExistingPasswordError("");
-                                                    }}
-                                                    placeholder="Enter new password"
-                                                />
-                                            </div>
-                                            <div className="reg_field-cont">
-                                                <label htmlFor="existing-confirm-password">Confirm Password <span className="required-field">*</span></label>
-                                                <input
-                                                    id="existing-confirm-password"
-                                                    type="password"
-                                                    value={existingConfirmPassword}
-                                                    onChange={(e) => {
-                                                        setExistingConfirmPassword(e.target.value);
-                                                        setExistingPasswordError("");
-                                                    }}
-                                                    placeholder="Confirm new password"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {(existingPasswordError || shouldShowExistingPasswordValidation) && (existingPasswordError || getExistingPasswordValidationError()) && (
-                                        <p className="existing-account-password-error">
-                                            {existingPasswordError || getExistingPasswordValidationError()}
-                                        </p>
-                                    )}
-                                    {retrievingExistingData ? (
-                                        <div className="existing-account-loader">
-                                            <img src={Loading} width="160" alt="Retrieving account" />
-                                            <p>Retrieving account...</p>
-                                        </div>
-                                    ) : (
-                                        <div className="match-record-actions">
-                                            <button
-                                                type="button"
-                                                onClick={handleProceedExistingRegistration}
-                                                disabled={!canRetrieveExistingAccount || retrievingExistingData}
-                                                className={!canRetrieveExistingAccount || retrievingExistingData ? "disabled" : ""}
-                                            >
-                                                Retrieve Account
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={handleManualRegister}
-                                                disabled={retrievingExistingData}
-                                            >
-                                                Manual Register
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <>
-                            {step === 1 && (
-                                <StepOne
-                                    nextStep={handleStepOneNext}
-                                    handleChange={handleChange}
-                                    values={formData}
-                                    checkError={checkError}
-                                    checkingExisting={checkingExisting}
-                                />
-                            )}
-                            {step === 2 && (
-                                <StepTwo
-                                    nextStep={nextStep}
-                                    prevStep={prevStep}
-                                    handleChange={handleChange}
-                                    values={formData}
-                                />
-                            )}
-                        </>
-                    )}
-
-
-			
-
-                    {/* DIto lalagay */}
-                </div>
+                
             </div>
         </div>
         </>

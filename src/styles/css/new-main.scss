@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+body{
+	position: relative;
+	font-family: 'Montserrat', sans-serif;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 31.5px;
+	color: #000;
+    overflow-x: hidden;
+
+    h1{
+        font-size: 4rem;
+    }
+
+    h2{
+        font-size: 3rem;
+    }
+
+    h3{
+        font-size: 2rem;
+    }
+}
+
+header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 25px 0;
+    background-color: transparent;
+    
+    .custom-container{
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 0 15px;
+
+        .main-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .header-logo{
+                flex: 1;
+            }
+
+            .header-nav{
+                flex: 2;
+                
+                ul{
+                    padding-left: 0;
+                    margin-bottom: 0;
+                    display: flex;
+                    flex-direction: row;
+                    list-style: none;
+                    justify-content: flex-end;
+                    gap: 20px;
+
+                    li{
+                        position: relative;
+
+                        &:hover{
+
+                            a{
+                                color: #FE6601;
+                                transition: color 0.3s ease;
+                            }
+                            &:before{
+                                width: 20px;
+                                transition: all 0.3s ease;
+                            }
+                        }
+
+                        &:before{
+                            position: absolute;
+                            content: '';
+                            bottom: -5px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: 0;
+                            height: 5px;
+                            border-radius: 10px;
+                            background-color: #FE6601;
+                            transition: all 0.3s ease;
+                        }
+
+                        &.has-child{
+                            position: relative;
+                            &:hover .child-nav{
+                                visibility: visible;
+                                display: block;
+                            }
+
+                            .child-nav{
+                                position: absolute;
+                                top: 100%;
+                                left: 0;
+                                background-color: #fff;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                visibility: hidden;
+                                display: none;
+                                width: 200px;
+                            }
+                        }
+                        a{
+                            text-decoration: none;
+                            color: inherit;
+                            font-weight: 500;
+                            transition: color 0.3s ease;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.userlayout{
+    position: relative;
+    background-color: #f5f5f5;
+
+    .custom-container{
+        width: 90%;
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+
+    &:before{
+        content: "";
+        position: fixed;
+        top: 50px;
+        right: -377px;
+        width: 815px;
+        height: 815px;
+        background: #FE6701;
+        background: radial-gradient(circle at center, #FE6701 0%, #F5F5F5 71%);
+        opacity: 0.5;
+        z-index: 1;
+    }
+
+    &:after{
+        content: "";
+        position: fixed;
+        bottom: -500px;
+        left: -477px;
+        width: 815px;
+        height: 815px;
+        background: #FE6701;
+        background: radial-gradient(circle at center, #FE6701 0%, #F5F5F5 71%);
+        opacity: 0.5;
+        z-index: 1;
+    }
+
+    .registration-page{
+        position: relative;
+        z-index: 2;
+        padding: 200px 0;
+
+        .registration-wrapper{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 50px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+
+            .registration-info{
+                flex: 50%;
+                img{
+                    margin-bottom: 30px;
+                }
+
+                h2{
+                    font-weight: 700;
+                    margin-bottom: 30px;
+                    span{
+                        color: #FE6701;
+                    }
+                }
+
+                ul{
+                    position: relative;
+                    padding-left: 70px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 50px;
+
+                    &:after{
+                        content: "";
+                        position: absolute;
+                        top: 50px;
+                        left: 16px;
+                        width: 4px;
+                        height: 340px;
+                        background-color: #EFEFEF;
+                        z-index: 1;
+                    }
+
+                    li{
+                        position: relative;
+                        display: block;
+                        z-index: 2;
+                        
+                        h5{
+                            position: absolute;
+                            top: 0;
+                            left: -70px;
+                            padding: 5px 13px;
+                            background-color: #FE6701;
+                            color: #fff;
+                            border-radius: 50%;
+                            text-align: center;
+                        }
+                    }
+                }
+            }
+
+            .reg-form-section{
+                flex: 50%;
+                padding: 47px;
+                /* From https://css.glass */
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 16px;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+
+                h2{
+                    margin-bottom: 30px;
+                }
+
+                .reg_fields{
+                    
+                }
+            }
+        }
+    }
+}

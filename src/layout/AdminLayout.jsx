@@ -8,9 +8,10 @@ const CONTRIBUTOR_ADMIN_STYLE_ID = "contributor-admin-style";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const isContributor = localStorage.getItem("role") === "contributor";
 
   useEffect(() => {
-    if (localStorage.getItem("role") !== "contributor") {
+    if (!isContributor) {
       document.getElementById(CONTRIBUTOR_ADMIN_STYLE_ID)?.remove();
       return undefined;
     }
@@ -53,6 +54,9 @@ export default function AdminLayout() {
             <li><Link to="/records" className="no-underline">Records</Link></li>
             <li><Link to="/global-records" className="no-underline">Global Records</Link></li>
             <li><Link to="/2024-records" className="no-underline">2024 Records</Link></li>
+            {isContributor && (
+              <li><Link to="/export-data" className="no-underline">Export of Data</Link></li>
+            )}
             <li><a href="" className="no-underline">2023 Records</a></li>
             <li><a href="" className="no-underline">2022 Records</a></li>
             <li><button onClick={logout}>

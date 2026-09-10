@@ -27,6 +27,11 @@ const Dashboard = () => {
             .catch(err => console.error(err));
     }, []);
 
+    useEffect(() => {
+        console.log("DATA:");
+        console.table(data);
+    }, [data]);
+    
     const getUser = async (token) => {
         try {
             const res = await fetchApi("/wp-json/wp/v2/users/me");

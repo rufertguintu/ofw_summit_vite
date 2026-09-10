@@ -83,7 +83,7 @@ const Records = () => {
     return <>
         <h1 className="px-10">Records</h1>
 
-        <ModalRecord isOpen={open} userdata={selectedUser} Modalloading={Modalloading} onClose={() => { setOpen(false); setSelectedUser(null); }}>
+        <ModalRecord isOpen={open} userdata={selectedUser} Modalloading={Modalloading} setUsers={setUsers} onClose={() => { setOpen(false); setSelectedUser(null); }}>
             <h2>User Details</h2>
             <p>This is your popup content</p>
         </ModalRecord>
@@ -148,13 +148,14 @@ const Records = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{user.id}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.email}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.type_registrant == 0 ? "Online Registrant" : user.type_registrant == 1 ? "Mall Registrant" : user.type_registrant == 2 ? "Onsite Registrant" : user.type_registrant == 3 ? "Networker" : "OWWA Member"}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.ofw_type == 0 ? "OFW" : "Relative of OFW"}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.type_registrant} - {user.type_registrant == 0 ? "Online Registrant" : user.type_registrant == 1 ? "Mall Registrant" : user.type_registrant == 2 ? "Onsite Registrant" : user.type_registrant == 3 ? "Networker" : "OWWA Member"}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.ofw_type} - {user.ofw_type == 0 ? "OFW" : "Relative of OFW"}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : "Returned"}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.user_registered}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                     <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " onClick={() => handleUserClick(user.id)}>View</button>
-                                    &nbsp;| <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " key={user.id} onClick={() => UpdateUserClick(user.id)}>Edit</button></td>
+                                    &nbsp;| <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " key={user.id} onClick={() => UpdateUserClick(user.id)}>Edit</button>
+                                    &nbsp;| <Link className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " to={`/records/${user.id}/view-profile`}>View Profile</Link></td>
                             </tr>
                         ))
                     )}

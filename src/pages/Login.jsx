@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Logo from "../assets/2025-assets/section1-logo.png";
 import Loading from "../assets/loading-reg.gif";
@@ -102,7 +103,7 @@ function Login() {
               </div>
             </div>
             <div className="two-column_fields">
-              <div className="reg_field-cont"><a href="" target="_blank">Nakalimutan ang password?</a></div>
+              <div className="reg_field-cont"><Link to="/forgot-password">Nakalimutan ang password?</Link></div>
             </div>
             <div className="one-column_field">
               <div id="message"></div>

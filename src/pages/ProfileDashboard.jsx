@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import ReviewInfo from "../components/ReviewInfo";
 import { fetchApi } from "../store/api";
 
@@ -167,6 +168,68 @@ const getUserReviewModeStorageKey = (userId) => {
   return `${REVIEW_MODE_STORAGE_PREFIX}:${userId}`;
 };
 
+const qrButtonStyle = {
+  border: "none",
+  background: "#2563eb",
+  color: "#fff",
+  padding: "8px 14px",
+  borderRadius: "8px",
+  cursor: "pointer",
+  fontSize: "13px",
+  fontWeight: 600,
+};
+
+const qrOverlayStyle = {
+  position: "fixed",
+  inset: 0,
+  background: "rgba(15, 23, 42, 0.65)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "20px",
+  zIndex: 9999,
+};
+
+const qrModalStyle = {
+  background: "#fff",
+  borderRadius: "16px",
+  width: "100%",
+  maxWidth: "360px",
+  padding: "24px",
+  boxShadow: "0 20px 45px rgba(0, 0, 0, 0.2)",
+};
+
+const qrModalHeaderStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: "12px",
+  marginBottom: "20px",
+};
+
+const qrCloseButtonStyle = {
+  border: "none",
+  background: "#e5e7eb",
+  color: "#111827",
+  padding: "8px 14px",
+  borderRadius: "8px",
+  cursor: "pointer",
+};
+
+const qrModalBodyStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "12px",
+};
+
+const qrHintStyle = {
+  margin: 0,
+  textAlign: "center",
+  color: "#374151",
+  fontSize: "14px",
+};
+
 const getStoredUserId = () => {
   try {
     return JSON.parse(localStorage.getItem("user") || "null")?.id || "";
@@ -196,6 +259,7 @@ const ProfileDashboard = () => {
 
   
   const [user, setUser] = useState(null);
+  const [admin_verified, setAdminVerified] = useState(null);
   const [regions, setRegions] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
@@ -214,6 +278,7 @@ const ProfileDashboard = () => {
   const [step, setStep] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(getInitialReviewMode);
   const [retrievedAccountContext, setRetrievedAccountContext] = useState(getRetrievedAccountContext);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const profileImageUrl = user?.profile_picture_url || `${imgsrc}unknown.jpg`;
   const meta = user?.meta || {};
 
@@ -225,6 +290,7 @@ const ProfileDashboard = () => {
   const [civil_status, setCivilStatus] = useState("");
   const [mobile, setMobile] = useState("");
   const [source_info, setSourceInfo] = useState("");
+  const [manning_agency, setManningAgency] = useState("");
   const [gender, setGender] = useState("");
   const [landline, setLandline] = useState("");
   const [passportId, setPassportId] = useState("");
@@ -327,25 +393,34 @@ const ProfileDashboard = () => {
   const resolveDocumentUrl = (metaKey) => {
     const rawValue = String(meta?.[metaKey] || "").trim();
     const pathMetaValue = getDocumentPathMetaValue(metaKey, meta);
-    const resolvedFileName = extractDocumentFileName(pathMetaValue || rawValue);
+    // rawValue stores a full URL for new uploads, or just the filename for
+    // retrieved accounts. Fall back to pathMetaValue for any legacy path meta.
+    const resolvedFileName = extractDocumentFileName(rawValue || pathMetaValue);
     const hasRawValue = rawValue !== "" && rawValue !== "[object File]";
     const hasPathMetaValue = pathMetaValue !== "";
     if (!hasRawValue && !hasPathMetaValue) {
       return "";
     }
 
-    // Already a full URL (new uploads or old records that stored full URLs)
+    const wordpressBaseUrl = getWordPressBaseUrl(user);
+
+    // New uploads store the full URL directly — return it as-is.
     if (hasRawValue && /^https?:\/\//i.test(rawValue)) {
       return rawValue;
     }
 
-    const isRetrievedAccount = Boolean(retrievedAccountContext?.isRetrieved);
-    const retrievedYear = String(retrievedAccountContext?.registeredYear || "").trim();
-    const retrievedDisplayName = String(
-      user?.name || user?.display_name || user?.username || retrievedAccountContext?.displayName || ""
+    // Retrieved accounts store only the filename. Build the URL using the
+    // original display_name under the shared register-records folder.
+    const displayName = String(
+      meta?.doc_display_name || user?.name || user?.display_name || user?.username ||
+      retrievedAccountContext?.displayName || ""
     ).trim();
-    const wordpressBaseUrl = getWordPressBaseUrl(user);
 
+    if (resolvedFileName && displayName && wordpressBaseUrl) {
+      return `${wordpressBaseUrl}/wp-content/uploads/register-records/${encodeURIComponent(displayName)}/${encodeURIComponent(resolvedFileName)}`;
+    }
+
+    // Fallback: legacy path/URL stored in meta.
     if (hasRawValue && isDocumentPathLikeValue(rawValue)) {
       const resolvedUrlFromRawValue = resolveDocumentPathMetaToUrl(rawValue, wordpressBaseUrl);
       if (resolvedUrlFromRawValue) {
@@ -353,26 +428,13 @@ const ProfileDashboard = () => {
       }
     }
 
-    if (isRetrievedAccount && hasPathMetaValue) {
-      const resolvedUrlFromPathMeta = resolveDocumentPathMetaToUrl(pathMetaValue, wordpressBaseUrl);
-      if (resolvedUrlFromPathMeta) {
-        return resolvedUrlFromPathMeta;
-      }
-    }
-
-    if (isRetrievedAccount && resolvedFileName && retrievedYear && retrievedDisplayName && wordpressBaseUrl) {
-      return `${wordpressBaseUrl}/wp-content/uploads/register-records-${encodeURIComponent(retrievedYear)}/${encodeURIComponent(retrievedDisplayName)}/${encodeURIComponent(resolvedFileName)}`;
-    }
-
-    // doc_base_url already includes the year folder + display_name subfolder,
-    // e.g. http://host/wp-content/uploads/register-records-2025/John Doe/
-    // It is set for migrated users; for regular users it equals profile_image_base_url + name.
+    // doc_base_url: http://host/wp-content/uploads/register-records/{display_name}/
     const docBaseUrl = String(user?.doc_base_url || "").trim();
     if (resolvedFileName && docBaseUrl) {
       return `${docBaseUrl.replace(/\/$/, "")}/${encodeURIComponent(resolvedFileName)}`;
     }
 
-    // Fallback: build from profile_image_base_url + display name
+    // Last resort: build from profile_image_base_url + display name.
     const profileImageBaseUrl = String(user?.profile_image_base_url || "").trim();
     const folderName = String(user?.name || user?.username || "").trim();
     if (!resolvedFileName || !profileImageBaseUrl || !folderName) {
@@ -552,6 +614,8 @@ const ProfileDashboard = () => {
   };
 
   const nextStep = async () => {
+    if (!isStepValid()) { return; }
+
     if (step === 3) {
       if (normalizedPassportId === "") {
         setPassportValidationState("invalid");
@@ -607,6 +671,83 @@ const ProfileDashboard = () => {
     select_docs5: "Allotment Certificate",
     select_docs6: "Seaman's Book",
   }).filter(([key]) => isSupportingDocChecked(key)).map(([, label]) => label);
+
+
+const isStepValid = () => {
+  switch (step) {
+    case 1:
+      // Attendance is required
+      return Boolean(attend && attendType);
+
+    case 2:
+      // All fields marked as required in Step 2
+      return Boolean(
+        address.trim() &&
+        currentLocation.trim() &&
+        selectedRegion &&
+        selectedProvince &&
+        selectedCity &&
+        selectedBarangay &&
+        civil_status &&
+        gender &&
+        mobile.trim() &&
+        source_info
+      );
+
+    case 3:
+      // Passport ID must be filled and successfully validated
+      if (
+        !passportId.trim() ||
+        passportValidationState === "checking" ||
+        passportValidationState === "invalid" ||
+        passportValidationState === "duplicate" ||
+        passportValidationState === "error"
+      ) {
+        return false;
+      }
+
+      // OWWA membership is required
+      if (!owwaMember) {
+        return false;
+      }
+
+      // These are required for a relative of an OFW
+      if (!isOfwTypeOne) {
+        if (
+          !ofwFirstname.trim() ||
+          !ofwMiddlename.trim() ||
+          !ofwLastname.trim() ||
+          !ofw_status ||
+          !ofw_profession.trim() ||
+          !ofw_emailaddress.trim() ||
+          !workCountry ||
+          !ofwYearService
+        ) {
+          return false;
+        }
+
+        if (!relationship) {
+          return false;
+        }
+      }
+
+      return true;
+
+    case 4:
+      // Passport file is required.
+      // Also allow an already-uploaded passport document.
+      return Boolean(
+        passportFile ||
+        hasDocumentData("passport")
+      );
+
+    default:
+      return false;
+  }
+};
+
+const isCurrentStepValid = isStepValid();
+
 
   const saveCurrentStep = async () => {
     let payload = {};
@@ -694,6 +835,20 @@ const ProfileDashboard = () => {
     3: "Networker Registrant",
     4: "OWWA Registrant",
   }[meta.type_registrant] || "Not provided";
+
+  const adminVerifiedLabel = {
+    0: "incomplete",
+    1: "rejected",
+    2: "verified",
+    3: "return",
+  }[meta.admin_verified] || "Not provided";
+
+  // QR code is only available once the admin has fully verified the user.
+  const isAdminVerified = Number(meta.admin_verified) === 2;
+  const profileViewUrl = user?.id
+    ? `${window.location.origin}/records/${user.id}/view-profile`
+    : "";
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -783,6 +938,11 @@ const ProfileDashboard = () => {
         const filePath = typeof fileInfo === "object" && fileInfo ? fileInfo.path : "";
         if (filePath) {
           acc[`${key}_path`] = filePath;
+        }
+
+        const uploadedYear = typeof fileInfo === "object" && fileInfo ? fileInfo.year : "";
+        if (uploadedYear) {
+          acc[`${key}_uploaded_year`] = String(uploadedYear);
         }
 
         return acc;
@@ -886,7 +1046,7 @@ const ProfileDashboard = () => {
         setUser(data);
         const storedRetrievedContext = getRetrievedAccountContext();
         const storedEmail = String(storedRetrievedContext?.userEmail || "").trim().toLowerCase();
-        const currentUserEmail = String(data?.user_email || "").trim().toLowerCase();
+        const currentUserEmail = String(data?.email || data?.user_email || "").trim().toLowerCase();
         const isRetrievedForCurrentUser = Boolean(storedRetrievedContext?.isRetrieved)
           && storedEmail !== ""
           && storedEmail === currentUserEmail;
@@ -1132,7 +1292,14 @@ const ProfileDashboard = () => {
           ) : null}
 
           {isReviewMode ? (
-            <ReviewInfo values={user?.meta ?? {}} onEdit={handleReviewEdit}></ReviewInfo>
+            <ReviewInfo
+              values={user?.meta ?? {}}
+              onEdit={handleReviewEdit}
+              displayName={String(meta?.doc_display_name || user?.name || user?.display_name || user?.username || "").trim()}
+              wordpressBaseUrl={getWordPressBaseUrl(user)}
+              userId={user?.id}
+              adminVerified={meta?.admin_verified}
+            />
           ) : (
             <form onSubmit={handleSubmit}>
  
@@ -1163,7 +1330,7 @@ const ProfileDashboard = () => {
           <div className="profile-info-wrapper">
             <div className="basic-info">
               <div className="verified-acct">
-                <img src={`${imgsrc}status/incomplete.svg`} alt="Incomplete"/>
+                <img src={`${imgsrc}status/${adminVerifiedLabel}.svg`} alt="${adminVerifiedLabel}"/>
               </div>
 
               <div className="basic-info-inner">
@@ -1185,8 +1352,20 @@ const ProfileDashboard = () => {
                 </div>
 
                 <div className="profile-info">
-                  <h5>Email: {user?.email ?? "N/A"} || OFW Type: {user?.meta?.ofw_type ?? "N/A"}</h5>
+                  <h5>Email: {user?.email ?? "N/A"}</h5>
                 </div>
+
+                {isAdminVerified ? (
+                  <div className="profile-info">
+                    <button
+                      type="button"
+                      onClick={() => setIsQrModalOpen(true)}
+                      style={qrButtonStyle}
+                    >
+                      View QR Code
+                    </button>
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -1264,7 +1443,7 @@ const ProfileDashboard = () => {
                     </div>
 
                     <div className="profile-info">
-                      <button type="button" onClick={nextStep} disabled={isSubmitting} aria-busy={isSubmitting}>
+                      <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
                         {nextButtonContent}
                       </button>
                     </div>
@@ -2101,13 +2280,18 @@ const ProfileDashboard = () => {
                           </select>
                         {/* )} */}  
                       </div>
+                      {source_info === "Manning Agency" && (
+                        <div className="fill-info">
+                          <input type="text" name="manning_agency" placeholder="Please specify" value={manning_agency} onChange={(e) => setManningAgency(e.target.value)} />
+                        </div>
+                        )}
                   </div>
                 </div>
 
                     <div className="profile-info">
                       <div style={{ display: "flex", gap: "10px" }}>
                         <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting} aria-busy={isSubmitting}>
+                        <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
                           {nextButtonContent}
                         </button>
                       </div>
@@ -2165,7 +2349,7 @@ const ProfileDashboard = () => {
                   <div className="field-wrap">
                       <div className="fill-info upload-docs">
                           
-                          <input type="file" className="upload-file-input" name="file" id="file" accept="image/png, application/pdf, image/jpeg" onChange={(e) => setPassportFile(e.target.files?.[0] || null)} />
+                          <input type="file" className="upload-file-input" name="file" id="file" accept="image/png, application/pdf, image/jpeg" onChange={(e) => setPassportFile(e.target.files?.[0] || null)} required />
                           {renderDocumentPreview("passport", "Passport")}
                           {/* <div className="upload-msg alert alert-success" id="passport-msg"></div> */}
                       </div>
@@ -2191,7 +2375,7 @@ const ProfileDashboard = () => {
                       </div>
                   </div>
                 </div>
-
+                {owwaMember === "yes" && (
                 <div className="profile-info" id="owwa_ofw_id">
                   <label>OWWA OFW ID No. </label>
                   <div className="field-wrap">
@@ -2204,7 +2388,7 @@ const ProfileDashboard = () => {
                       </div>
                   </div>
                 </div>
-                
+                )}
                 {!isOfwTypeOne ? (
                   <>
                     {/* Relative of OFW */}
@@ -2926,7 +3110,7 @@ const ProfileDashboard = () => {
                     <div className="profile-info">
                       <div style={{ display: "flex", gap: "10px" }}>
                         <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting || isPassportValidationBlocking} aria-busy={isSubmitting}>
+                        <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid || isPassportValidationBlocking} aria-busy={isSubmitting}>
                           {nextButtonContent}
                         </button>
                       </div>
@@ -3117,7 +3301,7 @@ const ProfileDashboard = () => {
                 <div className="profile-info">
                   <div style={{ display: "flex", gap: "10px" }}>
                     <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                    <input type="submit" name="profile_submit" disabled={isSubmitting || isPassportValidationBlocking} />
+                    <button type="submit" name="profile_submit" disabled={ isSubmitting || isPassportValidationBlocking || !isStepValid() } aria-busy={isSubmitting} style={{ minWidth: "120px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", }} > {isSubmitting ? ( <> <span className="spinner-border spinner-border-sm" aria-hidden="true" /> <span>Submitting...</span> </> ) : ( "Submit" )} </button>
                   </div>
                 </div>
                   </>
@@ -3129,6 +3313,30 @@ const ProfileDashboard = () => {
             </form>
           )}
         </div>
+
+        {isQrModalOpen ? (
+          <div style={qrOverlayStyle} onClick={() => setIsQrModalOpen(false)}>
+            <div style={qrModalStyle} onClick={(e) => e.stopPropagation()}>
+              <div style={qrModalHeaderStyle}>
+                <h4 style={{ margin: 0 }}>Your QR Code</h4>
+                <button type="button" onClick={() => setIsQrModalOpen(false)} style={qrCloseButtonStyle}>
+                  Close
+                </button>
+              </div>
+
+              <div style={qrModalBodyStyle}>
+                {profileViewUrl ? (
+                  <>
+                    <QRCodeSVG value={profileViewUrl} size={220} includeMargin />
+                    <p style={qrHintStyle}>Scan this QR code to view your profile.</p>
+                  </>
+                ) : (
+                  <p style={qrHintStyle}>Unable to generate QR code.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : null}
     </div>
   );
 };

@@ -8,12 +8,18 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import AboutUs from "./pages/AboutUs";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Online_Register from "./pages/Online_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
 import GlobalRecords from "./pages/GlobalRecords";
 import Records2024 from "./pages/Records2024";
+import ExportData from "./pages/ExportData";
 import ProfileDashboard from "./pages/ProfileDashboard";
+import ViewProfile from "./pages/ViewProfile";
+import OnsiteRegistration from "./pages/OnsiteRegistration";
+import NetworkerRegistration from "./pages/NetworkerRegistration";
 // import { Button } from "@/components/ui/button"
 import './App.css'
 
@@ -28,7 +34,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/online-register" element={<Online_Register />} />
+          <Route path="/onsite-registration" element={<OnsiteRegistration />} />
+          <Route path="/networker-registration" element={<NetworkerRegistration />} />
           <Route path="/profile-dashboard" element={<ProfileDashboard />} />
         </Route>
 
@@ -46,8 +56,10 @@ function App() {
         >
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/records" element={<Records />} />
+          <Route path="/records/:id/view-profile" element={<ViewProfile />} />
           <Route path="/global-records" element={<GlobalRecords />} />
           <Route path="/2024-records" element={<Records2024 />} />
+          <Route path="/export-data" element={<ExportData />} />
         </Route>
 
       </Routes>

@@ -21,28 +21,26 @@ export default function StepOne({ nextStep, handleChange, values, checkError = "
         /^09\d{9}$/.test(values.mobile);
 
     return <>
-        <h2>Join Event</h2>
+        <h2>Pre-registration</h2>
         <div className="reg_fields">
-            <div className="two-column_field mb-5">
-                <div className="two-column_inner-wrapper">
-                    <div className="reg_field-cont">
-                        <label>First Name (Pangalan) *</label>
-                        <input type="text" name="firstname" placeholder="First Name" required value={values.firstname} onChange={handleChange("firstname")} onBlur={() => setTouched({ ...touched, firstname: true })}/>
-                        {!values.firstname.trim() && touched.firstname && (
-                            <p style={{ color: "red" }}>
-                            First Name is required 
-                            </p>
-                        )}
-                    </div>
-                    <div className="reg_field-cont">
-                        <label>Last Name (Apelyido) *</label>
-                        <input type="text" name="lastname" placeholder="Last Name" required value={values.lastname} onChange={handleChange("lastname")} onBlur={() => setTouched({ ...touched, lastname: true })} />
-                        {!values.lastname.trim() && touched.lastname && (
-                            <p style={{ color: "red" }}>
-                            Last Name is required 
-                            </p>
-                        )}
-                    </div>
+            <div className="column_field flex flex-col">
+                <div className="reg_field-cont">
+                    <label>First Name (Pangalan) *</label>
+                    <input type="text" name="firstname" placeholder="First Name" required value={values.firstname} onChange={handleChange("firstname")} onBlur={() => setTouched({ ...touched, firstname: true })}/>
+                    {!values.firstname.trim() && touched.firstname && (
+                        <p style={{ color: "red" }}>
+                        First Name is required 
+                        </p>
+                    )}
+                </div>
+                <div className="reg_field-cont">
+                    <label>Last Name (Apelyido) *</label>
+                    <input type="text" name="lastname" placeholder="Last Name" required value={values.lastname} onChange={handleChange("lastname")} onBlur={() => setTouched({ ...touched, lastname: true })} />
+                    {!values.lastname.trim() && touched.lastname && (
+                        <p style={{ color: "red" }}>
+                        Last Name is required 
+                        </p>
+                    )}
                 </div>
             </div>
             <div className="one-column_field mb-5">

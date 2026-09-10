@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 
-import logo from "../assets/2024-logo.svg";
+import logo from "../assets/ofw-summit-logo-orange.svg";
 
 const HeaderLayout = () => {
     const navigate = useNavigate();
@@ -18,39 +18,37 @@ const HeaderLayout = () => {
         <header>
             <div className="custom-container">
                 <div className="main-header">
-                <div className="header-logo">
-                    <Link to="/"><img src={logo} alt="" width="200"/></Link>
-                </div>
-                <div className="header-nav">
-                    <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/about-us">About Us</Link></li>
-                    {token ? (
-                        <>
-                        <li><Link to="/">Profile</Link></li>
-                        <li><button onClick={logout}>Logout</button></li>
-                        </>
-                    ) : (
-                        <>
-                        <li className="has-child">
-                            <Link to="/">Join Event</Link>
-                            <ul className="child-nav">
-                            <li><Link to="/online-register">Online Register</Link></li>
-                            <li><Link to="/">Mall Register</Link></li>
-                            <li><Link to="/">On-site Register</Link></li>
-                            <li><Link to="/">Networker</Link></li>
-                            </ul>
-                        </li>
-                        <li><Link to="/login">Login</Link></li>
-                        </>
-                    )}
-                    </ul>
-                </div>
+                    <div className="header-logo">
+                        <Link to="/"><img src={logo} alt="" width="200"/></Link>
+                    </div>
+                    <div className="header-nav">
+                        <ul>
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/about-us">About Us</Link></li>
+                            {token ? (
+                                <>
+                                    <li><Link to="/">Profile</Link></li>
+                                    <li><button onClick={logout}>Logout</button></li>
+                                </>
+                            ) : (
+                                <>
+                                    {/* <li className="has-child">
+                                        <Link to="/">Join Event</Link>
+                                        <ul className="child-nav">
+                                            <li><Link to="/online-register">Online Register</Link></li>
+                                        </ul>
+                                    </li> */}
+                                    <li><Link to="/online-register">Join Event</Link></li>
+                                    <li><Link to="/login">Login</Link></li>
+                                </>
+                            )}
+                        </ul>
+                    </div>
                 </div>
             </div>
-            </header>
+        </header>
 
-            <nav role="navigation">
+            {/* <nav role="navigation">
             <div id="menuToggle">
                 <input type="checkbox" />
                 <span className="first-span"></span>
@@ -65,7 +63,7 @@ const HeaderLayout = () => {
                 <li><Link to="/">Logout</Link></li>
             </ul>
             </div>
-            </nav>
+            </nav> */}
     </>
 }
 

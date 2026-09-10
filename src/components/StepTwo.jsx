@@ -10,11 +10,16 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
     const [loading, setLoading] = useState(false);
     const [termsEnabled, setTermsEnabled] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
 
     const setFieldError = (field, message) => {
         setErrorField(field);
-        setEmailError(message);
+        if (field === "Email Address") {
+            setEmailError(message);
+        } else if (field === "Password") {
+            setPasswordError(message);
+        }
     };
 
     useEffect(() => {
@@ -70,12 +75,41 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
         await validateEmailAddress(email);
     };
 
+    const validatePasswordMatch = () => {
+        if (values.password !== values.confirmpw) {
+            setPasswordError("Passwords do not match.");
+            return false;
+        }
+
+        setPasswordError("");
+        return true;
+    };
+
+    useEffect(() => {
+        // Don't show error until user starts typing confirm password
+        if (!values.confirmpw) {
+            setPasswordError("");
+            return;
+        }
+
+        if (values.password !== values.confirmpw) {
+            setPasswordError("Passwords do not match.");
+        } else {
+            setPasswordError("");
+            setTermsEnabled(true);
+        }
+    }, [values.password, values.confirmpw]);
+
     const handleSubmit = async () => {
         try {
             const email = (values.emailaddress || values.email || "").trim();
             const isValidEmail = await validateEmailAddress(email);
 
             if (!isValidEmail) {
+                return;
+            }
+
+            if (!validatePasswordMatch()) {
                 return;
             }
 
@@ -288,12 +322,50 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             <div className="two-column_field">
                 <div className="two-column_inner-wrapper">
                     <div className="reg_field-cont">
-                        <label>Password <span className="required-field">*</span></label>
-                        <input type="password" name="password" placeholder="Password" required value={values.password} onChange={handleChange("password")}/>
+                        <label>
+                            Password <span className="required-field">*</span>
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            required
+                            value={values.password}
+                            onChange={handleChange("password")}
+                            style={{
+                                borderColor: passwordError ? "#e11d48" : undefined,
+                            }}
+                        />
                     </div>
                     <div className="reg_field-cont">
-                        <label>Confirm Password <span className="required-field">*</span></label>
-                        <input type="password" name="confirmpw" placeholder="Confirm Password" required value={values.confirmpw} onChange={handleChange("confirmpw")}/>
+                        <label>
+                            Confirm Password <span className="required-field">*</span>
+                        </label>
+
+                        <input
+                            type="password"
+                            name="confirmpw"
+                            placeholder="Confirm Password"
+                            required
+                            value={values.confirmpw}
+                            onChange={(e) => {
+                                handleChange("confirmpw")(e);
+
+                                if (passwordError) {
+                                    setPasswordError("");
+                                }
+                            }}
+                            style={{
+                                borderColor: passwordError ? "#e11d48" : undefined,
+                            }}
+                        />
+
+                        {passwordError && (
+                            <span className="email-error" role="alert">
+                                {passwordError}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
