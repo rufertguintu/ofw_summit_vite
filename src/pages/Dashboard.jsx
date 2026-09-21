@@ -97,8 +97,11 @@ const Dashboard = () => {
     return <>
         <div className="p-[40px]">
             <DashboardTitle />
-
+            
             <h3 className="text-1xl font-medium block mt-10">Validation Type</h3>
+            <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-primary border border-primary-line text-primary-foreground hover:bg-primary-hover focus:outline-hidden focus:bg-primary-focus disabled:opacity-50 disabled:pointer-events-none" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-offcanvas-example" data-hs-overlay="#hs-offcanvas-example">
+            Open (right) offcanvas
+            </button>
             <div className="flex flex-row gap-10 mt-10">
 
                 <div className="w-4/12 relative size-60">

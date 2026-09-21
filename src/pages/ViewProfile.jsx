@@ -91,6 +91,30 @@ function ViewProfile() {
     { label: "Gender", value: meta.gender || "N/A" },
     { label: "Mobile Number", value: meta.mobile || "N/A" },
     { label: "Landline Number", value: meta.landline || "N/A" },
+    { label: "Region", value: meta.region || "N/A" },
+    { label: "Province", value: meta.province || "N/A" },
+    { label: "City", value: meta.city || "N/A" },
+    { label: "Barangay", value: meta.barangay || "N/A" },
+    { label: "Zip Code", value: meta.zipcode || "N/A" },
+    { label: "Source of Information", value: meta.source || "N/A" },
+    { label: "Manning Agency", value: meta.manning_agency || "N/A" },
+    { label: "Profession", value: meta.profession || "N/A" },
+    { label: "Passport ID", value: meta.passport_id || "N/A" },
+    { label: "OWWA Member", value: meta.owwa_member || "N/A" },
+    { label: "OWWA Membership ID", value: meta.owwa_ofw_id || "N/A" },
+  ];
+
+  const OFWDetails = [
+    { label: "OFW First Name", value: meta.ofw_firstname || "N/A" },
+    { label: "OFW Middle Name", value: meta.ofw_middlename || "N/A" },
+    { label: "OFW Last Name", value: meta.ofw_lastname || "N/A" },
+    { label: "OFW Status", value: meta.ofw_status || "N/A" },
+    { label: "OFW Profession", value: meta.ofw_profession || "N/A" },
+    { label: "OFW Email Address", value: meta.ofw_emailaddress || "N/A" },
+    { label: "OFW Income", value: meta.ofw_income || "N/A" },
+    { label: "OFW Worked Country", value: meta.work_country || "N/A" },
+    { label: "OFW Years of Service", value: meta.ofw_year_service || "N/A" }
+    
   ];
 
   let documentItems = [];
@@ -202,6 +226,8 @@ function ViewProfile() {
       />
     );
   };
+
+  const ofwType = meta.ofw_type === "1";
 
   const showReasonIncomplete = formData.admin_verified === "0";
 
@@ -316,7 +342,21 @@ function ViewProfile() {
               ))}
             </div>
           </section>
-
+          
+          {ofwType && (
+            <section style={sectionCard}>
+            <h4 style={sectionTitle}>OFW Details</h4>
+            <div style={infoGrid}>
+              {OFWDetails.map((item) => (
+                <div key={item.label} style={infoItem}>
+                  <div style={infoLabel}>{item.label}</div>
+                  <div style={infoValue}>{item.value}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+          )}
+          
           <section style={sectionCard}>
             <h4 style={sectionTitle}>Documents</h4>
             <div style={documentGrid}>

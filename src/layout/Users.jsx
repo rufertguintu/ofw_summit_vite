@@ -3,7 +3,7 @@ import HeaderLayout from "./HeaderLayout";
 import { Outlet } from "react-router-dom";
 // import "../styles/css/reset.custom.min.css";
 import "../styles/css/mobile-nav-style.css";
-import "../styles/css/home-style.css";
+import "../styles/css/home-style.scss";
 import "../styles/css/bootstrap.min.css";
 import "../styles/css/new-main.scss";
 

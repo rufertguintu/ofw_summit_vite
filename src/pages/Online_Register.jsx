@@ -254,10 +254,10 @@ const Online_Register = () => {
                                     To prevent duplicate registrations, please log in to your account or reset your password instead.
                                 </p>
                                 <div className="match-record-actions">
-                                    <button type="button" onClick={() => navigate("/login")}>
+                                    <button type="button" className="proceed-button" onClick={() => navigate("/login")}>
                                         Go to Login
                                     </button>
-                                    <button type="button" onClick={() => navigate("/forgot-password")}>
+                                    <button type="button" className="manual-register-button" onClick={() => navigate("/forgot-password")}>
                                         Reset Password
                                     </button>
                                 </div>
@@ -273,10 +273,10 @@ const Online_Register = () => {
                                 )}
                                 {!showExistingPasswordStep ? (
                                     <div className="match-record-actions">
-                                        <button type="button" onClick={handlePrepareExistingRegistration} disabled={retrievingExistingData}>
+                                        <button type="button" className="proceed-button" onClick={handlePrepareExistingRegistration} disabled={retrievingExistingData}>
                                             Proceed
                                         </button>
-                                        <button type="button" onClick={handleManualRegister} disabled={retrievingExistingData}>
+                                        <button type="button" className="manual-register-button" onClick={handleManualRegister} disabled={retrievingExistingData}>
                                             Manual Register
                                         </button>
                                     </div>
@@ -331,7 +331,7 @@ const Online_Register = () => {
                                                     type="button"
                                                     onClick={handleProceedExistingRegistration}
                                                     disabled={!canRetrieveExistingAccount || retrievingExistingData}
-                                                    className={!canRetrieveExistingAccount || retrievingExistingData ? "disabled" : ""}
+                                                    className={!canRetrieveExistingAccount || retrievingExistingData ? "disabled proceed-button" : "proceed-button"}
                                                 >
                                                     Retrieve Account
                                                 </button>
@@ -339,6 +339,7 @@ const Online_Register = () => {
                                                     type="button"
                                                     onClick={handleManualRegister}
                                                     disabled={retrievingExistingData}
+                                                    className="manual-register-button"
                                                 >
                                                     Manual Register
                                                 </button>

@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { fetchApi } from "../store/api";
-
+import blackLogo2026 from "../assets/ofw-summit-15th.svg";
+import bannerImage from "../assets/about-banner.jpg";
 import gal1 from "../assets/gal-1.png";
 import gal2 from "../assets/gal-2.png";
 import gal3 from "../assets/gal-3.png";
@@ -51,11 +52,23 @@ const AboutUs = () => {
 			{ImageUrl && <img src={ImageUrl} alt="Hero Banner" />}
 		</div>
 
-		<div className="other-page-main-content">
+		<div className="about-us">
 			<div className="custom-container">
+				<h1>About</h1>
 				<div className="about-wrapper">
-					{/* <h1><?php the_title(); ?></h1> */}
-					{/* <?php the_content(); ?> */}
+					
+					<div className="desc">
+						<p>The Villar SIPAG (Social Institute for Poverty Alleviation and Governance) will hold its 11th OFW & Family Summit thru online platform with the theme, “Bagong Simula sa Sariling Bansa”, on November 18, 2022 (Friday), beginning at 8:00 a.m. at The Villar Tent at Vista Global South, C5 Extension Road, Las Piñas City.</p>
+					</div>
+					<img src={blackLogo2026} alt="OFW Summit 15th Logo" />
+				</div>
+
+				<div className="desc">
+					<p>This one-day event aims to provide practical advice to overseas Filipino workers (OFWs) and their families on how to manage and invest their hard-earned resources in appropriate business ventures and opportunities here in the Philippines, taking into consideration their respective interests and skills, and the applicable technology. The summit will also provide an opportunity for them and their families to engage with business owners, franchise holders, government agencies, and other groups that can assist them in starting a business.</p>
+				</div>
+
+				<div className="banner">
+					<img src={bannerImage} alt="Banner" />
 				</div>
 
 				<div className="event-gallery-section">

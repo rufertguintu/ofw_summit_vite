@@ -27,7 +27,7 @@ const HeaderLayout = () => {
                             <li><Link to="/about-us">About Us</Link></li>
                             {token ? (
                                 <>
-                                    <li><Link to="/">Profile</Link></li>
+                                    <li><Link to="/profile-dashboard">Profile</Link></li>
                                     <li><button onClick={logout}>Logout</button></li>
                                 </>
                             ) : (

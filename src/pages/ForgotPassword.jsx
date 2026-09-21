@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import Logo from "../assets/2025-assets/section1-logo.png";
+import blackLogo2026 from "../assets/ofw-summit-15th.svg";
 import Loading from "../assets/loading-reg.gif";
 import { fetchApi } from "../store/api";
 
@@ -52,56 +52,56 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="login-section">
-      <div className="login-banner">
-        <img src={Logo} alt="" />
-      </div>
-      <div className="custom-container">
-        <div className="login-wrapper">
-          <h2>Forgot Password</h2>
-          <div className="reg_fields">
-            {submitted ? (
-              <div className="one-column_field">
-                <p>{message}</p>
-              </div>
-            ) : (
-              <>
+    <div className="forgot-password-section">
+        <div className="custom-container">
+          <div className="login-banner">
+            <img src={blackLogo2026} alt="" />
+          </div>
+          <div className="login-wrapper">
+            <h2>Forgot Password</h2>
+            <div className="reg_fields">
+              {submitted ? (
                 <div className="one-column_field">
-                  <div className="reg_field-cont">
-                    <label htmlFor="email">Email Address</label>
-                    <input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter Email Address"
-                    />
-                  </div>
+                  <p>{message}</p>
                 </div>
-                {error && (
+              ) : (
+                <>
                   <div className="one-column_field">
-                    <p style={{ color: "red" }}>{error}</p>
+                    <div className="reg_field-cont">
+                      <label htmlFor="email">Email Address</label>
+                      <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Enter Email Address"
+                      />
+                    </div>
                   </div>
-                )}
-                <div className="one-column_field center">
-                  {loading ? (
-                    <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading" />
-                  ) : (
-                    <button onClick={handleSubmit} disabled={!isValid}>
-                      Send Reset Link
-                    </button>
+                  {error && (
+                    <div className="one-column_field">
+                      <p style={{ color: "red" }}>{error}</p>
+                    </div>
                   )}
-                </div>
-              </>
-            )}
-            <div className="one-column_field text-center">
-              <p>
-                Remembered your password? <Link to="/login">Sign In</Link>.
-              </p>
+                  <div className="one-column_field center">
+                    {loading ? (
+                      <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading" />
+                    ) : (
+                      <button onClick={handleSubmit} className="submit-button" disabled={!isValid}>
+                        Send Reset Link
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
+              <div className="sign-in-btn one-column_field text-center">
+                <p>
+                  Remembered your password? <Link to="/login">Sign In</Link>.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

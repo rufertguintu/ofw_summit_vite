@@ -44,10 +44,13 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
         try {
             setLoading(true);
-            const apiKey = "9aee96d37d5645628a5a1c055c4fb11e";
+            // const apiKey = "9aee96d37d5645628a5a1c055c4fb11e"; // Ruel
+            const apiKey = "c84cc42200d34187bf2eba94714a8c06"; // Test
             const validateUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`;
             const validateResponse = await fetch(validateUrl);
             const validateData = await validateResponse.json();
+
+            console.log("Email validation response:", validateData);
 
             if (validateData.email_deliverability?.status === "deliverable") {
                 setErrorField("");
@@ -168,11 +171,16 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
     return <>
         <h2>Step 2</h2>
+        <div className="flex w-full h-1.5 bg-surface-1 rounded-full overflow-hidden" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+            <div className="flex flex-col justify-center rounded-full overflow-hidden text-xs orange text-center whitespace-nowrap transition duration-500" style={{ width: "40%" }}>
+            </div>
+        </div>
         <div className="reg_fields" id="new">
-            <div className="one-column_field mb-5">
+            <div className="one-column_field">
                 <div className="reg_field-cont">
                     <label>May kamag-anak ka bang nagtatrabaho sa Villar Group of Companies? <span className="required-field">*</span></label>
                     <div className="reg_radio">
+                        
                         <div className="reg_radio-list">
                             <input
                                 type="radio"
@@ -201,12 +209,12 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 </div>
             </div>
             {hasRelativeCompany && (
-            <div className="two-column_field mb-5" id="relative_relationship">
+            <div className="two-column_field" id="relative_relationship">
                 <p>Kung meron, ano ang relasyon mo sakanya:</p>
                 <div className="two-column_inner-wrapper">
                     <div className="reg_field-cont">
                         <label>Relative Relationship (Relasyon)</label>
-                        <select name="company_relationship" id="company_relationship" value={values.company_relationship} onChange={handleChange("company_relationship")}>
+                        <select name="company_relationship" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" id="company_relationship" value={values.company_relationship} onChange={handleChange("company_relationship")}>
                             <option value="">- Select Relationship -</option>
                             <option value="Parent">Parent (Magulang)</option>
                             <option value="Sibling">Sibling (Kapatid)</option>
@@ -216,17 +224,18 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                     </div>
                     <div className="reg_field-cont">
                         <label>Relative Full Name (Buong Pangalan)</label>
-                        <input type="text" name="company_relative_fullname" placeholder="Full Name (Buong Pangalan)" value={values.company_relative_fullname} onChange={handleChange("company_relative_fullname")}/>
+                        <input type="text" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" name="company_relative_fullname" placeholder="Full Name (Buong Pangalan)" value={values.company_relative_fullname} onChange={handleChange("company_relative_fullname")}/>
                     </div>
                 </div>
             </div>
             )}
-            <div className="one-column_field mb-5">
+            <div className="one-column_field">
                 <div className="reg_field-cont">
                     <label>Registrant Type (Uri ng rehistrante) <span className="required-field">*</span></label>
                     <select
                         name="ofw_type"
                         id="ofw_type"
+                        className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none"
                         required
                         value={values.ofw_type || ""}
                         onChange={(e) => {
@@ -241,10 +250,10 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 </div>
             </div>
             {hasRelativeOFW && (
-            <div className="one-column_field mb-5"  id="relationship_ofw_f" >
+            <div className="one-column_field"  id="relationship_ofw_f" >
                 <div className="reg_field-cont">
                     <label>Relationship with OFW (Relasyon sa OFW) </label>
-                    <select name="relationship" id="relationship" required value={values.relationship} onChange={handleChange("relationship")}>
+                    <select name="relationship" id="relationship" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" required value={values.relationship} onChange={handleChange("relationship")}>
                         <option value="">- Select Relationship -</option>
                         <option value="Parent">Parent (Magulang)</option>
                         <option value="Sibling">Sibling (Kapatid)</option>
@@ -258,22 +267,23 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             <div className="two-column_field">
                 <div className="two-column_inner-wrapper">
                     <div className="reg_field-cont">
-                        <label>First Name (Pangalan) <span className="required-field">*</span></label>
-                        <input type="text" disabled placeholder="First Name" className="fname" value={values.firstname} onChange={handleChange("firstname")} readOnly/>
+                        <label>First Name (Pangalan)</label>
+                        <input type="text" disabled className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none disabled" placeholder="First Name" value={values.firstname} onChange={handleChange("firstname")} readOnly/>
                     </div>
                     <div className="reg_field-cont">
-                        <label>Last Name (Apelyido) <span className="required-field">*</span></label>
-                        <input type="text" disabled name="lastname" placeholder="Last Name" className="lname"  value={values.lastname} onChange={handleChange("lastname")}  readOnly/>
+                        <label>Last Name (Apelyido)</label>
+                        <input type="text" disabled className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none disabled" name="lastname" placeholder="Last Name" value={values.lastname} onChange={handleChange("lastname")}  readOnly/>
                     </div>
                 </div>
             </div>
             <div className="two-column_field">
-                <div className="two-column_inner-wrapper mb-5">
+                <div className="one-column_field">
                     <div className="reg_field-cont">
                         <label>Email Address <span className="required-field">*</span></label>
                         <input
                             type="email"
                             id="reg_email"
+                            className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none email"
                             name="emailaddress"
                             placeholder="Email Address"
                             value={values.emailaddress || values.email || ""}
@@ -291,9 +301,9 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         />
                         
                         {emailError && (
-                            <span className="email-error" role="alert">
+                            <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400 email-error" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
                                 {errorField ? `${errorField}: ${emailError}` : emailError}
-                            </span>
+                            </div>
                         )}
 
                         <div className="email-disclaimer">
@@ -302,20 +312,20 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                     </div>
                     <div className="reg_field-cont">
                         <label>Date of Birth (Araw ng kapanganakan) <span className="required-field">*</span></label>
-                        <input type="text" name="date_birth" className="dob" placeholder="YYYY/MM/DD" required  value={values.date_birth} onChange={handleChange("date_birth")} readOnly/>
+                        <input type="text" name="date_birth" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none disabled dob" placeholder="YYYY/MM/DD" required  value={values.date_birth} onChange={handleChange("date_birth")} readOnly/>
                     </div>
                 </div>
             </div>
             <div className="two-column_field">
                 <div className="two-column_inner-wrapper">
                     <div className="reg_field-cont">
-                        <label>Mobile Number <span className="required-field">*</span></label>
-                        <input type="text" disabled name="mobile" className="mobile" placeholder="ex. 09123456789"  value={values.mobile} onChange={handleChange("mobile")}  maxLength="11"/>
+                        <label>Mobile Number</label>
+                        <input type="text" disabled name="mobile" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none mobile disabled" placeholder="ex. 09123456789"  value={values.mobile} onChange={handleChange("mobile")}  maxLength="11"/>
                         <div id="error-container"></div>
                     </div>
                     <div className="reg_field-cont">
                         <label>Home Town <span className="required-field">*</span></label>
-                        <input type="text" name="hometown" placeholder="Home Town (City or Province only)" value={values.hometown} onChange={handleChange("hometown")}  required/>
+                        <input type="text" name="hometown" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" placeholder="Home Town (City or Province only)" value={values.hometown} onChange={handleChange("hometown")}  required/>
                     </div>
                 </div>
             </div>
@@ -329,6 +339,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         <input
                             type="password"
                             name="password"
+                            className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none"
                             placeholder="Password"
                             required
                             value={values.password}
@@ -346,6 +357,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         <input
                             type="password"
                             name="confirmpw"
+                            className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none"
                             placeholder="Confirm Password"
                             required
                             value={values.confirmpw}
@@ -360,14 +372,13 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                                 borderColor: passwordError ? "#e11d48" : undefined,
                             }}
                         />
-
-                        {passwordError && (
-                            <span className="email-error" role="alert">
-                                {passwordError}
-                            </span>
-                        )}
                     </div>
                 </div>
+                {passwordError && (
+                    <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400 email-error" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                        {passwordError}
+                    </div>
+                )}
             </div>
             <div className="one-column_field">
                 <p>Alinsunod sa Data Privacy Act of 2012, pinapahintulutan ko ang Villar Foundation na gamitin at iproseso ang mga impormasyong ibinahagi ko sa Registration Form na ito para sa layunin at maayos na pangangasiwa ng 12th OFW & Family Summit 2023 lamang at para na rin sa iba pang mga layunin na naaayon sa batas.<span className="required-field">*</span></p>
@@ -376,6 +387,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         type="checkbox"
                         name="agree"
                         value="1"
+                        className={`${!termsAccepted || !termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
                         disabled={!termsEnabled}
                         checked={termsAccepted}
                         onChange={(e) => setTermsAccepted(e.target.checked)}
@@ -389,7 +401,9 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             </div>
             <div className="one-column_field required_fill">
                                 
-                <button onClick={handleSubmit} disabled={!termsAccepted || !termsEnabled}>
+                <button onClick={handleSubmit} 
+                className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!termsAccepted || !termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
+                disabled={!termsAccepted || !termsEnabled}>
                 Submit
                 </button>
 

@@ -6,7 +6,6 @@ const SECTIONS = [
     title: "Attendance",
     fields: [
       { key: "attend", label: "Will attend the summit" },
-      { key: "attend_type", label: "Attendance type" },
     ],
   },
   {
@@ -186,7 +185,6 @@ export default function ReviewInfo({ values = {}, onEdit, displayName = "", word
       <div style={styles.header}>
         <div style={styles.headerTop}>
           <div>
-            <h2 style={styles.title}>Review Information</h2>
             <p style={styles.subtitle}>
               Please review the submitted details below. You can go back and edit if needed.
             </p>

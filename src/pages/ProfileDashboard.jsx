@@ -2,6 +2,8 @@ import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import ReviewInfo from "../components/ReviewInfo";
+import logo from "../assets/ofw-summit-15th.svg";
+import warning_logo from "../assets/warning.svg";
 import { fetchApi } from "../store/api";
 
 const imgsrc = "/src/assets/";
@@ -284,6 +286,7 @@ const ProfileDashboard = () => {
 
   const [address, setAddress] = useState("");
   const [attend, setAttend] = useState("");
+  const [willAttend, setWillAttend] = useState(false);
   const [attendType, setAttendType] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
@@ -451,6 +454,8 @@ const ProfileDashboard = () => {
     }
 
     const isImage = /\.(png|jpe?g|gif|webp|bmp|svg)(\?.*)?$/i.test(fileUrl);
+
+    
 
     return (
       <div style={{ marginTop: "8px" }}>
@@ -673,11 +678,30 @@ const ProfileDashboard = () => {
   }).filter(([key]) => isSupportingDocChecked(key)).map(([, label]) => label);
 
 
+const [touched, setTouched] = useState({
+    address: false,
+    currentLocation: false,
+    selectedRegion: false,
+    selectedProvince: false,
+    selectedCity: false,
+    selectedBarangay: false,
+    civil_status: false,
+    gender: false,
+    mobile: false,
+    source_info: false,
+    profession: false,
+    passport_id: false,
+    passport_file: false,
+    owwa_member: false,
+    work_country: false,
+    ofw_year_service: false,
+});
+
 const isStepValid = () => {
   switch (step) {
     case 1:
       // Attendance is required
-      return Boolean(attend && attendType);
+      return Boolean(attend);
 
     case 2:
       // All fields marked as required in Step 2
@@ -696,6 +720,16 @@ const isStepValid = () => {
 
     case 3:
       // Passport ID must be filled and successfully validated
+
+      return Boolean(
+        profession.trim() &&
+        passportId.trim() && passportValidationState === "valid" && passportFile ||
+        hasDocumentData("passport") &&
+        owwaMember && 
+        workCountry &&
+        ofwYearService
+      );
+
       if (
         !passportId.trim() ||
         passportValidationState === "checking" ||
@@ -756,7 +790,6 @@ const isCurrentStepValid = isStepValid();
       case 1:
         payload = {
           attend,
-          attend_type: attendType,
         };
         break;
 
@@ -848,6 +881,93 @@ const isCurrentStepValid = isStepValid();
   const profileViewUrl = user?.id
     ? `${window.location.origin}/records/${user.id}/view-profile`
     : "";
+
+  // Keep the completion indicator tied to the information a registrant can
+  // actually provide. State values make it update while editing; meta values
+  // ensure the correct value is shown as soon as an existing profile loads.
+  const getProfileValue = (currentValue, metaKey) => currentValue || meta?.[metaKey] || "";
+  const isProfileValueFilled = (value) => String(value ?? "").trim() !== "";
+  const profileFields = [
+    getProfileValue(attend, "attend"),
+    getProfileValue(address, "address"),
+    getProfileValue(currentLocation, "current_location"),
+    getProfileValue(zipcode, "zipcode"),
+    selectedRegionLabel || selectedRegion || meta?.region,
+    selectedProvinceLabel || selectedProvince || meta?.province,
+    selectedCityLabel || selectedCity || meta?.city,
+    selectedBarangayLabel || selectedBarangay || meta?.barangay,
+    getProfileValue(civil_status, "civil_status"),
+    getProfileValue(gender, "gender"),
+    getProfileValue(mobile, "mobile"),
+    getProfileValue(landline, "landline"),
+    source_info || meta?.source || meta?.source_info,
+    getProfileValue(profession, "profession"),
+    getProfileValue(passportId, "passport_id"),
+    passportFile || hasDocumentData("passport"),
+    getProfileValue(owwaMember, "owwa_member"),
+    getProfileValue(owwaOfwId, "owwa_ofw_id"),
+    getProfileValue(relationship, "relationship"),
+    getProfileValue(ofwFirstname, "ofw_firstname"),
+    getProfileValue(ofwMiddlename, "ofw_middlename"),
+    getProfileValue(ofwLastname, "ofw_lastname"),
+    getProfileValue(ofw_status, "ofw_status"),
+    getProfileValue(ofw_profession, "ofw_profession"),
+    getProfileValue(ofw_emailaddress, "ofw_emailaddress"),
+    getProfileValue(ofwIncome, "ofw_income"),
+    getProfileValue(workCountry, "work_country"),
+    getProfileValue(ofwYearService, "ofw_year_service"),
+  ];
+  const completedProfileFields = profileFields.filter(isProfileValueFilled).length;
+  const profileCompletion = Math.round((completedProfileFields / profileFields.length) * 100);
+  const profileCompletionLevel = profileCompletion === 100
+    ? { label: "Complete", color: "#16a34a" }
+    : profileCompletion >= 70
+      ? { label: "Almost complete", color: "#2563eb" }
+      : profileCompletion >= 40
+        ? { label: "In progress", color: "#f59e0b" }
+        : { label: "Just started", color: "#dc2626" };
+
+  const profileCompletionBar = (
+    <div className="user-progressbar">
+
+      {isAdminVerified ? (
+        <div className="profile-info qr-code-profile">
+          <button
+            type="button"
+            onClick={() => setIsQrModalOpen(true)}
+            style={qrButtonStyle}
+          >
+            View QR Code
+          </button>
+        </div>
+      ) : (
+        <div className="profile-info">
+          <div className="profile-completion-header">
+              <h5>Profile Completion</h5>
+              <span style={{ color: profileCompletionLevel.color, fontSize: "13px", fontWeight: 700 }}>
+                {profileCompletion}% {profileCompletionLevel.label}
+              </span>
+            </div>
+            <div
+              className="flex w-full h-1.5 bg-surface-1 rounded-full overflow-hidden"
+              role="progressbar"
+              aria-label="Profile completion"
+              aria-valuenow={profileCompletion}
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <div
+                className="flex flex-col justify-center rounded-full overflow-hidden text-xs text-center whitespace-nowrap transition duration-500"
+                style={{ width: `${profileCompletion}%`, backgroundColor: profileCompletionLevel.color }}
+              />
+            </div>
+        </div>
+
+        
+      )}
+      
+    </div>
+  );
 
 
   const handleInputChange = (event) => {
@@ -1063,8 +1183,8 @@ const isCurrentStepValid = isStepValid();
         const attendValue = String(data?.meta?.attend || "").trim().toLowerCase();
         const attendTypeValue = String(data?.meta?.attend_type || "").trim().toLowerCase();
 
-        setAttend(attendValue === "yes" || attendValue === "no" ? attendValue : "");
-        setAttendType(attendTypeValue === "onsite" ? "Onsite" : attendTypeValue === "online" ? "Online" : "");
+        // setAttend(attendValue === "yes" || attendValue === "no" ? attendValue : "");
+        // setAttendType(attendTypeValue === "onsite" ? "Onsite" : attendTypeValue === "online" ? "Online" : "");
         setAddress(String(data?.meta?.address || "").trim());
         setZipcode(String(data?.meta?.zipcode || "").trim());
         setCurrentLocation(String(data?.meta?.current_location || "").trim());
@@ -1278,13 +1398,10 @@ const isCurrentStepValid = isStepValid();
     }
   }, [meta.barangay, barangays, selectedBarangay]);
 
-  console.log("User Meta:", user);
 
   return (
     <div className="profile-section">
         <div className="custom-container">
-          <h2>Profile Dashboard</h2>
-
           {submitMessage ? (
             <div className="alert alert-success" style={{ marginBottom: "20px" }}>
               {submitMessage}
@@ -1292,2024 +1409,2060 @@ const isCurrentStepValid = isStepValid();
           ) : null}
 
           {isReviewMode ? (
-            <ReviewInfo
-              values={user?.meta ?? {}}
-              onEdit={handleReviewEdit}
-              displayName={String(meta?.doc_display_name || user?.name || user?.display_name || user?.username || "").trim()}
-              wordpressBaseUrl={getWordPressBaseUrl(user)}
-              userId={user?.id}
-              adminVerified={meta?.admin_verified}
-            />
+            <>
+              <div className="profile-heading">
+                <div className="profile-basic-info">
+                  <div className="profile-image">
+                    <img src={profileImageUrl} alt="Profile Picture"/>
+                  </div>
+                  <div className="profile-name-info">
+                    <h5>{String(meta?.doc_display_name || user?.name || user?.display_name || user?.username || "").trim()}</h5>
+                    <p>Email Address: {user?.email ?? "N/A"}</p>
+                    <p>User ID: {user?.id ?? "N/A"}</p>
+                  </div>
+                </div>
+
+                <div className="user-status-section">
+                  <h4>Profile Status:</h4>
+                  <h2 className={`status-${adminVerifiedLabel.toLowerCase()}`}>{adminVerifiedLabel}</h2>
+                </div>
+
+                {profileCompletionBar}
+              </div>
+
+              <div className="profile-main-body">
+                <div className="profile-main-body-header">
+                  <h3>Review Information</h3>
+
+                  <h4>Registrant Type: <span className={`registrant-type-${(meta?.type_registrant ?? "N/A").toLowerCase()}`}>{registrantTypeLabel ?? "N/A"}</span></h4>
+                </div>
+              </div>
+              <ReviewInfo
+                values={user?.meta ?? {}}
+                onEdit={handleReviewEdit}
+                displayName={String(meta?.doc_display_name || user?.name || user?.display_name || user?.username || "").trim()}
+                wordpressBaseUrl={getWordPressBaseUrl(user)}
+                userId={user?.id}
+                adminVerified={meta?.admin_verified}
+              />
+            </>
+            
           ) : (
             <form onSubmit={handleSubmit}>
- 
-          {/* <div className  ="profile-recover">
-              <h4>Hi!, We've found your record from previous OFW Summit Event.</h4>
-              <h5>Would you like to recover your previous Information? </h5>
-              <div className="recover-btn">
-                <button type="submit" name="recover" value="yes">Yes</button> <button name="no" >No</button>
-              </div>
-          </div>
-
-          <div className="profile-recover">
-            <div className="alert alert-success">
-              <h4>Congratulations! We've recovered your other details.</h4>
-              <h5>Please update your profile.</h5>
-            </div>
-          </div>
-
-          <div className="profile-recover" >
-            <div className="alert alert-success cstm_bg-orange">
-              <h4>Your Account has been Verified.</h4>
-              <h5>Please make sure you will attend on 12th OFW & Family Summit 2023.<br/> November 10, 2023 (Friday), 8:00 AM to 4:00 PM
-              The Tent at Vista Global South, C5 Extension Road, Las Piñas City</h5>
-              <h6>For you to be qualified on the grand raffle draw.</h6>
-            </div>
-          </div> */}
-
-          <div className="profile-info-wrapper">
-            <div className="basic-info">
-              <div className="verified-acct">
-                <img src={`${imgsrc}status/${adminVerifiedLabel}.svg`} alt="${adminVerifiedLabel}"/>
-              </div>
-
-              <div className="basic-info-inner">
-                <div className="basic-prof-pic">
-                  <div className="inner-prof-pic">
+              <div className="profile-heading">
+                <div className="profile-basic-info">
+                  <div className="profile-image">
                     <img src={profileImageUrl} alt="Profile Picture"/>
-                  {/* <div className="upload-profile-picture">
-									  <input type="file" name="picture" id="picture" accept="image/png, image/jpeg"/>
-								  </div> */}
+                  </div>
+                  <div className="profile-name-info">
+                    <h5>{String(meta?.doc_display_name || user?.name || user?.display_name || user?.username || "").trim()}</h5>
+                    <p>Email Address: {user?.email ?? "N/A"}</p>
+                    <p>User ID: {user?.id ?? "N/A"}</p>
                   </div>
                 </div>
 
-                <div className="profile-info">
-                  <h5>User ID: {user?.id ?? "N/A"}</h5>
+                <div className="user-status-section">
+                  <h4>Profile Status:</h4>
+                  <h2 className={`status-${adminVerifiedLabel.toLowerCase()}`}>{adminVerifiedLabel}</h2>
                 </div>
 
-                <div className="profile-info">
-                  <h5>Name: {user?.name ?? "N/A"}</h5>
-                </div>
-
-                <div className="profile-info">
-                  <h5>Email: {user?.email ?? "N/A"}</h5>
-                </div>
-
-                {isAdminVerified ? (
-                  <div className="profile-info">
-                    <button
-                      type="button"
-                      onClick={() => setIsQrModalOpen(true)}
-                      style={qrButtonStyle}
-                    >
-                      View QR Code
-                    </button>
-                  </div>
-                ) : null}
+                {profileCompletionBar}
               </div>
-            </div>
 
-            <div className="required-info">
-              <div className="profile-wrapper">
-                {/* <div className="custom-alert alert alert-success">
-                  Successfully Updated Profile
-                </div> */}
+              <div className="profile-main-body">
+                <div className="profile-main-body-header">
+                  <h3>Complete Your Profile</h3>
 
-                <div style={{ marginBottom: "20px" }}>
-                  <h4 style={{ marginBottom: "8px" }}>Step {step} of 4</h4>
-                  <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                    {[1, 2, 3, 4].map((item) => (
-                      <div
-                        key={item}
-                        style={{
-                          padding: "6px 10px",
-                          borderRadius: "999px",
-                          background: item === step ? "#f59e0b" : "#e5e7eb",
-                          color: item === step ? "#fff" : "#374151",
-                          fontSize: "12px",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {item === 1 ? "Attendance" : item === 2 ? "Personal Info" : item === 3 ? "OFW Info" : "Documents"}
-                      </div>
-                    ))}
-                  </div>
+                  <h4>Registrant Type: <span className={`registrant-type-${(meta?.type_registrant ?? "N/A").toLowerCase()}`}>{registrantTypeLabel ?? "N/A"}</span></h4>
                 </div>
 
-                <div className="profile-info">
-                  <label>Registrant Type: </label>
-                  <div className="field-wrap">
-                    <div className="fill-info">	
-                        <h5>{registrantTypeLabel}</h5>
-                    </div>
-                  </div>
-                </div>
 
-                {step === 1 ? (
-                  <>
-                    <div className="profile-info reg_fields">
-                      <label>Ikaw ba ay dadalo sa 14th OFW & Family Summit sa November 14, 2025 (Friday), 8:00 AM to 4:00 PM? <span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                        {/* {getMetaValue("attend", "") ? (
-                          <h5>{getMetaValue("attend", "Not provided")}</h5>
-                        ) : (
-                          <> */}
-                            <div className="reg_radio">
-                              <div className="reg_radio-list">
-                                <input type="radio" name="attend" value="yes" checked={attend === "yes"} onChange={(e) => setAttend(e.target.value)} required /> Yes
-                              </div>
-                              <div className="reg_radio-list">
-                                <input type="radio" name="attend" value="no" checked={attend === "no"} onChange={(e) => setAttend(e.target.value)} required /> No
-                              </div>
+
+                
+                <div className="profile-main-body-content">
+                  <div className="profile-steps">
+                    <ul>
+                      {[1, 2, 3, 4].map((item) => (
+                        <li
+                          key={item}
+                          style={{
+                            padding: "6px 10px",
+                            color: item === step ? "#FE4914" : "#000",
+                            borderColor: item === step ? "#FE4914" : "rgba(0, 0, 0, 0.1)",
+                            fontSize: "16px",
+                            fontWeight: item === step ? "600" : "400",
+                          }}
+                        >
+                          {item === 1 ? "Attendance" : item === 2 ? "Personal Info" : item === 3 ? "OFW Info" : "Documents"}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  {step === 1 ? (
+                      <>
+                        <div className="step-1">
+                          <div className="left-side">
+                            <img src={logo} alt="" />
+                            <p>15th Ofw & Family Summit sa <strong>November 14, 2026 (Friday), 8:00 AM to 4:00 PM?*</strong></p>
+
+                            <h5>The Tent at Villar City</h5>
+                            <p>C5 Extension Road 6490, Las Pinas, Metro Manila, Las Piñas, Philippines, 6490.</p>
+                          </div>
+
+                          <div className="right-side">
+                            <h3><strong>Ikaw ba ay dadalo</strong> sa 15th Ofw & Family Summit sa <strong>November 14, 2026 (Friday), 8:00 AM to 4:00 PM?</strong></h3>
+
+                            <div className="field-wrap">
+                              {/* {getMetaValue("attend", "") ? (
+                                <h5>{getMetaValue("attend", "Not provided")}</h5>
+                              ) : (
+                                <> */}
+                                  <div className="reg_radio">
+                                    <div className="reg_radio-list">
+                                      <div className={`custom-radio ${attend === "yes" ? "checked" : ""}`}>
+                                        <input type="radio" id="hs-checked-radio" name="attend" value="yes" checked={attend === "yes"} onChange={(e) => {setAttend(e.target.value); setWillAttend (true);}} required /> Yes
+                                      </div>
+                                    </div>
+                                    <div className="reg_radio-list">
+                                      <div className={`custom-radio ${attend === "no" ? "checked" : ""}`}>
+                                        <input type="radio" id="hs-checked-radio-no" name="attend" value="no" checked={attend === "no"} onChange={(e) => {setAttend(e.target.value); setWillAttend (false);}} required /> No
+                                      </div>
+                                    </div>
+                                  </div>
+                              {/* </>
+                              )} */}
                             </div>
-                        {/* </>
-                        )} */}
-
-                        {/* {getMetaValue("attend_type", "") ? (
-                          <h5>{getMetaValue("attend_type", "Not provided")}</h5>
-                        ) : (
-                          <> */}
-                            <div className="reg_radio reg_attend">
-                              <div className="reg_radio-list">
-                                <input type="radio" className="attend_type" name="attend_type" value="Onsite" checked={attendType === "Onsite"} onChange={(e) => setAttendType(e.target.value)} /> Onsite
-                              </div>
-                              <div className="reg_radio-list">
-                                <input type="radio" className="attend_type" name="attend_type" value="Online" checked={attendType === "Online"} onChange={(e) => setAttendType(e.target.value)} /> Online
-                              </div>
-                            </div>
-                          {/* </>
-                        )} */}
-                      </div>
-                    </div>
-
-                    <div className="profile-info">
-                      <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
-                        {nextButtonContent}
-                      </button>
-                    </div>
-                  </>
-                ) : null}
-
-                {step === 2 ? (
-                  <>
-                    <div className="profile-info">
-                      <h3>Personal Information</h3>
-                    </div>
-                <div className="profile-info">
-                  <label>Full Address <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      {/* {meta.address ? (
-                        <h5>{getMetaValue("address", "Not provided")}</h5>
-                      ) : ( */}
-                        <textarea name="address" id="address" cols="20" rows="2" value={address} onChange={(e) => setAddress(e.target.value)}  required></textarea>
-                      {/* )} */}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Current Location (Country) <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                        <select name="current_location" id="current_location" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} required>
-                              <option value="Algeria">Algeria</option>
-
-                              <option value="Andorra">Andorra</option>
-
-                              <option value="Angola">Angola</option>
-
-                              <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-
-                              <option value="Argentina">Argentina</option>
-
-                              <option value="Armenia">Armenia</option>
-
-                              <option value="Australia">Australia</option>
-
-                              <option value="Austria">Austria</option>
-
-                              <option value="Azerbaijan">Azerbaijan</option>
-
-                              <option value="Bahamas">Bahamas</option>
-
-                              <option value="Bahrain">Bahrain</option>
-
-                              <option value="Bangladesh">Bangladesh</option>
-
-                              <option value="Barbados">Barbados</option>
-
-                              <option value="Belarus">Belarus</option>
-
-                              <option value="Belgium">Belgium</option>
-
-                              <option value="Belize">Belize</option>
-
-                              <option value="Benin">Benin</option>
-
-                              <option value="Bhutan">Bhutan</option>
-
-                              <option value="Bolivia">Bolivia</option>
-
-                              <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-
-                              <option value="Botswana">Botswana</option>
-
-                              <option value="Brazil">Brazil</option>
-
-                              <option value="Brunei">Brunei</option>
-
-                              <option value="Bulgaria">Bulgaria</option>
-
-                              <option value="Burkina Faso">Burkina Faso</option>
-
-                              <option value="Burundi">Burundi</option>
-
-                              <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-
-                              <option value="Cabo Verde">Cabo Verde</option>
-
-                              <option value="Cambodia">Cambodia</option>
-
-                              <option value="Cameroon">
-                              Cameroon</option>
-
-                              <option value="Canada">
-                              Canada</option>
-
-                              <option value="Central African Republic">
-                              Central African Republic</option>
-
-                              <option value="Chad">
-                              Chad</option>
-
-                              <option value="Chile">
-                              Chile</option>
-
-                              <option value="China">
-                              China</option>
-
-                              <option value="Colombia">
-                              Colombia</option>
-
-                              <option value="Comoros">
-                              Comoros</option>
-
-                              <option value="Congo (Congo-Brazzaville)">
-                              Congo (Congo-Brazzaville)</option>
-
-                              <option value="Costa Rica">
-                              Costa Rica</option>
-
-                              <option value="Croatia">
-                              Croatia</option>
-
-                              <option value="Cuba">
-                              Cuba</option>
-
-                              <option value="Cyprus">
-                              Cyprus</option>
-
-                              <option value="Czechia (Czech Republic)">
-                              Czechia (Czech Republic)</option>
-
-                              <option value="Democratic Republic of the Congo">
-                              Democratic Republic of the Congo</option>
-
-                              <option value="Denmark">
-                              Denmark</option>
-
-                              <option value="Djibouti">
-                              Djibouti</option>
-
-                              <option value="Dominica">
-                              Dominica</option>
-
-                              <option value="Dominican Republic">
-                              Dominican Republic</option>
-
-                              <option value="Ecuador">
-                              Ecuador</option>
-
-                              <option value="Egypt">
-                              Egypt</option>
-
-                              <option value="El Salvador">
-                              El Salvador</option>
-
-                              <option value="Equatorial Guinea">
-                              Equatorial Guinea</option>
-
-                              <option value="Eritrea">
-                              Eritrea</option>
-
-                              <option value="Estonia">
-                              Estonia</option>
-
-                              <option value="Eswatini (fmr. Swaziland)">
-                              Eswatini (fmr. "Swaziland")</option>
-
-                              <option value="Ethiopia">
-                              Ethiopia</option>
-
-                              <option value="Fiji">
-                              Fiji</option>
-
-                              <option value="Finland">
-                              Finland</option>
-
-                              <option value="France">
-                              France</option>
-
-                              <option value="Gabon">
-                              Gabon</option>
-
-                              <option value="Gambia">
-                              Gambia</option>
-
-                              <option value="Georgia">
-                              Georgia</option>
-
-                              <option value="Germany">
-                              Germany</option>
-
-                              <option value="Ghana">
-                              Ghana</option>
-
-                              <option value="Greece">
-                              Greece</option>
-
-                              <option value="Grenada">
-                              Grenada</option>
-
-                              <option value="Guatemala">
-                              Guatemala</option>
-
-                              <option value="Guinea">
-                              Guinea</option>
-
-                              <option value="Guinea-Bissau">
-                              Guinea-Bissau</option>
-
-                              <option value="Guyana">
-                              Guyana</option>
-
-                              <option value="Haiti">
-                              Haiti</option>
-
-                              <option value="Holy See">
-                              Holy See</option>
-
-                              <option value="Honduras">
-                              Honduras</option>
-
-                              <option value="Hong Kong">
-                              Hong Kong</option>
-
-                              <option value="Hungary">
-                              Hungary</option>
-
-                              <option value="Iceland">
-                              Iceland</option>
-
-                              <option value="India">
-                              India</option>
-
-                              <option value="Indonesia">
-                              Indonesia</option>
-
-                              <option value="Iran">
-                              Iran</option>
-
-                              <option value="Iraq">
-                              Iraq</option>
-
-                              <option value="Ireland">
-                              Ireland</option>
-
-                              <option value="Israel">
-                              Israel</option>
-
-                              <option value="Italy">
-                              Italy</option>
-
-                              <option value="Jamaica">
-                              Jamaica</option>
-
-                              <option value="Japan">
-                              Japan</option>
-
-                              <option value="Jordan">
-                              Jordan</option>
-
-                              <option value="Kazakhstan">
-                              Kazakhstan</option>
-
-                              <option value="Kenya">
-                              Kenya</option>
-
-                              <option value="Kiribati">
-                              Kiribati</option>
-
-                              <option value="Kuwait">
-                              Kuwait</option>
-
-                              <option value="Kyrgyzstan">
-                              Kyrgyzstan</option>
-
-                              <option value="Laos">
-                              Laos</option>
-
-                              <option value="Latvia">
-                              Latvia</option>
-
-                              <option value="Lebanon">
-                              Lebanon</option>
-
-                              <option value="Lesotho">
-                              Lesotho</option>
-
-                              <option value="Liberia">
-                              Liberia</option>
-
-                              <option value="Libya">
-                              Libya</option>
-
-                              <option value="Liechtenstein">
-                              Liechtenstein</option>
-
-                              <option value="Lithuania">
-                              Lithuania</option>
-
-                              <option value="Luxembourg">
-                              Luxembourg</option>
-
-                              <option value="Macau">
-                              Macau</option>
-
-                              <option value="Madagascar">
-                              Madagascar</option>
-
-                              <option value="Malawi">
-                              Malawi</option>
-
-                              <option value="Malaysia">
-                              Malaysia</option>
-
-                              <option value="Maldives">
-                              Maldives</option>
-
-                              <option value="Mali">
-                              Mali</option>
-
-                              <option value="Malta">
-                              Malta</option>
-
-                              <option value="Marshall Islands">
-                              Marshall Islands</option>
-
-                              <option value="Mauritania">
-                              Mauritania</option>
-
-                              <option value="Mauritius">
-                              Mauritius</option>
-
-                              <option value="Mexico">
-                              Mexico</option>
-
-                              <option value="Micronesia">
-                              Micronesia</option>
-
-                              <option value="Moldova">
-                              Moldova</option>
-
-                              <option value="Monaco">
-                              Monaco</option>
-
-                              <option value="Mongolia">
-                              Mongolia</option>
-
-                              <option value="Montenegro">
-                              Montenegro</option>
-
-                              <option value="Morocco">
-                              Morocco</option>
-
-                              <option value="Mozambique">
-                              Mozambique</option>
-
-                              <option value="Myanmar (formerly Burma)">
-                              Myanmar (formerly Burma)</option>
-
-                              <option value="Namibia">
-                              Namibia</option>
-
-                              <option value="Nauru">
-                              Nauru</option>
-
-                              <option value="Nepal">
-                              Nepal</option>
-
-                              <option value="Netherlands">
-                              Netherlands</option>
-
-                              <option value="New Zealand">
-                              New Zealand</option>
-
-                              <option value="Nicaragua">
-                              Nicaragua</option>
-
-                              <option value="Niger">
-                              Niger</option>
-
-                              <option value="Nigeria">
-                              Nigeria</option>
-
-                              <option value="North Korea">
-                              North Korea</option>
-
-                              <option value="North Macedonia">
-                              North Macedonia</option>
-
-                              <option value="Norway">
-                              Norway</option>
-
-                              <option value="Oman">
-                              Oman</option>
-
-                              <option value="Pakistan">
-                              Pakistan</option>
-
-                              <option value="Palau">
-                              Palau</option>
-
-                              <option value="Palestine State">
-                              Palestine State</option>
-
-                              <option value="Panama">
-                              Panama</option>
-
-                              <option value="Papua New Guinea">
-                              Papua New Guinea</option>
-
-                              <option value="Paraguay">
-                              Paraguay</option>
-
-                              <option value="Peru">
-                              Peru</option>
-
-                              <option value="Philippines">
-                              Philippines</option>
-
-                              <option value="Poland">
-                              Poland</option>
-
-                              <option value="Portugal">
-                              Portugal</option>
-
-                              <option value="Qatar">
-                              Qatar</option>
-
-                              <option value="Romania">
-                              Romania</option>
-
-                              <option value="Russia">
-                              Russia</option>
-
-                              <option value="Rwanda">
-                              Rwanda</option>
-
-                              <option value="Saint Kitts and Nevis">
-                              Saint Kitts and Nevis</option>
-
-                              <option value="Saint Lucia">
-                              Saint Lucia</option>
-
-                              <option value="Saint Vincent and the Grenadines">
-                              Saint Vincent and the Grenadines</option>
-
-                              <option value="Samoa">
-                              Samoa</option>
-
-                              <option value="San Marino">
-                              San Marino</option>
-
-                              <option value="Sao Tome and Principe">
-                              Sao Tome and Principe</option>
-
-                              <option value="Saudi Arabia">
-                              Saudi Arabia</option>
-
-                              <option value="Senegal">
-                              Senegal</option>
-
-                              <option value="Serbia">
-                              Serbia</option>
-
-                              <option value="Seychelles">
-                              Seychelles</option>
-
-                              <option value="Sierra Leone">
-                              Sierra Leone</option>
-
-                              <option value="Singapore">
-                              Singapore</option>
-
-                              <option value="Slovakia">
-                              Slovakia</option>
-
-                              <option value="Slovenia">
-                              Slovenia</option>
-
-                              <option value="Solomon Islands">
-                              Solomon Islands</option>
-
-                              <option value="Somalia">
-                              Somalia</option>
-
-                              <option value="South Africa">
-                              South Africa</option>
-
-                              <option value="South Korea">
-                              South Korea</option>
-
-                              <option value="South Sudan">
-                              South Sudan</option>
-
-                              <option value="Spain">
-                              Spain</option>
-
-                              <option value="Sri Lanka">
-                              Sri Lanka</option>
-
-                              <option value="Sudan">
-                              Sudan</option>
-
-                              <option value="Suriname">
-                              Suriname</option>
-
-                              <option value="Sweden">
-                              Sweden</option>
-
-                              <option value="Switzerland">
-                              Switzerland</option>
-
-                              <option value="Syria">
-                              Syria</option>
-
-                              
-
-                              <option value="Taiwan">
-                              Taiwan</option>
-
-                              <option value="Tajikistan">
-                              Tajikistan</option>
-
-                              <option value="Tanzania">
-                              Tanzania</option>
-
-                              <option value="Thailand">
-                              Thailand</option>
-
-                              <option value="Timor-Leste">
-                              Timor-Leste</option>
-
-                              <option value="Togo">
-                              Togo</option>
-
-                              <option value="Tonga">
-                              Tonga</option>
-
-                              <option value="Trinidad and Tobago">
-                              Trinidad and Tobago</option>
-
-                              <option value="Tunisia">
-                              Tunisia</option>
-
-                              <option value="Turkey">
-                              Turkey</option>
-
-                              <option value="Turkmenistan">
-                              Turkmenistan</option>
-
-                              <option value="Tuvalu">
-                              Tuvalu</option>
-
-                              <option value="Uganda">
-                              Uganda</option>
-
-                              <option value="Ukraine">
-                              Ukraine</option>
-
-                              <option value="United Arab Emirates">
-                              United Arab Emirates</option>
-
-                              <option value="United Kingdom">
-                              United Kingdom</option>
-
-                              <option value="United States of America">
-                              United States of America</option>
-
-                              <option value="Uruguay">
-                              Uruguay</option>
-
-                              <option value="Uzbekistan">
-                              Uzbekistan</option>
-
-                              <option value="Vanuatu">
-                              Vanuatu</option>
-
-                              <option value="Venezuela">
-                              Venezuela</option>
-
-                              <option value="Vietnam">
-                              Vietnam</option>
-
-                              <option value="Yemen">
-                              Yemen</option>
-
-                              <option value="Zambia">
-                              Zambia</option>
-
-                              <option value="Zimbabwe">
-                              Zimbabwe</option>
-
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info places-function">
-                  <label>Region <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      {/* {meta.region ? (
-                        <h5>{selectedRegionName || getMetaValue("region", "Not provided")}</h5>
-                      ) : (
-                        <> */}
-                          <select
-                            id="region"
-                            name="region"
-                            value={selectedRegion}
-                            
-                            onChange={(e) => {
-                              const code = e.target.value;
-
-                              const region = regions.find(
-                                (r) => String(r.code) === String(code)
-                              );
-
-                              setSelectedRegion(code);
-                              setSelectedRegionLabel(region?.name);
-
-                              // console.log("Code:", code);
-                              // console.log("Name:", region?.name);
-                            }}
-
-                            required
-                          >
-                            <option value="">- Select Region -</option>
-                            {regions.map((region) => (
-                              <option key={region.code} value={region.code}>
-                                {region.name}
-                              </option>
-                            ))}
-                          </select>
-                          {/* <input type="hidden" name="h_region" value="" /> */}
-                        {/* </>
-                      )} */}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info places-function">
-                  <label>Province <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      <select
-                        id="province"
-                        name="province"
-                        value={selectedProvince}
-                        onChange={(e) => {
-                          const code = e.target.value;
-
-                          const province = provinces.find(
-                            (r) => String(r.code) === String(code)
-                          );
-
-                          setSelectedProvince(code);
-                          setSelectedProvinceLabel(province?.name || "");
-                        }}
-                        disabled={!selectedRegion}
-                        required
-                      >
-                        <option value="">- Select Province -</option>
-                        {provinces.map((province) => (
-                          <option key={province.code} value={province.code}>
-                            {province.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info places-function">
-                  <label>City/Municipalities <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      <select
-                        id="city"
-                        name="city"
-                        value={selectedCity}
-                        onChange={(e) => {
-                          const code = e.target.value;
-
-                          const city = cities.find(
-                            (r) => String(r.code) === String(code)
-                          );
-
-                          setSelectedCity(code);
-                          setSelectedCityLabel(city?.name || "");
-                        }}
-                        disabled={!selectedProvince}
-                        required
-                      >
-                        <option value="">- Select City/Municipalities -</option>
-                        {cities.map((city) => (
-                          <option key={city.code} value={city.code}>
-                            {city.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info places-function">
-                  <label>Barangay <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      <select
-                        id="barangay"
-                        name="barangay"
-                        value={selectedBarangay}
-                        onChange={(e) => {
-                          const code = e.target.value;
-
-                          const barangay = barangays.find(
-                            (r) => String(r.code) === String(code)
-                          );
-
-                          setSelectedBarangay(code);
-                          setSelectedBarangayLabel(barangay?.name || "");
-                        }}
-                        disabled={!selectedCity}
-                        required
-                      >
-                        <option value="">- Select Barangay -</option>
-                        {barangays.map((barangay) => (
-                          <option key={barangay.code} value={barangay.code}>
-                            {barangay.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Zip Code</label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      {/* {meta.zipcode ? (
-                        <h5>{getMetaValue("zipcode", "Not provided")}</h5>
-                      ) : ( */}
-                        <input type="text" id="zipcode" name="zipcode" value={zipcode} onChange={(e) => setZipcode(e.target.value)} />
-                      {/* )} */}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Civil Status <br/>(Estado sa Buhay)<span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.civil_status ? (
-                          <h5>{getMetaValue("civil_status", "Not provided")}</h5>
-                        ) : ( */}
-                          <select name="civil_status" id="civil_status" value={civil_status} onChange={(e) => setCivilStatus(e.target.value)} required>
-                            <option value="">- Select Civil Status -</option>
-                            <option value="Single" >Single</option>
-                            <option value="Married" >Married</option>
-                            <option value="Widowed" >Widowed</option>
-                          </select>
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Date of Birth <br/>(Araw ng kapanganakan)<span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <h5>{getMetaValue("date_birth", "Not provided")}</h5>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Gender <br/>(Kasarian)<span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      {/* {meta.gender ? (
-                        <h5>{getMetaValue("gender", "Not provided")}</h5>
-                      ) : ( */}
-                        <select name="gender" id="gender" value={gender} onChange={(e) => setGender(e.target.value)} required>
-                          <option value="">- Select Gender -</option>
-                          <option value="Male" >Male</option>
-                          <option value="Female" >Female</option>
-                        </select>
-                      {/* )} */}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Mobile Number <br/>(Numero ng Teleponong Mobile)<span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.mobile ? (
-                          <h5>{getMetaValue("mobile", "Not provided")}</h5>
-                        ) : ( */}
-                          <input type="text" name="mobile" placeholder="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} required />
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Landline Number <br/>(Numero ng Telepono)</label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.landline ? (
-                          <h5>{getMetaValue("landline", "Not provided")}</h5>
-                        ) : ( */}
-                          <input type="text" name="landline" placeholder="Landline Number" value={landline} onChange={(e) => setLandline(e.target.value)} />
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>How did you hear about the Summit? (Paano nalaman ang tungkol sa Summit?) <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.source ? (
-                          <h5>{getMetaValue("source", "Not provided")}</h5>
-                        ) : ( */}
-                          <select name="source" id="source" value={source_info} onChange={(e) => setSourceInfo(e.target.value)}  required >
-                            <option value="">- Select Source -</option>
-                            <option value="Friend" >Friend</option>
-                            <option value="Relative / Family" >Relative / Family</option>
-                            <option value="Newspaper or Magazine" >Newspaper or Magazine</option>
-                            <option value="Radio" >Radio</option>
-                            <option value="Television" >Television</option>
-                            <option value="Social Website (Facebook, LinkedIn, etc.)" >Social Website (Facebook, LinkedIn, etc.)</option>
-                            <option value="Website" >Website</option>
-                            <option value="Manning Agency" >Manning Agency</option>
-                            <option value="Others" >Others</option>
-                          </select>
-                        {/* )} */}  
-                      </div>
-                      {source_info === "Manning Agency" && (
-                        <div className="fill-info">
-                          <input type="text" name="manning_agency" placeholder="Please specify" value={manning_agency} onChange={(e) => setManningAgency(e.target.value)} />
-                        </div>
-                        )}
-                  </div>
-                </div>
-
-                    <div className="profile-info">
-                      <div style={{ display: "flex", gap: "10px" }}>
-                        <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
-                          {nextButtonContent}
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                ) : null}
-
-                {step === 3 ? (
-                  <>
-                    <div className="profile-info">
-                      <h3>Information of OFW (Impormasyon ng OFW)</h3>
-                    </div>
-
-                <div className="profile-info">
-                  <label>Profession</label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.profession ? (
-                          <h5>{getMetaValue("profession", "Not provided")}</h5>
-                        ) : ( */}
-                          <input type="text" id="profession" name="profession" value={profession} onChange={(e) => setProfession(e.target.value)} placeholder="Profession" />
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-
-                <div className="profile-info passport-validation">
-                  <label>Passport ID <br/>(Numero ng Pasaporte:)<span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.passport_id ? (
-                          <h5>{getMetaValue("passport_id", "Not provided")}</h5>
-                        ) : (
-                          <> */}
-                            <input type="text" name="passport_id"  id="passportid" value={passportId} onChange={(e) => setPassportId(e.target.value)}  required />
-                            {passportValidationMessage ? (
-                              <span
-                                id="message"
-                                className={passportValidationClassName}
-                                style={{ display: "block", marginTop: "8px" }}
-                              >
-                                {passportValidationMessage}
-                              </span>
-                            ) : (
-                              <span id="message"></span>
-                            )}
-                        {/* </> */}
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-
-                <div className="profile-info">
-                  <label>Passport</label>
-                  <div className="field-wrap">
-                      <div className="fill-info upload-docs">
+                          </div>
                           
-                          <input type="file" className="upload-file-input" name="file" id="file" accept="image/png, application/pdf, image/jpeg" onChange={(e) => setPassportFile(e.target.files?.[0] || null)} required />
-                          {renderDocumentPreview("passport", "Passport")}
-                          {/* <div className="upload-msg alert alert-success" id="passport-msg"></div> */}
-                      </div>
-                  </div>
-                </div>
+                          
+                        </div>
 
-                <div className="profile-info reg_fields">
-                  <label>Ikaw ba ay OWWA Member? <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.owwa_member ? (
-                          <h5>{getMetaValue("owwa_member", "Not provided")}</h5>
-                        ) : ( */}
-                          <div className="reg_radio">
-                            <div className="reg_radio-list">
-                              <input type="radio" name="owwa_member" value="yes" checked={owwaMember === "yes"} onChange={(e) => setOwwaMember(e.target.value)} /> Yes (Oo)
+                        <div className="proceed-btn-section">
+                          <button type="button" className={`proceed-btn ${isSubmitting || !isCurrentStepValid ? "disabled-proceed" : ""}`} onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
+                            {nextButtonContent}
+                          </button>
+                        </div>
+                      </>
+                    ) : null}
+
+
+                  {step === 2 ? (
+                    <>
+                    <div className="step-2">
+                      <h3>Personal Information</h3>
+
+                      <div className="profile-details profile-info">
+                        <label>Full Address <span className="required-field">*</span></label>
+                        <div className="field-wrap">
+                          <div className="fill-info">
+                              <textarea name="address" id="address" cols="20" rows="2" value={address} onChange={(e) => setAddress(e.target.value)} onBlur={() => setTouched({ ...touched, address: true })} style={{ borderColor: !address.trim() && touched.address ? "red" : "" }} className="py-2 px-3 sm:py-3 sm:px-4 block w-full bg-layer border-layer-line rounded-lg sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb" rows="3" placeholder="This is a textarea placeholder"  required></textarea>
+                            {!address.trim() && touched.address && (
+                  
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Address is required 
+                                </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label>Current Location (Country) <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                                <select name="current_location" id="current_location" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} onBlur={() => setTouched({ ...touched, currentLocation: true })} style={{ borderColor: !currentLocation.trim() && touched.currentLocation ? "red" : "" }} required>
+                                      <option value="Algeria">Algeria</option>
+
+                                      <option value="Andorra">Andorra</option>
+
+                                      <option value="Angola">Angola</option>
+
+                                      <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+
+                                      <option value="Argentina">Argentina</option>
+
+                                      <option value="Armenia">Armenia</option>
+
+                                      <option value="Australia">Australia</option>
+
+                                      <option value="Austria">Austria</option>
+
+                                      <option value="Azerbaijan">Azerbaijan</option>
+
+                                      <option value="Bahamas">Bahamas</option>
+
+                                      <option value="Bahrain">Bahrain</option>
+
+                                      <option value="Bangladesh">Bangladesh</option>
+
+                                      <option value="Barbados">Barbados</option>
+
+                                      <option value="Belarus">Belarus</option>
+
+                                      <option value="Belgium">Belgium</option>
+
+                                      <option value="Belize">Belize</option>
+
+                                      <option value="Benin">Benin</option>
+
+                                      <option value="Bhutan">Bhutan</option>
+
+                                      <option value="Bolivia">Bolivia</option>
+
+                                      <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+
+                                      <option value="Botswana">Botswana</option>
+
+                                      <option value="Brazil">Brazil</option>
+
+                                      <option value="Brunei">Brunei</option>
+
+                                      <option value="Bulgaria">Bulgaria</option>
+
+                                      <option value="Burkina Faso">Burkina Faso</option>
+
+                                      <option value="Burundi">Burundi</option>
+
+                                      <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+
+                                      <option value="Cabo Verde">Cabo Verde</option>
+
+                                      <option value="Cambodia">Cambodia</option>
+
+                                      <option value="Cameroon">
+                                      Cameroon</option>
+
+                                      <option value="Canada">
+                                      Canada</option>
+
+                                      <option value="Central African Republic">
+                                      Central African Republic</option>
+
+                                      <option value="Chad">
+                                      Chad</option>
+
+                                      <option value="Chile">
+                                      Chile</option>
+
+                                      <option value="China">
+                                      China</option>
+
+                                      <option value="Colombia">
+                                      Colombia</option>
+
+                                      <option value="Comoros">
+                                      Comoros</option>
+
+                                      <option value="Congo (Congo-Brazzaville)">
+                                      Congo (Congo-Brazzaville)</option>
+
+                                      <option value="Costa Rica">
+                                      Costa Rica</option>
+
+                                      <option value="Croatia">
+                                      Croatia</option>
+
+                                      <option value="Cuba">
+                                      Cuba</option>
+
+                                      <option value="Cyprus">
+                                      Cyprus</option>
+
+                                      <option value="Czechia (Czech Republic)">
+                                      Czechia (Czech Republic)</option>
+
+                                      <option value="Democratic Republic of the Congo">
+                                      Democratic Republic of the Congo</option>
+
+                                      <option value="Denmark">
+                                      Denmark</option>
+
+                                      <option value="Djibouti">
+                                      Djibouti</option>
+
+                                      <option value="Dominica">
+                                      Dominica</option>
+
+                                      <option value="Dominican Republic">
+                                      Dominican Republic</option>
+
+                                      <option value="Ecuador">
+                                      Ecuador</option>
+
+                                      <option value="Egypt">
+                                      Egypt</option>
+
+                                      <option value="El Salvador">
+                                      El Salvador</option>
+
+                                      <option value="Equatorial Guinea">
+                                      Equatorial Guinea</option>
+
+                                      <option value="Eritrea">
+                                      Eritrea</option>
+
+                                      <option value="Estonia">
+                                      Estonia</option>
+
+                                      <option value="Eswatini (fmr. Swaziland)">
+                                      Eswatini (fmr. "Swaziland")</option>
+
+                                      <option value="Ethiopia">
+                                      Ethiopia</option>
+
+                                      <option value="Fiji">
+                                      Fiji</option>
+
+                                      <option value="Finland">
+                                      Finland</option>
+
+                                      <option value="France">
+                                      France</option>
+
+                                      <option value="Gabon">
+                                      Gabon</option>
+
+                                      <option value="Gambia">
+                                      Gambia</option>
+
+                                      <option value="Georgia">
+                                      Georgia</option>
+
+                                      <option value="Germany">
+                                      Germany</option>
+
+                                      <option value="Ghana">
+                                      Ghana</option>
+
+                                      <option value="Greece">
+                                      Greece</option>
+
+                                      <option value="Grenada">
+                                      Grenada</option>
+
+                                      <option value="Guatemala">
+                                      Guatemala</option>
+
+                                      <option value="Guinea">
+                                      Guinea</option>
+
+                                      <option value="Guinea-Bissau">
+                                      Guinea-Bissau</option>
+
+                                      <option value="Guyana">
+                                      Guyana</option>
+
+                                      <option value="Haiti">
+                                      Haiti</option>
+
+                                      <option value="Holy See">
+                                      Holy See</option>
+
+                                      <option value="Honduras">
+                                      Honduras</option>
+
+                                      <option value="Hong Kong">
+                                      Hong Kong</option>
+
+                                      <option value="Hungary">
+                                      Hungary</option>
+
+                                      <option value="Iceland">
+                                      Iceland</option>
+
+                                      <option value="India">
+                                      India</option>
+
+                                      <option value="Indonesia">
+                                      Indonesia</option>
+
+                                      <option value="Iran">
+                                      Iran</option>
+
+                                      <option value="Iraq">
+                                      Iraq</option>
+
+                                      <option value="Ireland">
+                                      Ireland</option>
+
+                                      <option value="Israel">
+                                      Israel</option>
+
+                                      <option value="Italy">
+                                      Italy</option>
+
+                                      <option value="Jamaica">
+                                      Jamaica</option>
+
+                                      <option value="Japan">
+                                      Japan</option>
+
+                                      <option value="Jordan">
+                                      Jordan</option>
+
+                                      <option value="Kazakhstan">
+                                      Kazakhstan</option>
+
+                                      <option value="Kenya">
+                                      Kenya</option>
+
+                                      <option value="Kiribati">
+                                      Kiribati</option>
+
+                                      <option value="Kuwait">
+                                      Kuwait</option>
+
+                                      <option value="Kyrgyzstan">
+                                      Kyrgyzstan</option>
+
+                                      <option value="Laos">
+                                      Laos</option>
+
+                                      <option value="Latvia">
+                                      Latvia</option>
+
+                                      <option value="Lebanon">
+                                      Lebanon</option>
+
+                                      <option value="Lesotho">
+                                      Lesotho</option>
+
+                                      <option value="Liberia">
+                                      Liberia</option>
+
+                                      <option value="Libya">
+                                      Libya</option>
+
+                                      <option value="Liechtenstein">
+                                      Liechtenstein</option>
+
+                                      <option value="Lithuania">
+                                      Lithuania</option>
+
+                                      <option value="Luxembourg">
+                                      Luxembourg</option>
+
+                                      <option value="Macau">
+                                      Macau</option>
+
+                                      <option value="Madagascar">
+                                      Madagascar</option>
+
+                                      <option value="Malawi">
+                                      Malawi</option>
+
+                                      <option value="Malaysia">
+                                      Malaysia</option>
+
+                                      <option value="Maldives">
+                                      Maldives</option>
+
+                                      <option value="Mali">
+                                      Mali</option>
+
+                                      <option value="Malta">
+                                      Malta</option>
+
+                                      <option value="Marshall Islands">
+                                      Marshall Islands</option>
+
+                                      <option value="Mauritania">
+                                      Mauritania</option>
+
+                                      <option value="Mauritius">
+                                      Mauritius</option>
+
+                                      <option value="Mexico">
+                                      Mexico</option>
+
+                                      <option value="Micronesia">
+                                      Micronesia</option>
+
+                                      <option value="Moldova">
+                                      Moldova</option>
+
+                                      <option value="Monaco">
+                                      Monaco</option>
+
+                                      <option value="Mongolia">
+                                      Mongolia</option>
+
+                                      <option value="Montenegro">
+                                      Montenegro</option>
+
+                                      <option value="Morocco">
+                                      Morocco</option>
+
+                                      <option value="Mozambique">
+                                      Mozambique</option>
+
+                                      <option value="Myanmar (formerly Burma)">
+                                      Myanmar (formerly Burma)</option>
+
+                                      <option value="Namibia">
+                                      Namibia</option>
+
+                                      <option value="Nauru">
+                                      Nauru</option>
+
+                                      <option value="Nepal">
+                                      Nepal</option>
+
+                                      <option value="Netherlands">
+                                      Netherlands</option>
+
+                                      <option value="New Zealand">
+                                      New Zealand</option>
+
+                                      <option value="Nicaragua">
+                                      Nicaragua</option>
+
+                                      <option value="Niger">
+                                      Niger</option>
+
+                                      <option value="Nigeria">
+                                      Nigeria</option>
+
+                                      <option value="North Korea">
+                                      North Korea</option>
+
+                                      <option value="North Macedonia">
+                                      North Macedonia</option>
+
+                                      <option value="Norway">
+                                      Norway</option>
+
+                                      <option value="Oman">
+                                      Oman</option>
+
+                                      <option value="Pakistan">
+                                      Pakistan</option>
+
+                                      <option value="Palau">
+                                      Palau</option>
+
+                                      <option value="Palestine State">
+                                      Palestine State</option>
+
+                                      <option value="Panama">
+                                      Panama</option>
+
+                                      <option value="Papua New Guinea">
+                                      Papua New Guinea</option>
+
+                                      <option value="Paraguay">
+                                      Paraguay</option>
+
+                                      <option value="Peru">
+                                      Peru</option>
+
+                                      <option value="Philippines">
+                                      Philippines</option>
+
+                                      <option value="Poland">
+                                      Poland</option>
+
+                                      <option value="Portugal">
+                                      Portugal</option>
+
+                                      <option value="Qatar">
+                                      Qatar</option>
+
+                                      <option value="Romania">
+                                      Romania</option>
+
+                                      <option value="Russia">
+                                      Russia</option>
+
+                                      <option value="Rwanda">
+                                      Rwanda</option>
+
+                                      <option value="Saint Kitts and Nevis">
+                                      Saint Kitts and Nevis</option>
+
+                                      <option value="Saint Lucia">
+                                      Saint Lucia</option>
+
+                                      <option value="Saint Vincent and the Grenadines">
+                                      Saint Vincent and the Grenadines</option>
+
+                                      <option value="Samoa">
+                                      Samoa</option>
+
+                                      <option value="San Marino">
+                                      San Marino</option>
+
+                                      <option value="Sao Tome and Principe">
+                                      Sao Tome and Principe</option>
+
+                                      <option value="Saudi Arabia">
+                                      Saudi Arabia</option>
+
+                                      <option value="Senegal">
+                                      Senegal</option>
+
+                                      <option value="Serbia">
+                                      Serbia</option>
+
+                                      <option value="Seychelles">
+                                      Seychelles</option>
+
+                                      <option value="Sierra Leone">
+                                      Sierra Leone</option>
+
+                                      <option value="Singapore">
+                                      Singapore</option>
+
+                                      <option value="Slovakia">
+                                      Slovakia</option>
+
+                                      <option value="Slovenia">
+                                      Slovenia</option>
+
+                                      <option value="Solomon Islands">
+                                      Solomon Islands</option>
+
+                                      <option value="Somalia">
+                                      Somalia</option>
+
+                                      <option value="South Africa">
+                                      South Africa</option>
+
+                                      <option value="South Korea">
+                                      South Korea</option>
+
+                                      <option value="South Sudan">
+                                      South Sudan</option>
+
+                                      <option value="Spain">
+                                      Spain</option>
+
+                                      <option value="Sri Lanka">
+                                      Sri Lanka</option>
+
+                                      <option value="Sudan">
+                                      Sudan</option>
+
+                                      <option value="Suriname">
+                                      Suriname</option>
+
+                                      <option value="Sweden">
+                                      Sweden</option>
+
+                                      <option value="Switzerland">
+                                      Switzerland</option>
+
+                                      <option value="Syria">
+                                      Syria</option>
+
+                                      
+
+                                      <option value="Taiwan">
+                                      Taiwan</option>
+
+                                      <option value="Tajikistan">
+                                      Tajikistan</option>
+
+                                      <option value="Tanzania">
+                                      Tanzania</option>
+
+                                      <option value="Thailand">
+                                      Thailand</option>
+
+                                      <option value="Timor-Leste">
+                                      Timor-Leste</option>
+
+                                      <option value="Togo">
+                                      Togo</option>
+
+                                      <option value="Tonga">
+                                      Tonga</option>
+
+                                      <option value="Trinidad and Tobago">
+                                      Trinidad and Tobago</option>
+
+                                      <option value="Tunisia">
+                                      Tunisia</option>
+
+                                      <option value="Turkey">
+                                      Turkey</option>
+
+                                      <option value="Turkmenistan">
+                                      Turkmenistan</option>
+
+                                      <option value="Tuvalu">
+                                      Tuvalu</option>
+
+                                      <option value="Uganda">
+                                      Uganda</option>
+
+                                      <option value="Ukraine">
+                                      Ukraine</option>
+
+                                      <option value="United Arab Emirates">
+                                      United Arab Emirates</option>
+
+                                      <option value="United Kingdom">
+                                      United Kingdom</option>
+
+                                      <option value="United States of America">
+                                      United States of America</option>
+
+                                      <option value="Uruguay">
+                                      Uruguay</option>
+
+                                      <option value="Uzbekistan">
+                                      Uzbekistan</option>
+
+                                      <option value="Vanuatu">
+                                      Vanuatu</option>
+
+                                      <option value="Venezuela">
+                                      Venezuela</option>
+
+                                      <option value="Vietnam">
+                                      Vietnam</option>
+
+                                      <option value="Yemen">
+                                      Yemen</option>
+
+                                      <option value="Zambia">
+                                      Zambia</option>
+
+                                      <option value="Zimbabwe">
+                                      Zimbabwe</option>
+
+                              </select>
+
+                              {!currentLocation.trim() && touched.currentLocation && (
+                  
+                                  <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                      Current location is required 
+                                  </div>
+                              )}
                             </div>
-                            <div className="reg_radio-list">
-                              <input type="radio" name="owwa_member" value="no" checked={owwaMember === "no"} onChange={(e) => setOwwaMember(e.target.value)} /> No (Hindi)
+                          </div>
+                        </div>
+
+                        <div className="profile-info places-function">
+                          <label>Region <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                                  <select
+                                    id="region"
+                                    name="region"
+                                    value={selectedRegion}
+                                    onBlur={() => setTouched({ ...touched, region: true })} style={{ borderColor: !selectedRegion.trim() && touched.region ? "red" : "" }} 
+                                    onChange={(e) => {
+                                      const code = e.target.value;
+
+                                      const region = regions.find(
+                                        (r) => String(r.code) === String(code)
+                                      );
+
+                                      setSelectedRegion(code);
+                                      setSelectedRegionLabel(region?.name);
+
+                                      // console.log("Code:", code);
+                                      // console.log("Name:", region?.name);
+                                    }}
+
+                                    required
+                                  >
+                                    <option value="">- Select Region -</option>
+                                    {regions.map((region) => (
+                                      <option key={region.code} value={region.code}>
+                                        {region.name}
+                                      </option>
+                                    ))}
+                                  </select>
+
+                                  {!selectedRegion.trim() && touched.region && (
+                  
+                                  <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                      Region is required 
+                                  </div>
+                              )}
                             </div>
                           </div>
-                        {/* )} */}
+                        </div>
                       </div>
-                  </div>
-                </div>
-                {owwaMember === "yes" && (
-                <div className="profile-info" id="owwa_ofw_id">
-                  <label>OWWA OFW ID No. </label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.owwa_ofw_id ? (
-                          <h5>{getMetaValue("owwa_ofw_id", "Not provided")}</h5>
-                        ) : ( */}
-                          <input type="text" name="owwa_ofw_id" placeholder="OWWA OFW ID No." value={owwaOfwId} onChange={(e) => setOwwaOfwId(e.target.value)} />
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
-                )}
-                {!isOfwTypeOne ? (
-                  <>
-                    {/* Relative of OFW */}
-                    <div className="profile-info">
-                      <label>OFW First Name <br/>(Pangalan ng OFW)<span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                          <div className="fill-info">
-                            {/* {meta.ofw_firstname ? (
-                              <h5>{getMetaValue("ofw_firstname", "Not provided")}</h5>
-                            ) : ( */}
-                              <input type="text" name="ofw_firstname" value={ofwFirstname} onChange={(e) => setOfwFirstname(e.target.value)} placeholder="OFW First Name" required />
-                            {/* )} */}
+
+                      <div className="profile-details two-column">
+                        <div className="profile-info places-function">
+                          <label>Province <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                              <select
+                                id="province"
+                                name="province"
+                                value={selectedProvince}
+                                onBlur={() => setTouched({ ...touched, province: true })} style={{ borderColor: !selectedProvince.trim() && touched.province ? "red" : "" }} 
+                                onChange={(e) => {
+                                  const code = e.target.value;
+
+                                  const province = provinces.find(
+                                    (r) => String(r.code) === String(code)
+                                  );
+
+                                  setSelectedProvince(code);
+                                  setSelectedProvinceLabel(province?.name || "");
+                                }}
+                                disabled={!selectedRegion}
+                                required
+                              >
+                                <option value="">- Select Province -</option>
+                                {provinces.map((province) => (
+                                  <option key={province.code} value={province.code}>
+                                    {province.name}
+                                  </option>
+                                ))}
+                              </select>
+                              {!selectedProvince.trim() && touched.province && (
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Province is required 
+                                </div>
+                              )}
+                            </div>
                           </div>
-                      </div>
-                    </div>
+                        </div>
 
-                    <div className="profile-info">
-                      <label>OFW Middle Name <br/>(Apelyido bago ikinasal/Apelyido ng Ina:)<span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                          <div className="fill-info">
-                            {/* {meta.ofw_middlename ? (
-                              <h5>{getMetaValue("ofw_middlename", "Not provided")}</h5>
-                            ) : ( */}
-                              <input type="text" name="ofw_middlename" value={ofwMiddlename} onChange={(e) => setOfwMiddlename(e.target.value)} placeholder="OFW Middle Name" required />
-                            {/* )} */}
+                        <div className="profile-info places-function">
+                          <label>City/Municipalities <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                              <select
+                                id="city"
+                                name="city"
+                                value={selectedCity}
+                                onBlur={() => setTouched({ ...touched, city: true })} style={{ borderColor: !selectedCity.trim() && touched.city ? "red" : "" }}
+                                onChange={(e) => {
+                                  const code = e.target.value;
+
+                                  const city = cities.find(
+                                    (r) => String(r.code) === String(code)
+                                  );
+
+                                  setSelectedCity(code);
+                                  setSelectedCityLabel(city?.name || "");
+                                }}
+                                disabled={!selectedProvince}
+                                required
+                              >
+                                <option value="">- Select City/Municipalities -</option>
+                                {cities.map((city) => (
+                                  <option key={city.code} value={city.code}>
+                                    {city.name}
+                                  </option>
+                                ))}
+                              </select>
+                              {!selectedCity.trim() && touched.city && (
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    City/Municipalities is required 
+                                </div>
+                              )}
+                            </div>
                           </div>
+                        </div>
                       </div>
-                    </div>
 
+                      <div className="profile-details two-column">
+                        <div className="profile-info places-function">
+                          <label>Barangay <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                              <select
+                                id="barangay"
+                                name="barangay"
+                                value={selectedBarangay}
+                                onBlur={() => setTouched({ ...touched, barangay: true })} style={{ borderColor: !selectedBarangay.trim() && touched.barangay ? "red" : "" }}
+                                onChange={(e) => {
+                                  const code = e.target.value;
 
-                    <div className="profile-info">
-                      <label>OFW Last Name <br/>(Apelyido ng OFW)<span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                          <div className="fill-info">
-                            {/* {meta.ofw_lastname ? (
-                              <h5>{getMetaValue("ofw_lastname", "Not provided")}</h5>
-                            ) : ( */}
-                              <input type="text" name="ofw_lastname" value={ofwLastname} onChange={(e) => setOfwLastname(e.target.value)} placeholder="OFW Last Name" required />
-                            {/* )} */}
+                                  const barangay = barangays.find(
+                                    (r) => String(r.code) === String(code)
+                                  );
+
+                                  setSelectedBarangay(code);
+                                  setSelectedBarangayLabel(barangay?.name || "");
+                                }}
+                                disabled={!selectedCity}
+                                required
+                              >
+                                <option value="">- Select Barangay -</option>
+                                {barangays.map((barangay) => (
+                                  <option key={barangay.code} value={barangay.code}>
+                                    {barangay.name}
+                                  </option>
+                                ))}
+                              </select>
+                              {!selectedBarangay.trim() && touched.barangay && (
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Barangay is required 
+                                </div>
+                              )}
+                            </div>
                           </div>
-                      </div>
-                    </div>
+                        </div>
 
-                    <div className="profile-info">
-                      <label>OFW Status <br/>(Estado sa Buhay:)<span className="required-field">*</span></label>
-                      <div className="field-wrap">
+                        <div className="profile-info">
+                          <label>Zip Code</label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                              {/* {meta.zipcode ? (
+                                <h5>{getMetaValue("zipcode", "Not provided")}</h5>
+                              ) : ( */}
+                                <input type="text" id="zipcode"  name="zipcode" value={zipcode} onChange={(e) => setZipcode(e.target.value)} />
+                              {/* )} */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label>Civil Status <em>(Estado sa Buhay)</em><span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                              <div className="fill-info">
+                                {/* {meta.civil_status ? (
+                                  <h5>{getMetaValue("civil_status", "Not provided")}</h5>
+                                ) : ( */}
+                                  <select name="civil_status" id="civil_status" onBlur={() => setTouched({ ...touched, civil_status: true })} style={{ borderColor: !civil_status.trim() && touched.civil_status ? "red" : "" }} value={civil_status} onChange={(e) => setCivilStatus(e.target.value)} required>
+                                    <option value="">- Select Civil Status -</option>
+                                    <option value="Single" >Single</option>
+                                    <option value="Married" >Married</option>
+                                    <option value="Widowed" >Widowed</option>
+                                  </select>
+                                {/* )} */}
+                                {!civil_status.trim() && touched.civil_status && (
+                                  <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                      Civil Status is required 
+                                  </div>
+                                )}
+                              </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-info">
+                          <label>Date of Birth <em>(Araw ng kapanganakan)</em><span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                            <h5></h5>
+                            <input type="text" name="date_birth" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none disabled dob" placeholder="YYYY/MM/DD" required  value={getMetaValue("date_birth", "Not provided")} readOnly/>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="profile-details profile-info">
+                        <label>Gender <em>(Kasarian)</em><span className="required-field">*</span></label>
+                        <div className="field-wrap">
                           <div className="fill-info">
-                            {/* {meta.ofw_status ? (
-                              <h5>{getMetaValue("ofw_status", "Not provided")}</h5>
+                            {/* {meta.gender ? (
+                              <h5>{getMetaValue("gender", "Not provided")}</h5>
                             ) : ( */}
-                              <select name="ofw_status" id="" value={ofw_status} onChange={(e) => setofw_status(e.target.value)} required>
-                                <option value="">- Select OFW Status</option>
-                                <option value="Single">Single (Walang Asawa)</option>
-                              <option value="Married">Married (May Asawa)</option>
-                              <option value="Separated">Separated (Hiwalay sa Asawa)</option>
-                              <option value="Widowed">Widowed (Biyudo/Biyuda)</option>
-                              <option value="Divorced">Divorced (Diborsyado)</option>
+                              <select name="gender" id="gender" onBlur={() => setTouched({ ...touched, gender: true })} style={{ borderColor: !gender.trim() && touched.gender ? "red" : "" }} value={gender} onChange={(e) => setGender(e.target.value)} required>
+                                <option value="">- Select Gender -</option>
+                                <option value="Male" >Male</option>
+                                <option value="Female" >Female</option>
                               </select>
                             {/* )} */}
-                          </div>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="profile-info">
-                      <label>OFW Profession <br/>(Trabaho)<span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                          <div className="fill-info">
-                            {/* {meta.ofw_profession ? (
-                              <h5>{getMetaValue("ofw_profession", "Not provided")}</h5>
-                            ) : ( */}
-                              <input type="text" name="ofw_profession" value={ofw_profession} onChange={(e) => setOfwProfession(e.target.value)} placeholder="OFW Profession" required />
-                            {/* )} */}
+                        {!gender.trim() && touched.gender && (
+                          <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                              Gender is required 
                           </div>
+                        )}
+                        
                       </div>
-                    </div>
 
-                    <div className="profile-info">
-                      <label>OFW Email Address <span className="required-field">*</span></label>
-                      <div className="field-wrap">
-                        <div className="fill-info">
-                          {/* {meta.ofw_emailaddress ? (
-                            <h5>{getMetaValue("ofw_emailaddress", "Not provided")}</h5>
-                          ) : ( */}
-                            <input type="text" name="ofw_emailaddress" value={ofw_emailaddress} onChange={(e) => setofw_emailaddress(e.target.value)} placeholder="OFW Email Address" required />
-                          {/* )} */}
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label>Mobile Number <em>(Numero ng Teleponong Mobile)</em><span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                              <div className="fill-info">
+                                {/* {meta.mobile ? (
+                                  <h5>{getMetaValue("mobile", "Not provided")}</h5>
+                                ) : ( */}
+                                  <input type="text" name="mobile" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none mobile" placeholder="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} onBlur={() => setTouched({ ...touched, mobile: true })} style={{ borderColor: !mobile.trim() && touched.mobile ? "red" : "" }}  required />
+
+                                  {!mobile.trim() && touched.mobile && (
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Mobile Number is required 
+                                </div>
+                              )}
+                                {/* )} */}
+                              </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-info">
+                          <label>Landline Number <em>(Numero ng Telepono)</em></label>
+                          <div className="field-wrap">
+                              <div className="fill-info">
+                                {/* {meta.landline ? (
+                                  <h5>{getMetaValue("landline", "Not provided")}</h5>
+                                ) : ( */}
+                                  <input type="text" name="landline" placeholder="Landline Number" value={landline} onChange={(e) => setLandline(e.target.value)} />
+                                {/* )} */}
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="profile-details profile-info">
+                        <label>How did you hear about the Summit? (Paano nalaman ang tungkol sa Summit?) <span className="required-field">*</span></label>
+                        <div className="field-wrap">
+                            <div className="fill-info">
+                              {/* {meta.source ? (
+                                <h5>{getMetaValue("source", "Not provided")}</h5>
+                              ) : ( */}
+                                <select name="source" id="source" onBlur={() => setTouched({ ...touched, source: true })} style={{ borderColor: !source_info.trim() && touched.source ? "red" : "" }} value={source_info} onChange={(e) => setSourceInfo(e.target.value)}  required >
+                                  <option value="">- Select Source -</option>
+                                  <option value="Friend" >Friend</option>
+                                  <option value="Relative / Family" >Relative / Family</option>
+                                  <option value="Newspaper or Magazine" >Newspaper or Magazine</option>
+                                  <option value="Radio" >Radio</option>
+                                  <option value="Television" >Television</option>
+                                  <option value="Social Website (Facebook, LinkedIn, etc.)" >Social Website (Facebook, LinkedIn, etc.)</option>
+                                  <option value="Website" >Website</option>
+                                  <option value="Manning Agency" >Manning Agency</option>
+                                  <option value="Others" >Others</option>
+                                </select>
+                                {!source_info.trim() && touched.source && (
+                                  <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                      Source is required 
+                                  </div>
+                                )}
+                              {/* )} */}  
+                            </div>
+                            {source_info === "Manning Agency" && (
+                              <div className="fill-info" style={{ marginTop: "20px" }}>
+                                <input type="text" name="manning_agency" placeholder="Please specify" value={manning_agency} onChange={(e) => setManningAgency(e.target.value)} />
+                              </div>
+                              )}
                         </div>
                       </div>
                     </div>
 
-                    {/* End of Relative of OFW */}
-                  </>
-                ) : null}
-
-                <div className="profile-info">
-                  <label>Work Country (Bansang Pinagtatrabahuhan) <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                          <select name="work_country" id="work_country" value={workCountry} onChange={(e) => setWorkCountry(e.target.value)} required>
-                            <option value="">- Select Work Country -</option>
-                          <option value="Albania">Albania</option>
-
-                          <option value="Algeria">Algeria</option>
-
-                          <option value="Andorra">Andorra</option>
-
-                          <option value="Angola">Angola</option>
-
-                          <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-
-                          <option value="Argentina">Argentina</option>
-
-                          <option value="Armenia">Armenia</option>
-
-                          <option value="Australia">Australia</option>
-
-                          <option value="Austria">Austria</option>
-
-                          <option value="Azerbaijan">Azerbaijan</option>
-
-                          <option value="Bahamas">Bahamas</option>
-
-                          <option value="Bahrain">Bahrain</option>
-
-                          <option value="Bangladesh">Bangladesh</option>
-
-                          <option value="Barbados">Barbados</option>
-
-                          <option value="Belarus">Belarus</option>
-
-                          <option value="Belgium">Belgium</option>
-
-                          <option value="Belize">Belize</option>
-
-                          <option value="Benin">Benin</option>
-
-                          <option value="Bhutan">Bhutan</option>
-
-                          <option value="Bolivia">Bolivia</option>
-
-                          <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-
-                          <option value="Botswana">Botswana</option>
-
-                          <option value="Brazil">Brazil</option>
-
-                          <option value="Brunei">Brunei</option>
-
-                          <option value="Bulgaria">Bulgaria</option>
-
-                          <option value="Burkina Faso">Burkina Faso</option>
-
-                          <option value="Burundi">Burundi</option>
-
-                          <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-
-                          <option value="Cabo Verde">Cabo Verde</option>
-
-                          <option value="Cambodia">Cambodia</option>
-
-                          <option value="Cameroon">
-                          Cameroon</option>
-
-                          <option value="Canada">
-                          Canada</option>
-
-                          <option value="Central African Republic">
-                          Central African Republic</option>
-
-                          <option value="Chad">
-                          Chad</option>
-
-                          <option value="Chile">
-                          Chile</option>
-
-                          <option value="China">
-                          China</option>
-
-                          <option value="Colombia">
-                          Colombia</option>
-
-                          <option value="Comoros">
-                          Comoros</option>
-
-                          <option value="Congo (Congo-Brazzaville)">
-                          Congo (Congo-Brazzaville)</option>
-
-                          <option value="Costa Rica">
-                          Costa Rica</option>
-
-                          <option value="Croatia">
-                          Croatia</option>
-
-                          <option value="Cuba">
-                          Cuba</option>
-
-                          <option value="Cyprus">
-                          Cyprus</option>
-
-                          <option value="Czechia (Czech Republic)">
-                          Czechia (Czech Republic)</option>
-
-                          <option value="Democratic Republic of the Congo">
-                          Democratic Republic of the Congo</option>
-
-                          <option value="Denmark">
-                          Denmark</option>
-
-                          <option value="Djibouti">
-                          Djibouti</option>
-
-                          <option value="Dominica">
-                          Dominica</option>
-
-                          <option value="Dominican Republic">
-                          Dominican Republic</option>
-
-                          <option value="Ecuador">
-                          Ecuador</option>
-
-                          <option value="Egypt">
-                          Egypt</option>
-
-                          <option value="El Salvador">
-                          El Salvador</option>
-
-                          <option value="Equatorial Guinea">
-                          Equatorial Guinea</option>
-
-                          <option value="Eritrea">
-                          Eritrea</option>
-
-                          <option value="Estonia">
-                          Estonia</option>
-
-                          <option value="Eswatini (fmr. Swaziland)">
-                          Eswatini (fmr. "Swaziland")</option>
-
-                          <option value="Ethiopia">
-                          Ethiopia</option>
-
-                          <option value="Fiji">
-                          Fiji</option>
-
-                          <option value="Finland">
-                          Finland</option>
-
-                          <option value="France">
-                          France</option>
-
-                          <option value="Gabon">
-                          Gabon</option>
-
-                          <option value="Gambia">
-                          Gambia</option>
-
-                          <option value="Georgia">
-                          Georgia</option>
-
-                          <option value="Germany">
-                          Germany</option>
-
-                          <option value="Ghana">
-                          Ghana</option>
-
-                          <option value="Greece">
-                          Greece</option>
-
-                          <option value="Grenada">
-                          Grenada</option>
-
-                          <option value="Guatemala">
-                          Guatemala</option>
-
-                          <option value="Guinea">
-                          Guinea</option>
-
-                          <option value="Guinea-Bissau">
-                          Guinea-Bissau</option>
-
-                          <option value="Guyana">
-                          Guyana</option>
-
-                          <option value="Haiti">
-                          Haiti</option>
-
-                          <option value="Holy See">
-                          Holy See</option>
-
-                          <option value="Honduras">
-                          Honduras</option>
-
-                          <option value="Hong Kong">
-                          Hong Kong</option>
-
-                          <option value="Hungary">
-                          Hungary</option>
-
-                          <option value="Iceland">
-                          Iceland</option>
-
-                          <option value="India">
-                          India</option>
-
-                          <option value="Indonesia">
-                          Indonesia</option>
-
-                          <option value="Iran">
-                          Iran</option>
-
-                          <option value="Iraq">
-                          Iraq</option>
-
-                          <option value="Ireland">
-                          Ireland</option>
-
-                          <option value="Israel">
-                          Israel</option>
-
-                          <option value="Italy">
-                          Italy</option>
-
-                          <option value="Jamaica">
-                          Jamaica</option>
-
-                          <option value="Japan">
-                          Japan</option>
-
-                          <option value="Jordan">
-                          Jordan</option>
-
-                          <option value="Kazakhstan">
-                          Kazakhstan</option>
-
-                          <option value="Kenya">
-                          Kenya</option>
-
-                          <option value="Kiribati">
-                          Kiribati</option>
-
-                          <option value="Kuwait">
-                          Kuwait</option>
-
-                          <option value="Kyrgyzstan">
-                          Kyrgyzstan</option>
-
-                          <option value="Laos">
-                          Laos</option>
-
-                          <option value="Latvia">
-                          Latvia</option>
-
-                          <option value="Lebanon">
-                          Lebanon</option>
-
-                          <option value="Lesotho">
-                          Lesotho</option>
-
-                          <option value="Liberia">
-                          Liberia</option>
-
-                          <option value="Libya">
-                          Libya</option>
-
-                          <option value="Liechtenstein">
-                          Liechtenstein</option>
-
-                          <option value="Lithuania">
-                          Lithuania</option>
-
-                          <option value="Luxembourg">
-                          Luxembourg</option>
-
-                          <option value="Macau">
-                          Macau</option>
-
-                          <option value="Madagascar">
-                          Madagascar</option>
-
-                          <option value="Malawi">
-                          Malawi</option>
-
-                          <option value="Malaysia">
-                          Malaysia</option>
-
-                          <option value="Maldives">
-                          Maldives</option>
-
-                          <option value="Mali">
-                          Mali</option>
-
-                          <option value="Malta">
-                          Malta</option>
-
-                          <option value="Marshall Islands">
-                          Marshall Islands</option>
-
-                          <option value="Mauritania">
-                          Mauritania</option>
-
-                          <option value="Mauritius">
-                          Mauritius</option>
-
-                          <option value="Mexico">
-                          Mexico</option>
-
-                          <option value="Micronesia">
-                          Micronesia</option>
-
-                          <option value="Moldova">
-                          Moldova</option>
-
-                          <option value="Monaco">
-                          Monaco</option>
-
-                          <option value="Mongolia">
-                          Mongolia</option>
-
-                          <option value="Montenegro">
-                          Montenegro</option>
-
-                          <option value="Morocco">
-                          Morocco</option>
-
-                          <option value="Mozambique">
-                          Mozambique</option>
-
-                          <option value="Myanmar (formerly Burma)">
-                          Myanmar (formerly Burma)</option>
-
-                          <option value="Namibia">
-                          Namibia</option>
-
-                          <option value="Nauru">
-                          Nauru</option>
-
-                          <option value="Nepal">
-                          Nepal</option>
-
-                          <option value="Netherlands">
-                          Netherlands</option>
-
-                          <option value="New Zealand">
-                          New Zealand</option>
-
-                          <option value="Nicaragua">
-                          Nicaragua</option>
-
-                          <option value="Niger">
-                          Niger</option>
-
-                          <option value="Nigeria">
-                          Nigeria</option>
-
-                          <option value="North Korea">
-                          North Korea</option>
-
-                          <option value="North Macedonia">
-                          North Macedonia</option>
-
-                          <option value="Norway">
-                          Norway</option>
-
-                          <option value="Oman">
-                          Oman</option>
-
-                          <option value="Pakistan">
-                          Pakistan</option>
-
-                          <option value="Palau">
-                          Palau</option>
-
-                          <option value="Palestine State">
-                          Palestine State</option>
-
-                          <option value="Panama">
-                          Panama</option>
-
-                          <option value="Papua New Guinea">
-                          Papua New Guinea</option>
-
-                          <option value="Paraguay">
-                          Paraguay</option>
-
-                          <option value="Peru">
-                          Peru</option>
-
-                          <option value="Poland">
-                          Poland</option>
-
-                          <option value="Portugal">
-                          Portugal</option>
-
-                          <option value="Qatar">
-                          Qatar</option>
-
-                          <option value="Romania">
-                          Romania</option>
-
-                          <option value="Russia">
-                          Russia</option>
-
-                          <option value="Rwanda">
-                          Rwanda</option>
-
-                          <option value="Saint Kitts and Nevis">
-                          Saint Kitts and Nevis</option>
-
-                          <option value="Saint Lucia">
-                          Saint Lucia</option>
-
-                          <option value="Saint Vincent and the Grenadines">
-                          Saint Vincent and the Grenadines</option>
-
-                          <option value="Samoa">
-                          Samoa</option>
-
-                          <option value="San Marino">
-                          San Marino</option>
-
-                          <option value="Sao Tome and Principe">
-                          Sao Tome and Principe</option>
-
-                          <option value="Saudi Arabia">
-                          Saudi Arabia</option>
-
-                          <option value="Senegal">
-                          Senegal</option>
-
-                          <option value="Serbia">
-                          Serbia</option>
-
-                          <option value="Seychelles">
-                          Seychelles</option>
-
-                          <option value="Sierra Leone">
-                          Sierra Leone</option>
-
-                          <option value="Singapore">
-                          Singapore</option>
-
-                          <option value="Slovakia">
-                          Slovakia</option>
-
-                          <option value="Slovenia">
-                          Slovenia</option>
-
-                          <option value="Solomon Islands">
-                          Solomon Islands</option>
-
-                          <option value="Somalia">
-                          Somalia</option>
-
-                          <option value="South Africa">
-                          South Africa</option>
-
-                          <option value="South Korea">
-                          South Korea</option>
-
-                          <option value="South Sudan">
-                          South Sudan</option>
-
-                          <option value="Spain">
-                          Spain</option>
-
-                          <option value="Sri Lanka">
-                          Sri Lanka</option>
-
-                          <option value="Sudan">
-                          Sudan</option>
-
-                          <option value="Suriname">
-                          Suriname</option>
-
-                          <option value="Sweden">
-                          Sweden</option>
-
-                          <option value="Switzerland">
-                          Switzerland</option>
-
-                          <option value="Syria">
-                          Syria</option>
-
-                          <option value="Taiwan">
-                          Taiwan</option>
-
-                          <option value="Tajikistan">
-                          Tajikistan</option>
-
-                          <option value="Tanzania">
-                          Tanzania</option>
-
-                          <option value="Thailand">
-                          Thailand</option>
-
-                          <option value="Timor-Leste">
-                          Timor-Leste</option>
-
-                          <option value="Togo">
-                          Togo</option>
-
-                          <option value="Tonga">
-                          Tonga</option>
-
-                          <option value="Trinidad and Tobago">
-                          Trinidad and Tobago</option>
-
-                          <option value="Tunisia">
-                          Tunisia</option>
-
-                          <option value="Turkey">
-                          Turkey</option>
-
-                          <option value="Turkmenistan">
-                          Turkmenistan</option>
-
-                          <option value="Tuvalu">
-                          Tuvalu</option>
-
-                          <option value="Uganda">
-                          Uganda</option>
-
-                          <option value="Ukraine">
-                          Ukraine</option>
-
-                          <option value="United Arab Emirates">
-                          United Arab Emirates</option>
-
-                          <option value="United Kingdom">
-                          United Kingdom</option>
-
-                          <option value="United States of America">
-                          United States of America</option>
-
-                          <option value="Uruguay">
-                          Uruguay</option>
-
-                          <option value="Uzbekistan">
-                          Uzbekistan</option>
-
-                          <option value="Vanuatu">
-                          Vanuatu</option>
-
-                          <option value="Venezuela">
-                          Venezuela</option>
-
-                          <option value="Vietnam">
-                          Vietnam</option>
-
-                          <option value="Yemen">
-                          Yemen</option>
-
-                          <option value="Zambia">
-                          Zambia</option>
-
-                          <option value="Zimbabwe">
-                          Zimbabwe</option>
-
-                          </select>
+                      <div className="proceed-btn-section">
+                        <div style={{ display: "flex", gap: "10px" }}>
+                          <button type="button" className="back-btn" onClick={prevStep} disabled={isSubmitting}>Back</button>
+                          <button type="button" className={`proceed-btn ${isSubmitting || !isCurrentStepValid ? "disabled disabled-proceed" : ""}`} onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
+                            {nextButtonContent}
+                          </button>
+                        </div>
                       </div>
-                  </div>
-                </div>
+                    </>
+                  ) : null}
                 
 
-                <div className="profile-info">
-                  <label>Years of Service (Bilang ng Taon ng Serbisyo) <span className="required-field">*</span></label>
-                  <div className="field-wrap">
-                      <div className="fill-info">
-                        {/* {meta.ofw_year_service ? (
-                          <h5>{getMetaValue("ofw_year_service", "Not provided")}</h5>
-                        ) : ( */}
-                          <input type="number" id="ofw_year_service" name="ofw_year_service" value={ofwYearService} onChange={(e) => setOfwYearService(e.target.value)} required />
-                        {/* )} */}
-                      </div>
-                  </div>
-                </div>
+                  {step === 3 ? (
+                    <>
+                    <div className="step-3">
+                      <h3>Information of OFW (Impormasyon ng OFW)</h3>
 
-                <div className="profile-info">
-                  <label>Monthly Income Range (Buwanang Sweldo)</label>
-                  <div className="field-wrap">
-                    <div className="fill-info">
-                      {/* {meta.ofw_income ? (
-                        <h5>{getMetaValue("ofw_income", "Not provided")}</h5>
-                      ) : ( */}
-                        <select name="ofw_income" id="" value={ofwIncome} onChange={(e) => setOfwIncome(e.target.value)}  >
-                          <option value="">- Select Montly Income Range -</option>
-                          <option value="1.00 - 25,000.00">1.00 - 25,000.00</option>
-                          <option value="25,001.00 - 50,000.00">25,001.00 - 50,000.00</option>
-                          <option value="50,000.01 - 100,000.00">50,000.01 - 100,000.00</option>
-                          <option value="100,001.00 - 125,000.00">100,001.00 - 125,000.00</option>
-                          <option value="125,001.00 - 150,000.00">125,001.00 - 150,000.00</option>
-                          <option value="Above 150,000.00">Above 150,000.00</option>
-                        </select>
-                      {/* )} */}
-                    </div>
-                  </div>
-                </div>
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label htmlFor="profession">Profession</label>
+                          <input type="text" id="profession" name="profession" value={profession} onChange={(e) => setProfession(e.target.value)} onBlur={() => setTouched({ ...touched, profession: true })} style={{ borderColor: !profession.trim() && touched.profession ? "red" : "" }} placeholder="Profession" />
 
-                {!isOfwTypeOne ? (
-                  <div className="profile-info">
-                    <label>Relationship with OFW (Relasyon sa OFW) </label>
-                    <div className="field-wrap">
-                        <div className="fill-info">
-                          {/* {meta.relationship ? (
-                            <h5>{getMetaValue("relationship", "Not provided")}</h5>
-                          ) : ( */}
-                            <select name="relationship" id="relationship" value={relationship} onChange={(e) => setRelationship(e.target.value)}  required>
-                              <option value="">- Select Relationship -</option>
-                              <option value="Parent"  >Parent (Magulang)</option>
-                              <option value="Sibling" >Sibling (Kapatid)</option>
-                              <option value="Spouse" >Spouse (Asawa)</option>
-                              <option value="Child" >Child (Anak)</option>
-                            </select>
-                          {/* )} */}
+                          {!profession.trim() && touched.profession && (
+                  
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Profession is required 
+                                </div>
+                            )}
                         </div>
-                    </div>
-                  </div>
-                ) : null}
+                        <div className="profile-info">
+                          <label htmlFor="passportID">Passport ID</label>
+                          <input type="text" name="passport_id"  id="passportid" value={passportId} onChange={(e) => setPassportId(e.target.value)} onBlur={() => setTouched({ ...touched, passportId: true })} style={{ borderColor: !passportId.trim() && touched.passportId ? "red" : "" }} placeholder="Passport ID (Numero ng Pasaporte)" required />
+                              {passportValidationMessage ? (
+                                <span
+                                  id="message"
+                                  className={passportValidationClassName}
+                                  style={{ display: "block", marginTop: "8px" }}
+                                >
+                                  {passportValidationMessage}
+                                </span>
+                              ) : (
+                                <span id="message"></span>
+                              )}
+                              {!passportId.trim() && touched.passportId && (
+                  
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    Passport ID is required 
+                                </div>
+                            )}
+                        </div>
+                      </div>
 
-                    <div className="profile-info">
-                      <div style={{ display: "flex", gap: "10px" }}>
-                        <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                        <button type="button" onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid || isPassportValidationBlocking} aria-busy={isSubmitting}>
-                          {nextButtonContent}
-                        </button>
+                      <div className="profile-details">
+                        <div className="profile-info">
+                          <label htmlFor="passport">Passport</label>
+                          <input type="file" className="upload-file-input" name="file" id="file" accept="image/png, application/pdf, image/jpeg" onChange={(e) => setPassportFile(e.target.files?.[0] || null)} required />
+                          {renderDocumentPreview("passport", "Passport")}
+                            
+                        </div>
+                      </div>
+
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <h3>Ikaw ba ay OWWA Member? <span>*</span></h3>
+                        </div>
+
+                        <div className="profile-info">
+                          <div className="reg_radio">
+                            <div className="reg_radio-list">
+                              <input type="radio" name="owwa_member" value="yes" checked={owwaMember === "yes"} onChange={(e) => setOwwaMember(e.target.value)} onBlur={() => setTouched({ ...touched, owwaMember: true })} style={{ borderColor: !owwaMember.trim() && touched.owwaMember ? "red" : "" }} /> Yes (Oo)
+                            </div>
+                            <div className="reg_radio-list">
+                              <input type="radio" name="owwa_member" value="no" checked={owwaMember === "no"} onChange={(e) => setOwwaMember(e.target.value)} onBlur={() => setTouched({ ...touched, owwaMember: true })} style={{ borderColor: !owwaMember.trim() && touched.owwaMember ? "red" : "" }} /> No (Hindi)
+                            </div>
+                          </div>
+
+                          {!owwaMember.trim() && touched.owwaMember && (
+                  
+                                <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                    OWWA Membership selection is required 
+                                </div>
+                            )}
+                        </div>
+                      </div>
+                      {owwaMember === "yes" && (
+                        <div className="profile-details">
+                          <div className="profile-info" id="owwa_ofw_id">
+                            <label>OWWA OFW ID No. </label>
+                            <div className="field-wrap">
+                                <div className="fill-info">
+                                  {/* {meta.owwa_ofw_id ? (
+                                    <h5>{getMetaValue("owwa_ofw_id", "Not provided")}</h5>
+                                  ) : ( */}
+                                    <input type="text" name="owwa_ofw_id" placeholder="OWWA OFW ID No." value={owwaOfwId} onChange={(e) => setOwwaOfwId(e.target.value)} />
+                                  {/* )} */}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {!isOfwTypeOne ? (
+                          <>
+                              {/* Relative of OFW */}
+                              <div className="profile-details two-column">
+                                <div className="profile-info">
+                                  <label>OFW First Name <br/>(Pangalan ng OFW)<span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                      <div className="fill-info">
+                                        {/* {meta.ofw_firstname ? (
+                                          <h5>{getMetaValue("ofw_firstname", "Not provided")}</h5>
+                                        ) : ( */}
+                                          <input type="text" name="ofw_firstname" value={ofwFirstname} onChange={(e) => setOfwFirstname(e.target.value)} placeholder="OFW First Name" required />
+                                        {/* )} */}
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div className="profile-info">
+                                  <label>OFW Middle Name <br/>(Apelyido bago ikinasal/Apelyido ng Ina:)<span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                      <div className="fill-info">
+                                        {/* {meta.ofw_middlename ? (
+                                          <h5>{getMetaValue("ofw_middlename", "Not provided")}</h5>
+                                        ) : ( */}
+                                          <input type="text" name="ofw_middlename" value={ofwMiddlename} onChange={(e) => setOfwMiddlename(e.target.value)} placeholder="OFW Middle Name" required />
+                                        {/* )} */}
+                                      </div>
+                                  </div>
+                                </div>
+
+
+                                <div className="profile-info">
+                                  <label>OFW Last Name <br/>(Apelyido ng OFW)<span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                      <div className="fill-info">
+                                        {/* {meta.ofw_lastname ? (
+                                          <h5>{getMetaValue("ofw_lastname", "Not provided")}</h5>
+                                        ) : ( */}
+                                          <input type="text" name="ofw_lastname" value={ofwLastname} onChange={(e) => setOfwLastname(e.target.value)} placeholder="OFW Last Name" required />
+                                        {/* )} */}
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="profile-details two-column">
+                                <div className="profile-info">
+                                  <label>OFW Status <br/>(Estado sa Buhay:)<span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                      <div className="fill-info">
+                                        {/* {meta.ofw_status ? (
+                                          <h5>{getMetaValue("ofw_status", "Not provided")}</h5>
+                                        ) : ( */}
+                                          <select name="ofw_status" id="" value={ofw_status} onChange={(e) => setofw_status(e.target.value)} required>
+                                            <option value="">- Select OFW Status</option>
+                                            <option value="Single">Single (Walang Asawa)</option>
+                                          <option value="Married">Married (May Asawa)</option>
+                                          <option value="Separated">Separated (Hiwalay sa Asawa)</option>
+                                          <option value="Widowed">Widowed (Biyudo/Biyuda)</option>
+                                          <option value="Divorced">Divorced (Diborsyado)</option>
+                                          </select>
+                                        {/* )} */}
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div className="profile-info">
+                                  <label>OFW Profession <br/>(Trabaho)<span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                      <div className="fill-info">
+                                        {/* {meta.ofw_profession ? (
+                                          <h5>{getMetaValue("ofw_profession", "Not provided")}</h5>
+                                        ) : ( */}
+                                          <input type="text" name="ofw_profession" value={ofw_profession} onChange={(e) => setOfwProfession(e.target.value)} placeholder="OFW Profession" required />
+                                        {/* )} */}
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="profile-details">
+                                <div className="profile-info">
+                                  <label>OFW Email Address <span className="required-field">*</span></label>
+                                  <div className="field-wrap">
+                                    <div className="fill-info">
+                                      {/* {meta.ofw_emailaddress ? (
+                                        <h5>{getMetaValue("ofw_emailaddress", "Not provided")}</h5>
+                                      ) : ( */}
+                                        <input type="text" name="ofw_emailaddress" value={ofw_emailaddress} onChange={(e) => setofw_emailaddress(e.target.value)} placeholder="OFW Email Address" required />
+                                      {/* )} */}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* End of Relative of OFW */}
+                            </>
+                      ) : null}
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label>Work Country (Bansang Pinagtatrabahuhan) <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                              <div className="fill-info">
+                                  <select name="work_country" id="work_country" value={workCountry} onChange={(e) => setWorkCountry(e.target.value)}  onBlur={() => setTouched({ ...touched, workCountry: true })} style={{ borderColor: !workCountry.trim() && touched.workCountry ? "red" : "" }} required>
+                                    <option value="">- Select Work Country -</option>
+                                  <option value="Albania">Albania</option>
+
+                                  <option value="Algeria">Algeria</option>
+
+                                  <option value="Andorra">Andorra</option>
+
+                                  <option value="Angola">Angola</option>
+
+                                  <option value="Antigua and Barbuda">Antigua and Barbuda</option>
+
+                                  <option value="Argentina">Argentina</option>
+
+                                  <option value="Armenia">Armenia</option>
+
+                                  <option value="Australia">Australia</option>
+
+                                  <option value="Austria">Austria</option>
+
+                                  <option value="Azerbaijan">Azerbaijan</option>
+
+                                  <option value="Bahamas">Bahamas</option>
+
+                                  <option value="Bahrain">Bahrain</option>
+
+                                  <option value="Bangladesh">Bangladesh</option>
+
+                                  <option value="Barbados">Barbados</option>
+
+                                  <option value="Belarus">Belarus</option>
+
+                                  <option value="Belgium">Belgium</option>
+
+                                  <option value="Belize">Belize</option>
+
+                                  <option value="Benin">Benin</option>
+
+                                  <option value="Bhutan">Bhutan</option>
+
+                                  <option value="Bolivia">Bolivia</option>
+
+                                  <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
+
+                                  <option value="Botswana">Botswana</option>
+
+                                  <option value="Brazil">Brazil</option>
+
+                                  <option value="Brunei">Brunei</option>
+
+                                  <option value="Bulgaria">Bulgaria</option>
+
+                                  <option value="Burkina Faso">Burkina Faso</option>
+
+                                  <option value="Burundi">Burundi</option>
+
+                                  <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+
+                                  <option value="Cabo Verde">Cabo Verde</option>
+
+                                  <option value="Cambodia">Cambodia</option>
+
+                                  <option value="Cameroon">
+                                  Cameroon</option>
+
+                                  <option value="Canada">
+                                  Canada</option>
+
+                                  <option value="Central African Republic">
+                                  Central African Republic</option>
+
+                                  <option value="Chad">
+                                  Chad</option>
+
+                                  <option value="Chile">
+                                  Chile</option>
+
+                                  <option value="China">
+                                  China</option>
+
+                                  <option value="Colombia">
+                                  Colombia</option>
+
+                                  <option value="Comoros">
+                                  Comoros</option>
+
+                                  <option value="Congo (Congo-Brazzaville)">
+                                  Congo (Congo-Brazzaville)</option>
+
+                                  <option value="Costa Rica">
+                                  Costa Rica</option>
+
+                                  <option value="Croatia">
+                                  Croatia</option>
+
+                                  <option value="Cuba">
+                                  Cuba</option>
+
+                                  <option value="Cyprus">
+                                  Cyprus</option>
+
+                                  <option value="Czechia (Czech Republic)">
+                                  Czechia (Czech Republic)</option>
+
+                                  <option value="Democratic Republic of the Congo">
+                                  Democratic Republic of the Congo</option>
+
+                                  <option value="Denmark">
+                                  Denmark</option>
+
+                                  <option value="Djibouti">
+                                  Djibouti</option>
+
+                                  <option value="Dominica">
+                                  Dominica</option>
+
+                                  <option value="Dominican Republic">
+                                  Dominican Republic</option>
+
+                                  <option value="Ecuador">
+                                  Ecuador</option>
+
+                                  <option value="Egypt">
+                                  Egypt</option>
+
+                                  <option value="El Salvador">
+                                  El Salvador</option>
+
+                                  <option value="Equatorial Guinea">
+                                  Equatorial Guinea</option>
+
+                                  <option value="Eritrea">
+                                  Eritrea</option>
+
+                                  <option value="Estonia">
+                                  Estonia</option>
+
+                                  <option value="Eswatini (fmr. Swaziland)">
+                                  Eswatini (fmr. "Swaziland")</option>
+
+                                  <option value="Ethiopia">
+                                  Ethiopia</option>
+
+                                  <option value="Fiji">
+                                  Fiji</option>
+
+                                  <option value="Finland">
+                                  Finland</option>
+
+                                  <option value="France">
+                                  France</option>
+
+                                  <option value="Gabon">
+                                  Gabon</option>
+
+                                  <option value="Gambia">
+                                  Gambia</option>
+
+                                  <option value="Georgia">
+                                  Georgia</option>
+
+                                  <option value="Germany">
+                                  Germany</option>
+
+                                  <option value="Ghana">
+                                  Ghana</option>
+
+                                  <option value="Greece">
+                                  Greece</option>
+
+                                  <option value="Grenada">
+                                  Grenada</option>
+
+                                  <option value="Guatemala">
+                                  Guatemala</option>
+
+                                  <option value="Guinea">
+                                  Guinea</option>
+
+                                  <option value="Guinea-Bissau">
+                                  Guinea-Bissau</option>
+
+                                  <option value="Guyana">
+                                  Guyana</option>
+
+                                  <option value="Haiti">
+                                  Haiti</option>
+
+                                  <option value="Holy See">
+                                  Holy See</option>
+
+                                  <option value="Honduras">
+                                  Honduras</option>
+
+                                  <option value="Hong Kong">
+                                  Hong Kong</option>
+
+                                  <option value="Hungary">
+                                  Hungary</option>
+
+                                  <option value="Iceland">
+                                  Iceland</option>
+
+                                  <option value="India">
+                                  India</option>
+
+                                  <option value="Indonesia">
+                                  Indonesia</option>
+
+                                  <option value="Iran">
+                                  Iran</option>
+
+                                  <option value="Iraq">
+                                  Iraq</option>
+
+                                  <option value="Ireland">
+                                  Ireland</option>
+
+                                  <option value="Israel">
+                                  Israel</option>
+
+                                  <option value="Italy">
+                                  Italy</option>
+
+                                  <option value="Jamaica">
+                                  Jamaica</option>
+
+                                  <option value="Japan">
+                                  Japan</option>
+
+                                  <option value="Jordan">
+                                  Jordan</option>
+
+                                  <option value="Kazakhstan">
+                                  Kazakhstan</option>
+
+                                  <option value="Kenya">
+                                  Kenya</option>
+
+                                  <option value="Kiribati">
+                                  Kiribati</option>
+
+                                  <option value="Kuwait">
+                                  Kuwait</option>
+
+                                  <option value="Kyrgyzstan">
+                                  Kyrgyzstan</option>
+
+                                  <option value="Laos">
+                                  Laos</option>
+
+                                  <option value="Latvia">
+                                  Latvia</option>
+
+                                  <option value="Lebanon">
+                                  Lebanon</option>
+
+                                  <option value="Lesotho">
+                                  Lesotho</option>
+
+                                  <option value="Liberia">
+                                  Liberia</option>
+
+                                  <option value="Libya">
+                                  Libya</option>
+
+                                  <option value="Liechtenstein">
+                                  Liechtenstein</option>
+
+                                  <option value="Lithuania">
+                                  Lithuania</option>
+
+                                  <option value="Luxembourg">
+                                  Luxembourg</option>
+
+                                  <option value="Macau">
+                                  Macau</option>
+
+                                  <option value="Madagascar">
+                                  Madagascar</option>
+
+                                  <option value="Malawi">
+                                  Malawi</option>
+
+                                  <option value="Malaysia">
+                                  Malaysia</option>
+
+                                  <option value="Maldives">
+                                  Maldives</option>
+
+                                  <option value="Mali">
+                                  Mali</option>
+
+                                  <option value="Malta">
+                                  Malta</option>
+
+                                  <option value="Marshall Islands">
+                                  Marshall Islands</option>
+
+                                  <option value="Mauritania">
+                                  Mauritania</option>
+
+                                  <option value="Mauritius">
+                                  Mauritius</option>
+
+                                  <option value="Mexico">
+                                  Mexico</option>
+
+                                  <option value="Micronesia">
+                                  Micronesia</option>
+
+                                  <option value="Moldova">
+                                  Moldova</option>
+
+                                  <option value="Monaco">
+                                  Monaco</option>
+
+                                  <option value="Mongolia">
+                                  Mongolia</option>
+
+                                  <option value="Montenegro">
+                                  Montenegro</option>
+
+                                  <option value="Morocco">
+                                  Morocco</option>
+
+                                  <option value="Mozambique">
+                                  Mozambique</option>
+
+                                  <option value="Myanmar (formerly Burma)">
+                                  Myanmar (formerly Burma)</option>
+
+                                  <option value="Namibia">
+                                  Namibia</option>
+
+                                  <option value="Nauru">
+                                  Nauru</option>
+
+                                  <option value="Nepal">
+                                  Nepal</option>
+
+                                  <option value="Netherlands">
+                                  Netherlands</option>
+
+                                  <option value="New Zealand">
+                                  New Zealand</option>
+
+                                  <option value="Nicaragua">
+                                  Nicaragua</option>
+
+                                  <option value="Niger">
+                                  Niger</option>
+
+                                  <option value="Nigeria">
+                                  Nigeria</option>
+
+                                  <option value="North Korea">
+                                  North Korea</option>
+
+                                  <option value="North Macedonia">
+                                  North Macedonia</option>
+
+                                  <option value="Norway">
+                                  Norway</option>
+
+                                  <option value="Oman">
+                                  Oman</option>
+
+                                  <option value="Pakistan">
+                                  Pakistan</option>
+
+                                  <option value="Palau">
+                                  Palau</option>
+
+                                  <option value="Palestine State">
+                                  Palestine State</option>
+
+                                  <option value="Panama">
+                                  Panama</option>
+
+                                  <option value="Papua New Guinea">
+                                  Papua New Guinea</option>
+
+                                  <option value="Paraguay">
+                                  Paraguay</option>
+
+                                  <option value="Peru">
+                                  Peru</option>
+
+                                  <option value="Poland">
+                                  Poland</option>
+
+                                  <option value="Portugal">
+                                  Portugal</option>
+
+                                  <option value="Qatar">
+                                  Qatar</option>
+
+                                  <option value="Romania">
+                                  Romania</option>
+
+                                  <option value="Russia">
+                                  Russia</option>
+
+                                  <option value="Rwanda">
+                                  Rwanda</option>
+
+                                  <option value="Saint Kitts and Nevis">
+                                  Saint Kitts and Nevis</option>
+
+                                  <option value="Saint Lucia">
+                                  Saint Lucia</option>
+
+                                  <option value="Saint Vincent and the Grenadines">
+                                  Saint Vincent and the Grenadines</option>
+
+                                  <option value="Samoa">
+                                  Samoa</option>
+
+                                  <option value="San Marino">
+                                  San Marino</option>
+
+                                  <option value="Sao Tome and Principe">
+                                  Sao Tome and Principe</option>
+
+                                  <option value="Saudi Arabia">
+                                  Saudi Arabia</option>
+
+                                  <option value="Senegal">
+                                  Senegal</option>
+
+                                  <option value="Serbia">
+                                  Serbia</option>
+
+                                  <option value="Seychelles">
+                                  Seychelles</option>
+
+                                  <option value="Sierra Leone">
+                                  Sierra Leone</option>
+
+                                  <option value="Singapore">
+                                  Singapore</option>
+
+                                  <option value="Slovakia">
+                                  Slovakia</option>
+
+                                  <option value="Slovenia">
+                                  Slovenia</option>
+
+                                  <option value="Solomon Islands">
+                                  Solomon Islands</option>
+
+                                  <option value="Somalia">
+                                  Somalia</option>
+
+                                  <option value="South Africa">
+                                  South Africa</option>
+
+                                  <option value="South Korea">
+                                  South Korea</option>
+
+                                  <option value="South Sudan">
+                                  South Sudan</option>
+
+                                  <option value="Spain">
+                                  Spain</option>
+
+                                  <option value="Sri Lanka">
+                                  Sri Lanka</option>
+
+                                  <option value="Sudan">
+                                  Sudan</option>
+
+                                  <option value="Suriname">
+                                  Suriname</option>
+
+                                  <option value="Sweden">
+                                  Sweden</option>
+
+                                  <option value="Switzerland">
+                                  Switzerland</option>
+
+                                  <option value="Syria">
+                                  Syria</option>
+
+                                  <option value="Taiwan">
+                                  Taiwan</option>
+
+                                  <option value="Tajikistan">
+                                  Tajikistan</option>
+
+                                  <option value="Tanzania">
+                                  Tanzania</option>
+
+                                  <option value="Thailand">
+                                  Thailand</option>
+
+                                  <option value="Timor-Leste">
+                                  Timor-Leste</option>
+
+                                  <option value="Togo">
+                                  Togo</option>
+
+                                  <option value="Tonga">
+                                  Tonga</option>
+
+                                  <option value="Trinidad and Tobago">
+                                  Trinidad and Tobago</option>
+
+                                  <option value="Tunisia">
+                                  Tunisia</option>
+
+                                  <option value="Turkey">
+                                  Turkey</option>
+
+                                  <option value="Turkmenistan">
+                                  Turkmenistan</option>
+
+                                  <option value="Tuvalu">
+                                  Tuvalu</option>
+
+                                  <option value="Uganda">
+                                  Uganda</option>
+
+                                  <option value="Ukraine">
+                                  Ukraine</option>
+
+                                  <option value="United Arab Emirates">
+                                  United Arab Emirates</option>
+
+                                  <option value="United Kingdom">
+                                  United Kingdom</option>
+
+                                  <option value="United States of America">
+                                  United States of America</option>
+
+                                  <option value="Uruguay">
+                                  Uruguay</option>
+
+                                  <option value="Uzbekistan">
+                                  Uzbekistan</option>
+
+                                  <option value="Vanuatu">
+                                  Vanuatu</option>
+
+                                  <option value="Venezuela">
+                                  Venezuela</option>
+
+                                  <option value="Vietnam">
+                                  Vietnam</option>
+
+                                  <option value="Yemen">
+                                  Yemen</option>
+
+                                  <option value="Zambia">
+                                  Zambia</option>
+
+                                  <option value="Zimbabwe">
+                                  Zimbabwe</option>
+
+                                  </select>
+                                  {!workCountry.trim() && touched.workCountry && (
+                  
+                                      <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                          Work Country selection is required 
+                                      </div>
+                                  )}
+                              </div>
+                          </div>
+                        </div>
+
+                        <div className="profile-info">
+                          <label>Years of Service (Bilang ng Taon ng Serbisyo) <span className="required-field">*</span></label>
+                          <div className="field-wrap">
+                              <div className="fill-info">
+                                  <input type="number" id="ofw_year_service" name="ofw_year_service" value={ofwYearService} onChange={(e) => setOfwYearService(e.target.value)}   onBlur={() => setTouched({ ...touched, ofwYearService: true })} style={{ borderColor: !ofwYearService.trim() && touched.ofwYearService ? "red" : "" }} required />
+                                  {!ofwYearService.trim() && touched.ofwYearService && (
+                                      <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
+                                          Years of Service is required 
+                                      </div>
+                                  )}
+                              </div>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div className="profile-details two-column">
+                        <div className="profile-info">
+                          <label>Monthly Income Range (Buwanang Sweldo)</label>
+                          <div className="field-wrap">
+                            <div className="fill-info">
+                              {/* {meta.ofw_income ? (
+                                <h5>{getMetaValue("ofw_income", "Not provided")}</h5>
+                              ) : ( */}
+                                <select name="ofw_income" id="" value={ofwIncome} onChange={(e) => setOfwIncome(e.target.value)}  >
+                                  <option value="">- Select Montly Income Range -</option>
+                                  <option value="1.00 - 25,000.00">1.00 - 25,000.00</option>
+                                  <option value="25,001.00 - 50,000.00">25,001.00 - 50,000.00</option>
+                                  <option value="50,000.01 - 100,000.00">50,000.01 - 100,000.00</option>
+                                  <option value="100,001.00 - 125,000.00">100,001.00 - 125,000.00</option>
+                                  <option value="125,001.00 - 150,000.00">125,001.00 - 150,000.00</option>
+                                  <option value="Above 150,000.00">Above 150,000.00</option>
+                                </select>
+                              {/* )} */}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="profile-info">
+                          &nbsp;
+                        </div>
                       </div>
                     </div>
-                  </>
-                ) : null}
 
-                {step === 4 ? (
+                    <div className="proceed-btn-section">
+                      <div className="profile-info">
+                        <div style={{ display: "flex", gap: "10px" }}>
+                          <button type="button" className="back-btn" onClick={prevStep} disabled={isSubmitting}>Back</button>
+                          <button type="button" className={`proceed-btn ${isSubmitting || !isCurrentStepValid ? "disabled disabled-proceed" : ""}`} onClick={nextStep} disabled={isSubmitting || !isCurrentStepValid} aria-busy={isSubmitting}>
+                            {nextButtonContent}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </>
+                    ) : null}
+
+                  {step === 4 ? (
                   <>
-                    <div className="profile-info">
-                      <h3>Supporting Documents</h3>
-                    </div>
+                    <div className="step-4">
+                      <h2>Supporting Documents</h2>
 
-                <div className="profile-info profile-center">
-                  <div className="documents-note">
-                    <h5><i>Note: Max file upload: <strong>10MB</strong><br/>File Format: JPG, JPEG, PNG and PDF only</i></h5>
-                  </div>
-                </div>
-
-                {/* Relationship as Parent / Sibling */}
-                {!isOfwTypeOne ? (
-                <div className="profile-info">
-                  <label>Birth Certificate of OFW</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="ofw_birthcert" name="ofw_birthcert" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("ofw_birthcert", "Birth Certificate of OFW")}
-                      {/* <div className="upload-msg alert alert-success" id="ofw_birthcert-msg" style="display: none;"></div> */}
-                    </div>
-                  </div>
-                </div>
-                ) : null}
-                {/* End of Relationship as Parent / Sibling */}
-
-                {/* Relationship as Child / Sibling */}
-                <div className="profile-info">
-                  <label>Birth Certificate (Personal)</label>
-                  <div className="field-wrap">
-                      <div className="fill-info upload-docs">
-                        <input type="file" className="upload-file-input" id="birth_cert" name="birth_cert" accept="image/png, application/pdf, image/jpeg" />
-                        {renderDocumentPreview("birth_cert", "Birth Certificate")}
-                        {/* <div className="upload-msg alert alert-success" id="birth-msg" style="display: none;"></div> */}    
+                      <div className="notice">
+                        <img src={warning_logo} alt="Warning" style={{ marginRight: "8px" }}/>
+                        Note: Max file upload: 10MB File Format: JPG, JPEG, PNG and PDF only
                       </div>
-                  </div>
-                </div>
-                {/* End of Relationship as Child / Sibling */}
-                
-                {/* Relationship as Spouse */}
-                {OFWRelationship_type ? (
-                <div className="profile-info">
-                  <label>Marriage Certificate</label>
-                  <div className="field-wrap">
-                      <div className="fill-info upload-docs">
-                        <input type="file" className="upload-file-input" id="married_cert" name="married_cert" accept="image/png, application/pdf, image/jpeg" />
-                        {renderDocumentPreview("married_cert", "Marriage Certificate")}
-                        {/* <div className="upload-msg alert alert-success" id="married-msg" style="display: none;"></div> */}
-                      </div>
-                  </div>
-                </div>
-                ) : null}
-                {/* End of Relationship as Spouse */}
 
-                {/* Relative of OFW */}
-                {!isOfwTypeOne ? (
-                <div className="profile-info">
-                  <label>Valid ID</label>
-                  <div className="field-wrap">
-                      <div className="fill-info upload-docs">
-                        <input type="file" className="upload-file-input" id="valid_id" name="valid_id" accept="image/png, application/pdf, image/jpeg" />
-                        {renderDocumentPreview("valid_id", "Valid ID")}
-                        {/* <div className="upload-msg alert alert-success" id="valid_id-msg" style="display: none;"></div> */}
-                      </div>
-                  </div>
-                </div>
-                ) : null}
-                {/* End of Relative of OFW */}
-
-                <div className="profile-info">
-                  <label>Choose Supporting Documents</label>
-                  <div className="field-wrap">
-                    
-                    <div className="fill-info">
-                      <div className="supp-docs-wrapper">
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs6" value="6" checked={isSupportingDocChecked("select_docs6")} onChange={handleSupportingDocToggle} /> Seaman's Book
+                        {/* Relationship as Parent / Sibling */}
+                        {!isOfwTypeOne ? (
+                        <div className="profile-info">
+                          <label>Birth Certificate of OFW</label>
+                          <div className="field-wrap">
+                            <div className="fill-info upload-docs">
+                              <input type="file" className="upload-file-input" id="ofw_birthcert" name="ofw_birthcert" accept="image/png, application/pdf, image/jpeg" />
+                              {renderDocumentPreview("ofw_birthcert", "Birth Certificate of OFW")}
+                              {/* <div className="upload-msg alert alert-success" id="ofw_birthcert-msg" style="display: none;"></div> */}
+                            </div>
+                          </div>
                         </div>
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs1" value="1" checked={isSupportingDocChecked("select_docs1")} onChange={handleSupportingDocToggle} /> Employment Contract
+                        ) : null}
+                        {/* End of Relationship as Parent / Sibling */}
+
+                        {/* Relationship as Child / Sibling */}
+                        <div className="profile-info">
+                          <label>Birth Certificate (Personal)</label>
+                          <div className="field-wrap">
+                              <div className="fill-info upload-docs">
+                                <input type="file" className="upload-file-input" id="birth_cert" name="birth_cert" accept="image/png, application/pdf, image/jpeg" />
+                                {renderDocumentPreview("birth_cert", "Birth Certificate")}
+                                {/* <div className="upload-msg alert alert-success" id="birth-msg" style="display: none;"></div> */}    
+                              </div>
+                          </div>
                         </div>
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs2" value="2" checked={isSupportingDocChecked("select_docs2")} onChange={handleSupportingDocToggle} /> Working Visa
+                        {/* End of Relationship as Child / Sibling */}
+                        
+                        {/* Relationship as Spouse */}
+                        {OFWRelationship_type ? (
+                        <div className="profile-info">
+                          <label>Marriage Certificate</label>
+                          <div className="field-wrap">
+                              <div className="fill-info upload-docs">
+                                <input type="file" className="upload-file-input" id="married_cert" name="married_cert" accept="image/png, application/pdf, image/jpeg" />
+                                {renderDocumentPreview("married_cert", "Marriage Certificate")}
+                                {/* <div className="upload-msg alert alert-success" id="married-msg" style="display: none;"></div> */}
+                              </div>
+                          </div>
                         </div>
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs3" value="3" checked={isSupportingDocChecked("select_docs3")} onChange={handleSupportingDocToggle} /> OWWA /POEA Registration
+                        ) : null}
+                        {/* End of Relationship as Spouse */}
+
+                        {/* Relative of OFW */}
+                        {!isOfwTypeOne ? (
+                        <div className="profile-info">
+                          <label>Valid ID</label>
+                          <div className="field-wrap">
+                              <div className="fill-info upload-docs">
+                                <input type="file" className="upload-file-input" id="valid_id" name="valid_id" accept="image/png, application/pdf, image/jpeg" />
+                                {renderDocumentPreview("valid_id", "Valid ID")}
+                                {/* <div className="upload-msg alert alert-success" id="valid_id-msg" style="display: none;"></div> */}
+                              </div>
+                          </div>
                         </div>
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs4" value="4" checked={isSupportingDocChecked("select_docs4")} onChange={handleSupportingDocToggle} /> Remittance Slip
+                        ) : null}
+                        {/* End of Relative of OFW */}
+
+                        <div className="profile-info">
+                          <label>Choose Supporting Documents</label>
+                          <div className="field-wrap">
+                            
+                            <div className="fill-info">
+                              <div className="supp-docs-wrapper">
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs6 || hasDocumentData("seaman_book") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs6" value="6" checked={isSupportingDocChecked("select_docs6")} onChange={handleSupportingDocToggle} /> Seaman's Book
+
+                                  {selectedSupportingDocs.select_docs6 || hasDocumentData("seaman_book") ? (
+                                  <div className="profile-info" id="supp_seaman" >
+                                      <label>Seaman’s Book (Ipasa ang Seaman’s book Ng OFW )</label>
+                                      <div className="field-wrap">
+                                          <div className="fill-info upload-docs">
+                                            <input type="file" className="upload-file-input" id="seaman_book" name="seaman_book" accept="image/png, application/pdf, image/jpeg" />
+                                            {renderDocumentPreview("seaman_book", "Seaman's Book")}
+                                          </div>
+                                      </div>
+                                  </div>
+                                  ) : null}
+                                </div>
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs1 || hasDocumentData("employment_contract") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs1" value="1" checked={isSupportingDocChecked("select_docs1")} onChange={handleSupportingDocToggle}  /> Employment Contract
+
+                                  {selectedSupportingDocs.select_docs1 || hasDocumentData("employment_contract") ? (
+                                  <div className="profile-info" id="supp_employment" >
+                                    <label>Employment Contract</label>
+                                    <div className="field-wrap">
+                                      <div className="fill-info upload-docs">
+                                        <input type="file" className="upload-file-input" id="employment_contract" name="employment_contract" accept="image/png, application/pdf, image/jpeg" />
+                                        {renderDocumentPreview("employment_contract", "Employment Contract")}
+                                        <div className="upload-msg alert alert-success" id="employee-msg" style={{ display: 'none' }}></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  ) : null}
+                                </div>
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs2 || hasDocumentData("visa") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs2" value="2" checked={isSupportingDocChecked("select_docs2")} onChange={handleSupportingDocToggle} /> Working Visa
+
+                                  {selectedSupportingDocs.select_docs2 || hasDocumentData("visa") ? (
+                                  <div className="profile-info" id="supp_visa" >
+                                    <label>Working VISA</label>
+                                    <div className="field-wrap">
+                                      <div className="fill-info upload-docs">
+                                        <input type="file" className="upload-file-input" id="visa" name="visa" accept="image/png, application/pdf, image/jpeg" />
+                                        {renderDocumentPreview("visa", "Working VISA")}
+                                        <div className="upload-msg alert alert-success" id="visa-msg" style={{ display: 'none' }}></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  ) : null}
+                                </div>
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs3 || hasDocumentData("owwa_poea") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs3" value="3" checked={isSupportingDocChecked("select_docs3")} onChange={handleSupportingDocToggle} /> OWWA /POEA Registration
+
+                                  {selectedSupportingDocs.select_docs3 || hasDocumentData("owwa_poea") ? (
+                                  <div className="profile-info" id="supp_owwa" >
+                                    <label>OWWA / POEA Registration</label>
+                                    <div className="field-wrap">
+                                      <div className="fill-info upload-docs">
+                                        <input type="file" className="upload-file-input" id="owwa_poea" name="owwa_poea" accept="image/png, application/pdf, image/jpeg" />
+                                        {renderDocumentPreview("owwa_poea", "OWWA / POEA Registration")}
+                                        <div className="upload-msg alert alert-success" id="owa-msg" style={{ display: 'none' }}></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  ) : null}
+                                </div>
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs4 || hasDocumentData("remittance") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs4" value="4" checked={isSupportingDocChecked("select_docs4")} onChange={handleSupportingDocToggle} /> Remittance Slip
+
+                                  {selectedSupportingDocs.select_docs4 || hasDocumentData("remittance") ? (
+                                    <div className="profile-info" id="supp_remit" >
+                                      <label>Remittance Slip</label>
+                                      <div className="field-wrap">
+                                        <div className="fill-info upload-docs">
+                                          <input type="file" className="upload-file-input" id="remittance" name="remittance" accept="image/png, application/pdf, image/jpeg" />
+                                          {renderDocumentPreview("remittance", "Remittance Slip")}
+                                          <div className="upload-msg alert alert-success" id="remit-msg" style={{ display: 'none' }}></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    ) : null}
+                                </div>
+                                <div className="supp-docs-list" style={selectedSupportingDocs.select_docs5 || hasDocumentData("allotment") ? { borderColor: '#58BE75' } : { borderColor: '#ccc' } }>
+                                  <input type="checkbox" className="supp_doc_required" name="select_docs5" value="5" checked={isSupportingDocChecked("select_docs5")} onChange={handleSupportingDocToggle} /> Allotment Certificate
+
+                                  {selectedSupportingDocs.select_docs5 || hasDocumentData("allotment") ? (
+                                    <div className="profile-info" id="supp_allotment">
+                                      <label>Allotment Certificate</label>
+                                      <div className="field-wrap">
+                                        <div className="fill-info upload-docs">
+                                          <input type="file" className="upload-file-input" id="allotment" name="allotment" accept="image/png, application/pdf, image/jpeg" />
+                                          {renderDocumentPreview("allotment", "Allotment Certificate")}
+                                          <div className="upload-msg alert alert-success" id="allotment-msg" style={{ display: 'none' }}></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    ) : null}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="supp-docs-list">
-                          <input type="checkbox" className="supp_doc_required" name="select_docs5" value="5" checked={isSupportingDocChecked("select_docs5")} onChange={handleSupportingDocToggle} /> Allotment Certificate
+                        
+                        <div className="proceed-btn-section profile-info">
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <button type="button" onClick={prevStep} className="back-btn" disabled={isSubmitting}>Back</button>
+                            <button type="submit" name="profile_submit" className="proceed-btn" disabled={ isSubmitting || isPassportValidationBlocking || !isStepValid() } aria-busy={isSubmitting} style={{ minWidth: "120px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", }} > {isSubmitting ? ( <> <span className="spinner-border spinner-border-sm" aria-hidden="true" /> <span>Submitting...</span> </> ) : ( "Submit" )} </button>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                {selectedSupportingDocs.select_docs6 || hasDocumentData("seaman_book") ? (
-                <div className="profile-info" id="supp_seaman" >
-                    <label>Seaman's Book</label>
-                    <div className="field-wrap">
-                        <div className="fill-info upload-docs">
-                          <input type="file" className="upload-file-input" id="seaman_book" name="seaman_book" accept="image/png, application/pdf, image/jpeg" />
-                          {renderDocumentPreview("seaman_book", "Seaman's Book")}
-                          {/* <div className="upload-msg alert alert-success" id="sb-msg" style="display: none;"></div> */}
-                        </div>
-                    </div>
-                </div>
-                ) : null}
 
-                {selectedSupportingDocs.select_docs1 || hasDocumentData("employment_contract") ? (
-                <div className="profile-info" id="supp_employment" >
-                  <label>Employment Contract</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="employment_contract" name="employment_contract" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("employment_contract", "Employment Contract")}
-                      <div className="upload-msg alert alert-success" id="employee-msg" style={{ display: 'none' }}></div>
                     </div>
-                  </div>
-                </div>
-                ) : null}
-
-                {selectedSupportingDocs.select_docs2 || hasDocumentData("visa") ? (
-                <div className="profile-info" id="supp_visa" >
-                  <label>Working VISA</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="visa" name="visa" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("visa", "Working VISA")}
-                      <div className="upload-msg alert alert-success" id="visa-msg" style={{ display: 'none' }}></div>
-                    </div>
-                  </div>
-                </div>
-                ) : null}
-
-                {selectedSupportingDocs.select_docs3 || hasDocumentData("owwa_poea") ? (
-                <div className="profile-info" id="supp_owwa" >
-                  <label>OWWA / POEA Registration</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="owwa_poea" name="owwa_poea" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("owwa_poea", "OWWA / POEA Registration")}
-                      <div className="upload-msg alert alert-success" id="owa-msg" style={{ display: 'none' }}></div>
-                    </div>
-                  </div>
-                </div>
-                ) : null}
-
-                {selectedSupportingDocs.select_docs4 || hasDocumentData("remittance") ? (
-                <div className="profile-info" id="supp_remit" >
-                  <label>Remittance Slip</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="remittance" name="remittance" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("remittance", "Remittance Slip")}
-                      <div className="upload-msg alert alert-success" id="remit-msg" style={{ display: 'none' }}></div>
-                    </div>
-                  </div>
-                </div>
-                ) : null}
-
-                {selectedSupportingDocs.select_docs5 || hasDocumentData("allotment") ? (
-                <div className="profile-info" id="supp_allotment">
-                  <label>Allotment Certificate</label>
-                  <div className="field-wrap">
-                    <div className="fill-info upload-docs">
-                      <input type="file" className="upload-file-input" id="allotment" name="allotment" accept="image/png, application/pdf, image/jpeg" />
-                      {renderDocumentPreview("allotment", "Allotment Certificate")}
-                      <div className="upload-msg alert alert-success" id="allotment-msg" style={{ display: 'none' }}></div>
-                    </div>
-                  </div>
-                </div>
-                ) : null}
-
-                <div className="one-column_field">
-                  <div id="message"></div>
-                </div>
-                <div className="profile-info">
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <button type="button" onClick={prevStep} disabled={isSubmitting}>Back</button>
-                    <button type="submit" name="profile_submit" disabled={ isSubmitting || isPassportValidationBlocking || !isStepValid() } aria-busy={isSubmitting} style={{ minWidth: "120px", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "8px", }} > {isSubmitting ? ( <> <span className="spinner-border spinner-border-sm" aria-hidden="true" /> <span>Submitting...</span> </> ) : ( "Submit" )} </button>
-                  </div>
-                </div>
                   </>
-                ) : null}
-
+                  ) : null}
+                </div>
               </div>
-            </div>
-          </div>
             </form>
           )}
         </div>
