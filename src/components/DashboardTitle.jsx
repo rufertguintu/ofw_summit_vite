@@ -15,6 +15,7 @@ function DashboardTitle() {
         "/global-records": "Global Records",
         "/2024-records": "2024 Records",
         "/export-data": "Export of Data",
+        "/status-filtered/verified": "Verified Status",
     };
 
     const currentTitle = titles[location.pathname] || "Page";

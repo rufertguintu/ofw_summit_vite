@@ -97,11 +97,9 @@ const Dashboard = () => {
     return <>
         <div className="p-[40px]">
             <DashboardTitle />
-            
+
             <h3 className="text-1xl font-medium block mt-10">Validation Type</h3>
-            <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-primary border border-primary-line text-primary-foreground hover:bg-primary-hover focus:outline-hidden focus:bg-primary-focus disabled:opacity-50 disabled:pointer-events-none" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-offcanvas-example" data-hs-overlay="#hs-offcanvas-example">
-            Open (right) offcanvas
-            </button>
+            
             <div className="flex flex-row gap-10 mt-10">
 
                 <div className="w-4/12 relative size-60">
@@ -113,9 +111,11 @@ const Dashboard = () => {
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{verified_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Verified</span>
-                        <span className=" block">{verified?.toLocaleString()}</span>
+                        <Link to="/status-filtered/verified">
+                            <span className="text-2xl  block">{verified_percentage?.toFixed(2)}%</span>
+                            <span className="text-2xl  font-bold block">Verified</span>
+                            <span className=" block">{verified?.toLocaleString()}</span>
+                        </Link>
                     </div>
                 </div>
 
@@ -128,9 +128,11 @@ const Dashboard = () => {
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{incomplete_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Incomplete</span>
-                        <span className=" block">{incomplete?.toLocaleString()}</span>
+                        <Link to="/status-filtered/incomplete">
+                            <span className="text-2xl  block">{incomplete_percentage?.toFixed(2)}%</span>
+                            <span className="text-2xl  font-bold block">Incomplete</span>
+                            <span className=" block">{incomplete?.toLocaleString()}</span>
+                        </Link>
                     </div>
                 </div>
 
@@ -143,9 +145,11 @@ const Dashboard = () => {
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{returned_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Returned</span>
-                        <span className=" block">{returned?.toLocaleString()}</span>
+                        <Link to="/status-filtered/return">
+                            <span className="text-2xl  block">{returned_percentage?.toFixed(2)}%</span>
+                            <span className="text-2xl  font-bold block">Returned</span>
+                            <span className=" block">{returned?.toLocaleString()}</span>
+                        </Link>
                     </div>
                 </div>
 
@@ -158,9 +162,11 @@ const Dashboard = () => {
                     </svg>
 
                     <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{reject_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Rejected</span>
-                        <span className=" block">{reject?.toLocaleString()}</span>
+                        <Link to="/status-filtered/rejected">
+                            <span className="text-2xl  block">{reject_percentage?.toFixed(2)}%</span>
+                            <span className="text-2xl  font-bold block">Rejected</span>
+                            <span className=" block">{reject?.toLocaleString()}</span>
+                        </Link>
                     </div>
                 </div>
 

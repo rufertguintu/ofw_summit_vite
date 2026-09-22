@@ -20,6 +20,7 @@ import ProfileDashboard from "./pages/ProfileDashboard";
 import ViewProfile from "./pages/ViewProfile";
 import OnsiteRegistration from "./pages/OnsiteRegistration";
 import NetworkerRegistration from "./pages/NetworkerRegistration";
+import StatusFiltered from "./pages/StatusFiltered";
 // import { Button } from "@/components/ui/button"
 import './App.css'
 
@@ -60,6 +61,7 @@ function App() {
           <Route path="/global-records" element={<GlobalRecords />} />
           <Route path="/2024-records" element={<Records2024 />} />
           <Route path="/export-data" element={<ExportData />} />
+          <Route path="/status-filtered/:status" element={<StatusFiltered />} />
         </Route>
 
       </Routes>

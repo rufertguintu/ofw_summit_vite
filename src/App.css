@@ -211,7 +211,10 @@
   grid-column: 1 / -1;
 }
 
-.onsite-registration-form input,
+.onsite-registration-form input[type="text"],
+.onsite-registration-form input[type="email"],
+.onsite-registration-form input[type="password"],
+.onsite-registration-form input[type="number"],
 .onsite-registration-form select,
 .onsite-registration-form textarea {
   width: 100%;
