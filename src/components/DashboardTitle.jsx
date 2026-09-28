@@ -19,7 +19,7 @@ function DashboardTitle() {
 
     const currentTitle = titles[location.pathname] || "Page";
 
-    return <h1 className="text-2xl font-bold">{currentTitle}</h1>;
+    return <h2 className="text-2xl font-bold">{currentTitle}</h2>;
 
 }
 

@@ -98,133 +98,146 @@ const Dashboard = () => {
         <div className="p-[40px]">
             <DashboardTitle />
             
-            <h3 className="text-1xl font-medium block mt-10">Validation Type</h3>
-            <button type="button" class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-primary border border-primary-line text-primary-foreground hover:bg-primary-hover focus:outline-hidden focus:bg-primary-focus disabled:opacity-50 disabled:pointer-events-none" aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-offcanvas-example" data-hs-overlay="#hs-offcanvas-example">
-            Open (right) offcanvas
-            </button>
-            <div className="flex flex-row gap-10 mt-10">
+            <div className="admin-divider border p-3 rounded-[10px]">
+                <h4 className="text-1xl font-medium block mt-10">Validation Type</h4>
+                <div className="flex flex-row flex-wrap mt-10">
 
-                <div className="w-4/12 relative size-60">
-                    <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                        
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+                    <div className="sm:w-full md:w-6/12 lg:w-3/12 relative size-60">
+                        <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
-                    </svg>
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        </svg>
 
-                    <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{verified_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Verified</span>
-                        <span className=" block">{verified?.toLocaleString()}</span>
+                        <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <Link to="/status-filtered/verified">
+                                <span className="text-2xl  block">{verified_percentage?.toFixed(2)}%</span>
+                                <span className="text-2xl  font-bold block">Verified</span>
+                                <span className=" block">{verified?.toLocaleString()}</span>
+                            </Link>
+                        </div>
                     </div>
-                </div>
 
-                <div className="w-4/12 relative size-60">
-                    <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                        
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+                    <div className="sm:w-full md:w-6/12 lg:w-3/12 relative size-60">
+                        <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
-                    </svg>
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        </svg>
 
-                    <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{incomplete_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Incomplete</span>
-                        <span className=" block">{incomplete?.toLocaleString()}</span>
+                        <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <Link to="/status-filtered/incomplete">
+                                <span className="text-2xl  block">{incomplete_percentage?.toFixed(2)}%</span>
+                                <span className="text-2xl  font-bold block">Incomplete</span>
+                                <span className=" block">{incomplete?.toLocaleString()}</span>
+                            </Link>
+                        </div>
                     </div>
-                </div>
 
-                <div className="w-4/12 relative size-60">
-                    <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                        
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+                    <div className="sm:w-full md:w-6/12 lg:w-3/12 relative size-60">
+                        <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
-                    </svg>
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        </svg>
 
-                    <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{returned_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Returned</span>
-                        <span className=" block">{returned?.toLocaleString()}</span>
+                        <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <Link to="/status-filtered/returned">
+                                <span className="text-2xl  block">{returned_percentage?.toFixed(2)}%</span>
+                                <span className="text-2xl  font-bold block">Returned</span>
+                                <span className=" block">{returned?.toLocaleString()}</span>
+                            </Link>
+                        </div>
                     </div>
-                </div>
 
-                <div className="w-4/12 relative size-60">
-                    <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
-                        
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+                    <div className="sm:w-full md:w-6/12 lg:w-3/12 relative size-60">
+                        <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="1.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                        <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
-                    </svg>
+                            <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="1.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                        </svg>
 
-                    <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                        <span className="text-2xl  block">{reject_percentage?.toFixed(2)}%</span>
-                        <span className="text-2xl  font-bold block">Rejected</span>
-                        <span className=" block">{reject?.toLocaleString()}</span>
+                        <div className="absolute top-1/2 inset-s-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                            <Link to="/status-filtered/rejected">
+                                <span className="text-2xl  block">{reject_percentage?.toFixed(2)}%</span>
+                                <span className="text-2xl  font-bold block">Rejected</span>
+                                <span className=" block">{reject?.toLocaleString()}</span>
+                            </Link>
+                        </div>
                     </div>
-                </div>
 
+                </div>
             </div>
+            
+            <div className="admin-divider border p-10 mt-10 rounded-[10px]">
+                <h4>Attendance Overview</h4>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6  gap-4 mt-10">
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h3 className="text-4xl text-white font-medium block">{total?.toLocaleString()}</h3>
+                        <h6 className="text-white font-medium block">Total Registered</h6>
+                    </div>
 
-            <div className="grid grid-cols-6 gap-4 mt-10">
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{total?.toLocaleString()}</h2>
-                    <h4 className="text-white font-medium block">Total Registered</h4>
-                </div>
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h3 className="text-4xl text-white font-medium block">{attendance?.toLocaleString()}</h3>
+                        <h6 className="text-white font-medium block">Total Attendance</h6>
+                    </div>
 
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{attendance?.toLocaleString()}</h2>
-                    <h4 className="text-white font-medium block">Total Attendance</h4>
-                </div>
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h4 className="text-lg text-white font-medium block">Yes - {attendee_yes?.toLocaleString()}</h4>
+                        <h4 className="text-lg text-white font-medium block">No - {attendee_no?.toLocaleString()}</h4>
+                        <h6 className="text-white font-medium block">Total Attendee</h6>
+                    </div>
 
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-lg text-white font-medium block">Yes - {attendee_yes?.toLocaleString()}</h2>
-                    <h2 className="text-lg text-white font-medium block">No - {attendee_no?.toLocaleString()}</h2>
-                    <h4 className="text-white font-medium block">Total Attendee</h4>
-                </div>
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h3 className="text-4xl text-white font-medium block">{onsite_attendee?.toLocaleString()}</h3>
+                        <h6 className="text-base text-white font-medium block">Total Onsite Attendee</h6>
+                    </div>
 
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{onsite_attendee?.toLocaleString()}</h2>
-                    <h5 className="text-base text-white font-medium block">Total Onsite Attendee</h5>
-                </div>
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h3 className="text-4xl text-white font-medium block">{online_attendee?.toLocaleString()}</h3>
+                        <h6 className="text-base text-white font-medium block">Total Online Attendee</h6>
+                    </div>
 
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{online_attendee?.toLocaleString()}</h2>
-                    <h5 className="text-base text-white font-medium block">Total Online Attendee</h5>
-                </div>
-
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{companion?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">Total Companion</h5>
-                </div>
-                
-            </div>
-
-            <h3 className="text-2xl font-medium block pt-6">Registrant Type</h3>
-            <div className="grid grid-cols-5 gap-4 mt-10">
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{online_registrant?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">Online Registrant</h5>
-                </div>
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{onsite_registrant?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">Onsite Registrant</h5>
-                </div>
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{mall_registrant?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">Mall Registrant</h5>
-                </div>
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{networker_registrant?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">Networker</h5>
-                </div>
-                <div className="p-8 bg-[#ff902b] rounded">
-                    <h2 className="text-4xl text-white font-medium block">{owwa_registrant?.toLocaleString()}</h2>
-                    <h5 className="text-white font-medium block">OWWA Member</h5>
+                    <div className="p-3 shrink bg-[#ff902b] rounded-[10px]">
+                        <h3 className="text-4xl text-white font-medium block">{companion?.toLocaleString()}</h3>
+                        <h6 className="text-white font-medium block">Total Companion</h6>
+                    </div>
+                    
                 </div>
             </div>
 
-            <h3 className="text-2xl  font-medium block pt-10">OFW Type</h3>
+            <div className="admin-divider border p-10 mt-10 rounded-[10px]">
+                <h4 className="text-2xl font-medium block">Registrant Type</h4>
+                <div className="grid grid-cols-5 gap-4 mt-10">
+                    <div className="p-8 bg-[#ff902b] rounded">
+                        <h2 className="text-4xl text-white font-medium block">{online_registrant?.toLocaleString()}</h2>
+                        <h5 className="text-white font-medium block">Online Registrant</h5>
+                    </div>
+                    <div className="p-8 bg-[#ff902b] rounded">
+                        <h2 className="text-4xl text-white font-medium block">{onsite_registrant?.toLocaleString()}</h2>
+                        <h5 className="text-white font-medium block">Onsite Registrant</h5>
+                    </div>
+                    <div className="p-8 bg-[#ff902b] rounded">
+                        <h2 className="text-4xl text-white font-medium block">{mall_registrant?.toLocaleString()}</h2>
+                        <h5 className="text-white font-medium block">Mall Registrant</h5>
+                    </div>
+                    <div className="p-8 bg-[#ff902b] rounded">
+                        <h2 className="text-4xl text-white font-medium block">{networker_registrant?.toLocaleString()}</h2>
+                        <h5 className="text-white font-medium block">Networker</h5>
+                    </div>
+                    <div className="p-8 bg-[#ff902b] rounded">
+                        <h2 className="text-4xl text-white font-medium block">{owwa_registrant?.toLocaleString()}</h2>
+                        <h5 className="text-white font-medium block">OWWA Member</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div className="admin-divider border p-10 mt-10 rounded-[10px]">
+                <h4 className="text-2xl  font-medium block pt-10">OFW Type</h4>
                 
                 {ofw && relative_ofw ? (
                 <OFWtypeChart ofw={ofw} relativeOfw={relative_ofw} />
@@ -232,51 +245,54 @@ const Dashboard = () => {
 
                 <div class="animate-pulse w-96 h-96 block !bg-[#e3e3e3] rounded-full m-auto"></div>
                 )}
-
-            <h3 className="text-2xl  font-medium block mt-10">Location</h3>
-            {/* <h4 className="text-lg  font-medium block mb-5">Metro Manila: {metro_manila?.toLocaleString()}</h4> */}
-
-            <div className="flex justify-center gap-4 mb-5">
-                
-                {["Country", "Region", "Province", "City"].map((item) => (
-                    <button
-                    key={item}
-                    type="button"
-                    onClick={() => handleFilterChange(item)}
-                    disabled={isLocationLoading}
-                    style={{ pointerEvents: "auto" }}
-                    className={`text-white font-medium py-2 px-4 rounded pointer-events-auto 
-                        ${filter === item 
-                        ? "!bg-blue-600"   // ✅ active
-                        : "!bg-[#ff902b]"} // ✅ default
-                    `}
-                    >
-                    {item}
-                    </button>
-                ))}
-
-                <button
-                    type="button"
-                    onClick={() => handleFilterChange("Metro Manila")}
-                    disabled={isLocationLoading}
-                    style={{ pointerEvents: "auto" }}
-                    className={`text-white font-medium py-2 px-4 rounded pointer-events-auto
-                    ${filter === "Metro Manila"
-                        ? "!bg-blue-600"
-                        : "!bg-[#ff902b]"}
-                    `}
-                >
-                    Metro Manila: {metro_manila?.toLocaleString()}
-                </button>
-
             </div>
-            {isLocationLoading ? (
-                <div className="flex justify-center py-8">
-                    <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading location data" />
+
+            <div className="admin-divider border p-10 mt-10 rounded-[10px]">
+                <h4 className="text-2xl  font-medium block mt-10">Location</h4>
+                {/* <h4 className="text-lg  font-medium block mb-5">Metro Manila: {metro_manila?.toLocaleString()}</h4> */}
+
+                <div className="flex justify-center gap-4 mb-5">
+                    
+                    {["Country", "Region", "Province", "City"].map((item) => (
+                        <button
+                        key={item}
+                        type="button"
+                        onClick={() => handleFilterChange(item)}
+                        disabled={isLocationLoading}
+                        style={{ pointerEvents: "auto" }}
+                        className={`text-white font-medium py-2 px-4 rounded pointer-events-auto 
+                            ${filter === item 
+                            ? "!bg-blue-600"   // ✅ active
+                            : "!bg-[#ff902b]"} // ✅ default
+                        `}
+                        >
+                        {item}
+                        </button>
+                    ))}
+
+                    <button
+                        type="button"
+                        onClick={() => handleFilterChange("Metro Manila")}
+                        disabled={isLocationLoading}
+                        style={{ pointerEvents: "auto" }}
+                        className={`text-white font-medium py-2 px-4 rounded pointer-events-auto
+                        ${filter === "Metro Manila"
+                            ? "!bg-blue-600"
+                            : "!bg-[#ff902b]"}
+                        `}
+                    >
+                        Metro Manila: {metro_manila?.toLocaleString()}
+                    </button>
+
                 </div>
-            ) : null}
-            <div style={{ display: isLocationLoading ? "none" : "block" }}>
-                <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
+                {isLocationLoading ? (
+                    <div className="flex justify-center py-8">
+                        <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading location data" />
+                    </div>
+                ) : null}
+                <div style={{ display: isLocationLoading ? "none" : "block" }}>
+                    <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
+                </div>
             </div>
         </div>
     </>

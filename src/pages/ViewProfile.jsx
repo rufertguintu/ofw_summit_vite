@@ -317,13 +317,110 @@ function ViewProfile() {
   return (
     <div style={pageWrapper}>
       <div style={headerRow}>
-        <h1 style={{ margin: 0 }}>View Profile</h1>
+        <h3 style={{ margin: 0 }}>View Profile</h3>
         <div style={headerActions}>
           <Link to="/records" style={secondaryButton}>
             Back to Records
           </Link>
         </div>
       </div>
+
+      <section style={sectionCard} className="mb-4">
+        <h4 style={sectionTitle}>Update Status</h4>
+
+        <div style={formGrid}>
+          <div style={fieldCard}>
+            <label style={fieldLabel} htmlFor="admin_verified">
+              Update Status
+            </label>
+            <select
+              id="admin_verified"
+              name="admin_verified"
+              value={formData.admin_verified}
+              onChange={handleChange}
+              style={fieldControl}
+            >
+              <option value="">Select status</option>
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {showReasonIncomplete ? (
+            <div style={fieldCard}>
+              <label style={fieldLabel} htmlFor="reason_incomplete">
+                Reason for Incomplete
+              </label>
+              <select
+                id="reason_incomplete"
+                name="reason_incomplete"
+                value={formData.reason_incomplete}
+                onChange={handleChange}
+                style={fieldControl}
+              >
+                <option value="">Select reason</option>
+                {REASON_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          <div style={fieldCard}>
+            <label style={fieldLabel} htmlFor="attendance">
+              Attendance
+            </label>
+            <select
+              id="attendance"
+              name="attendance"
+              value={formData.attendance}
+              onChange={handleChange}
+              style={fieldControl}
+            >
+              <option value="">Select attendance</option>
+              {ATTENDANCE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={fieldCard}>
+            <label style={fieldLabel} htmlFor="companion">
+              Number of Companion
+            </label>
+            <input
+              id="companion"
+              type="number"
+              min="0"
+              step="1"
+              name="companion"
+              value={companionValue}
+              onChange={handleChange}
+              style={fieldControl}
+              placeholder="Enter number of companion"
+            />
+          </div>
+        </div>
+
+        {submitError ? <div style={errorBanner}>{submitError}</div> : null}
+        {submitSuccess ? <div style={successBanner}>{submitSuccess}</div> : null}
+
+        <div style={actionsRow}>
+          <button type="button" onClick={() => navigate("/records")} style={secondaryButtonBtn} disabled={submitLoading}>
+            Cancel
+          </button>
+          <button type="button" onClick={handleSubmit} style={primaryButton} disabled={submitLoading}>
+            {submitLoading ? "Updating..." : "Update"}
+          </button>
+        </div>
+      </section>
 
       {loading ? (
         <div style={loadingState}>Please wait...</div>
@@ -366,103 +463,6 @@ function ViewProfile() {
                   {meta.type_registrant === "0" ? renderDocumentPreview(item.value, item.alt) : item.value}
                 </div>
               ))}
-            </div>
-          </section>
-
-          <section style={sectionCard}>
-            <h4 style={sectionTitle}>Update Status</h4>
-
-            <div style={formGrid}>
-              <div style={fieldCard}>
-                <label style={fieldLabel} htmlFor="admin_verified">
-                  Update Status
-                </label>
-                <select
-                  id="admin_verified"
-                  name="admin_verified"
-                  value={formData.admin_verified}
-                  onChange={handleChange}
-                  style={fieldControl}
-                >
-                  <option value="">Select status</option>
-                  {STATUS_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {showReasonIncomplete ? (
-                <div style={fieldCard}>
-                  <label style={fieldLabel} htmlFor="reason_incomplete">
-                    Reason for Incomplete
-                  </label>
-                  <select
-                    id="reason_incomplete"
-                    name="reason_incomplete"
-                    value={formData.reason_incomplete}
-                    onChange={handleChange}
-                    style={fieldControl}
-                  >
-                    <option value="">Select reason</option>
-                    {REASON_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : null}
-
-              <div style={fieldCard}>
-                <label style={fieldLabel} htmlFor="attendance">
-                  Attendance
-                </label>
-                <select
-                  id="attendance"
-                  name="attendance"
-                  value={formData.attendance}
-                  onChange={handleChange}
-                  style={fieldControl}
-                >
-                  <option value="">Select attendance</option>
-                  {ATTENDANCE_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={fieldCard}>
-                <label style={fieldLabel} htmlFor="companion">
-                  Number of Companion
-                </label>
-                <input
-                  id="companion"
-                  type="number"
-                  min="0"
-                  step="1"
-                  name="companion"
-                  value={companionValue}
-                  onChange={handleChange}
-                  style={fieldControl}
-                  placeholder="Enter number of companion"
-                />
-              </div>
-            </div>
-
-            {submitError ? <div style={errorBanner}>{submitError}</div> : null}
-            {submitSuccess ? <div style={successBanner}>{submitSuccess}</div> : null}
-
-            <div style={actionsRow}>
-              <button type="button" onClick={() => navigate("/records")} style={secondaryButtonBtn} disabled={submitLoading}>
-                Cancel
-              </button>
-              <button type="button" onClick={handleSubmit} style={primaryButton} disabled={submitLoading}>
-                {submitLoading ? "Updating..." : "Update"}
-              </button>
             </div>
           </section>
         </div>

@@ -317,16 +317,16 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 </div>
             </div>
             <div className="two-column_field">
-                <div className="two-column_inner-wrapper">
+                <div className="one-column_field">
                     <div className="reg_field-cont">
                         <label>Mobile Number</label>
                         <input type="text" disabled name="mobile" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none mobile disabled" placeholder="ex. 09123456789"  value={values.mobile} onChange={handleChange("mobile")}  maxLength="11"/>
                         <div id="error-container"></div>
                     </div>
-                    <div className="reg_field-cont">
+                    {/* <div className="reg_field-cont">
                         <label>Home Town <span className="required-field">*</span></label>
                         <input type="text" name="hometown" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" placeholder="Home Town (City or Province only)" value={values.hometown} onChange={handleChange("hometown")}  required/>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             <div className="two-column_field">

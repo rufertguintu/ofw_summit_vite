@@ -932,13 +932,7 @@ const isCurrentStepValid = isStepValid();
 
       {isAdminVerified ? (
         <div className="profile-info qr-code-profile">
-          <button
-            type="button"
-            onClick={() => setIsQrModalOpen(true)}
-            style={qrButtonStyle}
-          >
-            View QR Code
-          </button>
+          <QRCodeSVG value={profileViewUrl} size={150} includeMargin />
         </div>
       ) : (
         <div className="profile-info">

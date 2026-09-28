@@ -20,6 +20,9 @@ import ProfileDashboard from "./pages/ProfileDashboard";
 import ViewProfile from "./pages/ViewProfile";
 import OnsiteRegistration from "./pages/OnsiteRegistration";
 import NetworkerRegistration from "./pages/NetworkerRegistration";
+import StatusFiltered from "./pages/StatusFiltered";
+import OptionsPage from "./pages/OptionsPage";
+import RegistrationAvailability from "./components/RegistrationAvailability";
 // import { Button } from "@/components/ui/button"
 import './App.css'
 
@@ -36,8 +39,22 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/online-register" element={<Online_Register />} />
-          <Route path="/onsite-registration" element={<OnsiteRegistration />} />
+          <Route
+            path="/online-register"
+            element={
+              <RegistrationAvailability setting="onlineRegistration" title="Online registration">
+                <Online_Register />
+              </RegistrationAvailability>
+            }
+          />
+          <Route
+            path="/onsite-registration"
+            element={
+              <RegistrationAvailability setting="onsiteRegistration" title="Onsite registration">
+                <OnsiteRegistration />
+              </RegistrationAvailability>
+            }
+          />
           <Route path="/networker-registration" element={<NetworkerRegistration />} />
           <Route path="/profile-dashboard" element={<ProfileDashboard />} />
         </Route>
@@ -60,6 +77,8 @@ function App() {
           <Route path="/global-records" element={<GlobalRecords />} />
           <Route path="/2024-records" element={<Records2024 />} />
           <Route path="/export-data" element={<ExportData />} />
+          <Route path="/status-filtered/:status" element={<StatusFiltered />} />
+          <Route path="/options-page" element={<OptionsPage />} />
         </Route>
 
       </Routes>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import banner from "../assets/hero-banner-2026.jpg";
 import whiteLogo2026 from "../assets/2026-white-logo.svg";
 import blackLogo2026 from "../assets/ofw-summit-15th.svg";
-import qr2026 from "../assets/qr-2026.svg";
+import qr2026 from "../assets/2026-QR.jpg";
 import eventbg2026 from "../assets/event-bg-2026.png";
 import vicinity_map from "../assets/vicinity-map-2026.svg";
 import camella_logo from "../assets/camella.png";
@@ -25,7 +25,8 @@ const Home = () => {
         <div className="hero-section" style={heroStyle}>
             <div className="hero-content">
                 <img src={whiteLogo2026} alt="OFW Summit 2026" />
-                <a  className="text-center" href=""><span></span> Register Here</a>
+                <h3>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h3>
+                <Link to="/online-register"><span></span>  Register Here</Link>
             </div>
             
             
@@ -39,18 +40,17 @@ const Home = () => {
                     <img src={eventbg2026} alt="Event 2026"/>
                 </div>
                 <div className="event-content">	
-                    <img src={blackLogo2026} alt="OFW Summit 2026"/>
-                    <h3><strong>Registration is a must and entitles the OFW or Family</strong> to a raffle for the Summit</h3>
+                    <img src={blackLogo2026} alt="OFW Summit 2026" className="event-logo-2026"/>
+                    <h3><strong>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</strong></h3>
                     <h4>Mag-register sa alinmang sumusunod na mga paraan:</h4>
                     <ul>
-                        <li>Mag-register online sa <a href="http://ofwsummit2023.villarsipag.org/">http://ofwsummit2023.villarsipag.org/</a>;</li>
+                        <li>Mag-register online sa <a href="https://ofwsummit.villarfoundation.com.ph/"><strong>https://ofwsummit.villarfoundation.com.ph/</strong></a>;</li>
                         <li><strong>I-scan ang QR code</strong> na makikita sa harap ng flyer/poster na ito at sundan ang instructions;</li>
-                        <li><strong>Magpunta sa OFW & Family Summit Desk</strong> na makikita sa Vista Mail and Starmall branches nationwide; o kaya</li>
-                        <li>On-site registration sa November 18, Friday</li>
+                        <li>On-site registration sa <strong>November 27, 2026 Friday</strong>, <br />Magpunta sa <strong>The Tent at Vista Global South, C5 Extension Road, Las Piñas City</strong></li>
                     </ul>
                     <div className="join-via-qrcode">
                         <h3>SALI NA!<br/>Scan QR Code to <strong>Register!</strong></h3>
-                        <img src={qr2026} alt="QR Code 2026" />
+                        <img src={qr2026} alt="QR Code 2026" width="100" height="100" />
                     </div>
                     
                 </div>	
@@ -66,7 +66,7 @@ const Home = () => {
     maka-attend sa 15th OFW & Family Summit</strong> nang matuto mag invest, malaman ang mga napapanahong negosyo at magkaroon ng pagkakataong manalo ng house & lot, pangkabuhayan showcase, home appliances at marami pang iba! Para makasali sa raffle draw, maaari kayong mag-register sa alinmang sumusunod na mga paraan:</p>
                         <div className="join-via-qrcode">
                             <h3>SALI NA!<br/>Scan QR Code to <strong>Register!</strong></h3>
-                            <img src={qr2026} alt="QR Code 2026" />
+                            <img src={qr2026} alt="QR Code 2026" width="200" height="200" />
                         </div>
                     </div>
 

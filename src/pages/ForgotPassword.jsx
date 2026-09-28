@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import blackLogo2026 from "../assets/ofw-summit-15th.svg";
@@ -11,8 +11,52 @@ function ForgotPassword() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [emailStatus, setEmailStatus] = useState("");
+  const [checkingEmail, setCheckingEmail] = useState(false);
 
   const isValid = /\S+@\S+\.\S+/.test(email);
+
+  useEffect(() => {
+    if (!isValid) {
+      setEmailStatus("");
+      setCheckingEmail(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+    const controller = new AbortController();
+    const normalizedEmail = email.trim();
+    setEmailStatus("");
+    setCheckingEmail(true);
+
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const response = await fetchApi("/wp-json/custom/v1/check-email", {
+          method: "POST",
+          signal: controller.signal,
+          body: JSON.stringify({ email: normalizedEmail }),
+        });
+        const data = await response.json();
+        if (!cancelled) {
+          setEmailStatus(response.ok
+            ? (data?.exists ? "This email is registered." : "No account was found for this email.")
+            : "Unable to check this email right now.");
+        }
+      } catch (err) {
+        if (!cancelled && err.name !== "AbortError") {
+          setEmailStatus("Unable to check this email right now.");
+        }
+      } finally {
+        if (!cancelled) setCheckingEmail(false);
+      }
+    }, 450);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [email, isValid]);
 
   const handleSubmit = async () => {
     setError("");
@@ -75,9 +119,17 @@ function ForgotPassword() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Enter Email Address"
+                        aria-describedby="email-check-status"
                       />
                     </div>
                   </div>
+                  {(checkingEmail || emailStatus) && (
+                    <div className="one-column_field">
+                      <p id="email-check-status" role="status" aria-live="polite">
+                        {checkingEmail ? "Checking email..." : emailStatus}
+                      </p>
+                    </div>
+                  )}
                   {error && (
                     <div className="one-column_field">
                       <p style={{ color: "red" }}>{error}</p>

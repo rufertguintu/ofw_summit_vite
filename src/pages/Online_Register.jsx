@@ -41,7 +41,7 @@ const Online_Register = () => {
         firstname_relative: "",
         lastname_relative: "",
         emailaddress: "",
-        hometown: "",
+        // hometown: "",
         password: "",
         confirmpw: "",
         agree: "",

@@ -44,8 +44,8 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-wrapper text-[#000]">
-      <div className="p-[24px] bg-[darkgray]">
-        <div className="logo"><img src={Logo} alt="" className="w-xs"/></div>
+      <div className="p-[24px] bg-[#35394b]">
+        <div className="logo"><img src={Logo} alt="" className="w-[150px]"/></div>
       </div>
       <main className="flex flex-row">
         <div className="w-1/6 admin-sidebar">
@@ -57,8 +57,7 @@ export default function AdminLayout() {
             {isContributor && (
               <li><Link to="/export-data" className="no-underline">Export of Data</Link></li>
             )}
-            <li><a href="" className="no-underline">2023 Records</a></li>
-            <li><a href="" className="no-underline">2022 Records</a></li>
+            <li><Link to="/options-page" className="no-underline">Options Page</Link></li>
             <li><button onClick={logout}>
                   <em className="fa fa-sign-out"></em>
                     <span className="item-text">Logout</span>
