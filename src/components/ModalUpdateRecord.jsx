@@ -1,6 +1,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { fetchApi } from "../store/api";
+
 function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUsers }) {
   
 //   console.log(userdata);
@@ -78,13 +80,10 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
 
 
         try {
-            const res =await fetch(
-                `http://localhost:8005/wp-json/custom/v1/user/${userdata.id}`,
+            const res = await fetchApi(
+                `/wp-json/custom/v1/user/${userdata.id}`,
                 {
                     method: "PUT",
-                    headers: {
-                    "Content-Type": "application/json"
-                    },
                     body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -100,8 +99,8 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                 fileData.append("passport", formData.passport);
                 fileData.append("user_id", userdata.id);
 
-                await fetch(
-                "http://localhost:8005/wp-json/custom/v1/upload-files",
+                await fetchApi(
+                "/wp-json/custom/v1/upload-files",
                 {
                     method: "POST",
                     body: fileData

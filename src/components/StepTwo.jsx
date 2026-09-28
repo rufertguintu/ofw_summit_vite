@@ -2,6 +2,8 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { fetchApi } from "../store/api";
+
 export default function StepTwo({nextStep, prevStep, handleChange, values}) {
     const [hasRelativeCompany, setHasRelativeCompany] = useState(false);
     const [hasRelativeOFW, setHasRelativeOFW] = useState(false);
@@ -116,13 +118,10 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 return;
             }
 
-            const response = await fetch(
-                "http://localhost:8005/wp-json/custom/v1/submit-form",
+            const response = await fetchApi(
+                "/wp-json/custom/v1/submit-form",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
                     body: JSON.stringify({ ...values, emailaddress: email }),
                 }
             );
@@ -133,13 +132,10 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
             if (response.ok) {
                 try {
-                    const loginResponse = await fetch(
-                        "http://localhost:8005/wp-json/jwt-auth/v1/token",
+                    const loginResponse = await fetchApi(
+                        "/wp-json/jwt-auth/v1/token",
                         {
                             method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
                             body: JSON.stringify({
                                 username: email,
                                 password: values.password,
@@ -151,7 +147,14 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
                     if (loginResponse.ok && loginData?.token) {
                         localStorage.setItem("token", loginData.token);
-                        localStorage.setItem("user", JSON.stringify(loginData.user || {}));
+                        localStorage.setItem("role", loginData.roles?.[0] ?? "subscriber");
+                        localStorage.setItem("user", JSON.stringify({
+                            id: loginData.id,
+                            user_email: loginData.user_email,
+                            user_nicename: loginData.user_nicename,
+                            display_name: loginData.user_display_name,
+                            roles: loginData.roles,
+                        }));
                     }
                 } catch (loginError) {
                     console.error("Auto-login failed:", loginError);

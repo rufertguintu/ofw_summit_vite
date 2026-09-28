@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchApi } from "../store/api";
+import { fetchApi, API_BASE_URL } from "../store/api";
 
 const STATUS_OPTIONS = [
   { label: "Incomplete", value: "0" },
@@ -203,7 +203,7 @@ function ViewProfile() {
         .split("/")
         .filter(Boolean)
         .pop();
-      previewUrl = `http://localhost:8005/wp-content/uploads/register-records/${encodeURIComponent(
+      previewUrl = `${wordpressBaseUrl || API_BASE_URL}/wp-content/uploads/register-records/${encodeURIComponent(
         displayName
       )}/${encodeURIComponent(fileName)}`;
     }

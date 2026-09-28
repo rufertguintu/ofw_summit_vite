@@ -43,28 +43,27 @@ function Login() {
 
       const loginData = await loginRes.json();
 
-      if (!loginData.token) {
-        alert("Login failed ❌");
-        setLoading(false);
+      if (!loginRes.ok || !loginData.token) {
+        alert(loginData?.message || "Login failed ❌");
 
         return;
       }
 
-      // ✅ SAVE TOKEN
+      // ✅ SAVE TOKEN + USER + ROLE
+      const role = loginData.roles?.[0] ?? "subscriber";
+
       localStorage.setItem("token", loginData.token);
-
-      // ✅ FETCH USER INFO
-      const userRes = await fetchApi("/wp-json/wp/v2/users/me");
-
-      const user = await userRes.json();
-
-      // ✅ SAVE USER + ROLE
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("role", user.roles[0]);
-
+      localStorage.setItem("role", role);
+      localStorage.setItem("user", JSON.stringify({
+        id: loginData.id,
+        user_email: loginData.user_email,
+        user_nicename: loginData.user_nicename,
+        display_name: loginData.user_display_name,
+        roles: loginData.roles,
+      }));
 
       // ✅ ROLE-BASED REDIRECT
-      if (user_role == "contributor") {
+      if (role === "contributor") {
         navigate("/dashboard");
       } else {
         navigate("/profile-dashboard");
@@ -73,9 +72,9 @@ function Login() {
     } catch (error) {
       console.error(error);
       alert("Server error ❌");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
 
