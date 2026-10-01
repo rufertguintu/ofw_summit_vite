@@ -158,7 +158,7 @@ const OnsiteRegistration = () => {
       formData.set("registrant_type", "Onsite Registrant");
       formData.set("attend_type", formData.get("attend_type") || "Onsite");
 
-      const response = await fetchApi("/wp-json/custom/v1/submit-form", {
+      const response = await fetchApi("/wp-json/custom/v1/submit-form-onsite", {
         method: "POST",
         body: formData,
       });
@@ -235,7 +235,10 @@ const OnsiteRegistration = () => {
             <h3>Address and Personal Information</h3>
             <div className="onsite-registration-grid">
               <div className="reg_field-cont onsite-registration-wide"><label htmlFor="address">Full Address</label><textarea id="address" name="address" rows="3" /></div>
-              <div className="reg_field-cont"><label htmlFor="current_location">Current Location (Country)</label><input id="current_location" name="current_location" /></div>
+              {/* <div className="reg_field-cont">
+                <label htmlFor="current_location">Current Location (Country)</label>
+                <input id="current_location" name="current_location" />
+              </div> */}
               <div className="reg_field-cont">
                 <label htmlFor="region">Region</label>
                 <select id="region" value={selectedRegion} onChange={handleRegionChange}>
@@ -268,7 +271,7 @@ const OnsiteRegistration = () => {
                 </select>
                 <input type="hidden" name="barangay" value={getLocationName(barangays, selectedBarangay)} />
               </div>
-              <div className="reg_field-cont"><label htmlFor="zipcode">Zip Code</label><input id="zipcode" name="zipcode" /></div>
+              <div className="reg_field-cont"><label htmlFor="zipcode">Zip Code</label><input id="zipcode" type="text" name="zipcode" /></div>
               {renderSelect("civil_status", "Civil Status (Estado sa Buhay)")}
               {renderSelect("gender", "Gender (Kasarian)")}
               {renderSelect("source_info", "How did you hear about the Summit?")}
@@ -282,7 +285,7 @@ const OnsiteRegistration = () => {
               {ofwFields.map(renderTextField)}
               {renderSelect("owwa_member", "Are you an OWWA Member?", (event) => setOwwaMember(event.target.value))}
               {isOwwaMember && (
-                <div className="reg_field-cont"><label htmlFor="owwa_ofw_id">OWWA OFW ID No.</label><input id="owwa_ofw_id" name="owwa_ofw_id" /></div>
+                <div className="reg_field-cont"><label htmlFor="owwa_ofw_id">OWWA OFW ID No.</label><input id="owwa_ofw_id" type="text" name="owwa_ofw_id" /></div>
               )}
               {isRelativeOfw && renderSelect("ofw_status", "OFW Status (Estado sa Buhay)")}
               {renderSelect("ofw_income", "Monthly Income Range (Buwanang Sweldo)")}

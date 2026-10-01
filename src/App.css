@@ -28,10 +28,24 @@
   grid-column: 1 / -1;
 }
 
-.onsite-registration-form input,
+.onsite-registration-form input[type="text"],
+.onsite-registration-form input[type="email"],
+.onsite-registration-form input[type="password"],
 .onsite-registration-form select,
 .onsite-registration-form textarea {
   width: 100%;
+}
+
+.onsite-registration-form button{
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    width: 300px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #000;
 }
 
 .onsite-registration-note,

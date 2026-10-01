@@ -10,6 +10,8 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
     const [emailError, setEmailError] = useState("");
     const [errorField, setErrorField] = useState("");
     const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isEmailValid, setIsEmailValid] = useState(false);
     const [termsEnabled, setTermsEnabled] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [passwordError, setPasswordError] = useState("");
@@ -34,20 +36,23 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
     const validateEmailAddress = async (email) => {
         if (!email?.trim()) {
+            setIsEmailValid(false);
             setFieldError("Email Address", "Please enter an email address.");
             return false;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
+            setIsEmailValid(false);
             setFieldError("Email Address", "Please enter a valid email.");
             return false;
         }
 
         try {
+            setIsEmailValid(false);
             setLoading(true);
-            const apiKey = "9aee96d37d5645628a5a1c055c4fb11e"; // Ruel
-            // const apiKey = "c84cc42200d34187bf2eba94714a8c06"; // Test
+            // const apiKey = "9aee96d37d5645628a5a1c055c4fb11e"; // Ruel
+            const apiKey = "c84cc42200d34187bf2eba94714a8c06"; // Test
             const validateUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`;
             const validateResponse = await fetch(validateUrl);
             const validateData = await validateResponse.json();
@@ -57,17 +62,17 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             if (validateData.email_deliverability?.status === "deliverable") {
                 setErrorField("");
                 setEmailError("");
-                setTermsEnabled(true);
+                setIsEmailValid(true);
                 return true;
             }
 
+            setIsEmailValid(false);
             setFieldError("Email Address", "Please enter a valid email.");
-            setTermsEnabled(false);
             return false;
         } catch (error) {
             console.error("Error validating email:", error);
+            setIsEmailValid(false);
             setFieldError("Email Address", "Unable to validate email.");
-            setTermsEnabled(false);
             return false;
         } finally {
             setLoading(false);
@@ -92,6 +97,11 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
     useEffect(() => {
         // Don't show error until user starts typing confirm password
+        if(!values.password) {
+            setPasswordError("");
+            return;
+        }
+
         if (!values.confirmpw) {
             setPasswordError("");
             return;
@@ -101,11 +111,24 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             setPasswordError("Passwords do not match.");
         } else {
             setPasswordError("");
-            setTermsEnabled(true);
         }
     }, [values.password, values.confirmpw]);
 
+    useEffect(() => {
+        const hasMatchingPasswords =
+            Boolean(values.password?.trim()) &&
+            Boolean(values.confirmpw?.trim()) &&
+            values.password === values.confirmpw;
+
+        setTermsEnabled(isEmailValid && hasMatchingPasswords);
+    }, [isEmailValid, values.password, values.confirmpw]);
+
     const handleSubmit = async () => {
+        if (isSubmitting) {
+            return;
+        }
+
+        setIsSubmitting(true);
         try {
             const email = (values.emailaddress || values.email || "").trim();
             const isValidEmail = await validateEmailAddress(email);
@@ -169,6 +192,8 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             }
         } catch (error) {
             console.error("Error:", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -296,6 +321,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                                     setErrorField("");
                                     setEmailError("");
                                 }
+                                setIsEmailValid(false);
                                 setTermsEnabled(false);
                             }}
                             onBlur={handleEmailBlur}
@@ -390,7 +416,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         type="checkbox"
                         name="agree"
                         value="1"
-                        className={`${!termsAccepted || !termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
+                        className={`${!termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
                         disabled={!termsEnabled}
                         checked={termsAccepted}
                         onChange={(e) => setTermsAccepted(e.target.checked)}
@@ -406,8 +432,16 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                                 
                 <button onClick={handleSubmit} 
                 className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!termsAccepted || !termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
-                disabled={!termsAccepted || !termsEnabled}>
-                Submit
+                disabled={!termsAccepted || !termsEnabled || isSubmitting}
+                aria-busy={isSubmitting}>
+                {isSubmitting ? (
+                    <>
+                        <span className="spinner-border spinner-border-sm" aria-hidden="true" />
+                        <span>Submitting...</span>
+                    </>
+                ) : (
+                    "Submit"
+                )}
                 </button>
 
             </div>
