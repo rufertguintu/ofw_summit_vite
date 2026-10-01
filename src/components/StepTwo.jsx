@@ -46,8 +46,8 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
 
         try {
             setLoading(true);
-            // const apiKey = "9aee96d37d5645628a5a1c055c4fb11e"; // Ruel
-            const apiKey = "c84cc42200d34187bf2eba94714a8c06"; // Test
+            const apiKey = "9aee96d37d5645628a5a1c055c4fb11e"; // Ruel
+            // const apiKey = "c84cc42200d34187bf2eba94714a8c06"; // Test
             const validateUrl = `https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`;
             const validateResponse = await fetch(validateUrl);
             const validateData = await validateResponse.json();
