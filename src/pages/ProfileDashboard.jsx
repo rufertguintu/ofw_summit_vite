@@ -4,9 +4,8 @@ import { QRCodeSVG } from "qrcode.react";
 import ReviewInfo from "../components/ReviewInfo";
 import logo from "../assets/ofw-summit-15th.svg";
 import warning_logo from "../assets/warning.svg";
+import unknownProfileImage from "../assets/unknown.jpg";
 import { fetchApi } from "../store/api";
-
-const imgsrc = "/src/assets/";
 
 const SOURCE_OPTIONS = [
   "Friend",
@@ -281,7 +280,7 @@ const ProfileDashboard = () => {
   const [isReviewMode, setIsReviewMode] = useState(getInitialReviewMode);
   const [retrievedAccountContext, setRetrievedAccountContext] = useState(getRetrievedAccountContext);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
-  const profileImageUrl = user?.profile_picture_url || `${imgsrc}unknown.jpg`;
+  const profileImageUrl = user?.profile_picture_url || unknownProfileImage;
   const meta = user?.meta || {};
 
   const [address, setAddress] = useState("");
