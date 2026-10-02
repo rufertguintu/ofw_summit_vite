@@ -58,7 +58,7 @@ const AboutUs = () => {
 				<div className="about-wrapper">
 					
 					<div className="desc">
-						<p>The Villar SIPAG (Social Institute for Poverty Alleviation and Governance) will hold its 11th OFW & Family Summit thru online platform with the theme, “Bagong Simula sa Sariling Bansa”, on November 18, 2022 (Friday), beginning at 8:00 a.m. at The Villar Tent at Vista Global South, C5 Extension Road, Las Piñas City.</p>
+						<p>The Villar SIPAG (Social Institute for Poverty Alleviation and Governance) will hold its 11th OFW & Family Summit thru online platform with the theme, “Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan”, on November 26, 2026 (Thursday), beginning at 8:00 a.m. at The Villar Tent at Vista Global South, C5 Extension Road, Las Piñas City.</p>
 					</div>
 					<img src={blackLogo2026} alt="OFW Summit 15th Logo" />
 				</div>

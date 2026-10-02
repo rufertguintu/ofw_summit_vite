@@ -1497,14 +1497,14 @@ const isCurrentStepValid = isStepValid();
                         <div className="step-1">
                           <div className="left-side">
                             <img src={logo} alt="" />
-                            <p>15th Ofw & Family Summit sa <strong>November 14, 2026 (Friday), 8:00 AM to 4:00 PM?*</strong></p>
+                            <p>15th Ofw & Family Summit sa <strong>November 26, 2026 (Thursday), 8:00 AM to 4:00 PM?*</strong></p>
 
                             <h5>The Tent at Villar City</h5>
                             <p>C5 Extension Road 6490, Las Pinas, Metro Manila, Las Piñas, Philippines, 6490.</p>
                           </div>
 
                           <div className="right-side">
-                            <h3><strong>Ikaw ba ay dadalo</strong> sa 15th Ofw & Family Summit sa <strong>November 14, 2026 (Friday), 8:00 AM to 4:00 PM?</strong></h3>
+                            <h3><strong>Ikaw ba ay dadalo</strong> sa 15th Ofw & Family Summit sa <strong>November 26, 2026 (Thursday), 8:00 AM to 4:00 PM?</strong></h3>
 
                             <div className="field-wrap">
                               {/* {getMetaValue("attend", "") ? (
