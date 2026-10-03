@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import DashboardTitle from "../components/DashboardTitle";
 import GlobalRecordModal from "../components/GlobalRecordModal";
 import { fetchApi } from "../store/api";
@@ -235,12 +235,12 @@ const GlobalRecords = () => {
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Full Name</th>
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Email Address</th>
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Date of Birth</th>
-                  <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Location</th>
+                  {/* <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Location</th> */}
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Status</th>
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Registrant Type</th>
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">OFW Type</th>
                   <th className="px-6 py-3 text-start text-xs font-medium uppercase text-muted-foreground-1">Registered Date</th>
-                  {/* <th className="px-6 py-3 text-end text-xs font-medium uppercase text-muted-foreground-1">Action</th> */}
+                  <th className="px-6 py-3 text-end text-xs font-medium uppercase text-muted-foreground-1">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-table-line">
@@ -271,20 +271,19 @@ const GlobalRecords = () => {
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getFullName(record) || "N/A"}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getEmailAddress(record) || "N/A"}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getDateOfBirth(record) || "N/A"}</td>
-                      <td className="px-6 py-4 text-sm text-foreground">{getLocation(record) || "N/A"}</td>
+                      {/* <td className="px-6 py-4 text-sm text-foreground">{getLocation(record) || "N/A"}</td> */}
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getStatus(record)}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getRegistrantType(record) || "N/A"}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getOfwType(record) || "N/A"}</td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-foreground">{getRegisteredDate(record) || "N/A"}</td>
-                      {/* <td className="whitespace-nowrap px-6 py-4 text-end text-sm font-medium">
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-x-2 rounded-lg text-sm font-semibold text-foreground focus:outline-hidden"
-                          onClick={() => handleViewRecord(getRecordId(record))}
+                      <td className="whitespace-nowrap px-6 py-4 text-end text-sm font-medium">
+                        <Link
+                          to={`/global-records/${encodeURIComponent(getRecordId(record))}`}
+                          className="inline-flex items-center rounded-lg bg-[#ff902b] px-3 py-1.5 text-sm font-semibold text-white no-underline"
                         >
                           View
-                        </button>
-                      </td> */}
+                        </Link>
+                      </td>
                     </tr>
                   ))
                 )}

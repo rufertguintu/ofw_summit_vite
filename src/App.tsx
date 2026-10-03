@@ -14,6 +14,7 @@ import Online_Register from "./pages/Online_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
 import GlobalRecords from "./pages/GlobalRecords";
+import GlobalRecordView from "./pages/GlobalRecordView";
 import Records2024 from "./pages/Records2024";
 import ExportData from "./pages/ExportData";
 import ProfileDashboard from "./pages/ProfileDashboard";
@@ -75,6 +76,7 @@ function App() {
           <Route path="/records" element={<Records />} />
           <Route path="/records/:id/view-profile" element={<ViewProfile />} />
           <Route path="/global-records" element={<GlobalRecords />} />
+          <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
           <Route path="/2024-records" element={<Records2024 />} />
           <Route path="/export-data" element={<ExportData />} />
           <Route path="/status-filtered/:status" element={<StatusFiltered />} />
