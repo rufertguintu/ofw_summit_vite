@@ -30,7 +30,7 @@ export default function OFWtypeChart({ofw, relativeOfw}) {
           options={options}
           series={series}
           type="pie"
-          height={550}
+          height={350}
         />
       ) : (
         <p>Loading chart...</p> // ✅ loading state

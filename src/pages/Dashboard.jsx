@@ -95,8 +95,158 @@ const Dashboard = () => {
 
 
     return <>
-        <div className="p-[40px]">
-            <DashboardTitle />
+        <div>
+            
+            <div className="admin-dashboard-layout">
+                <div className="dashboard-heading">
+                    <div className="dashboard-title">
+                        <h1 className="text-3xl font-bold">Dashboard</h1>
+                    </div>
+                    <div className="list-attendance">
+                        <ul>
+                            <li>
+                                <h6>Registrants</h6>
+                                <h3>{total?.toLocaleString()} Registrants</h3>
+                            </li>
+                            <li>
+                                <h6>Attendance</h6>
+                                <h3>{attendance?.toLocaleString()} Attendance</h3>
+                            </li>
+                            <li>
+                                <h6>Companions</h6>
+                                <h3>{companion?.toLocaleString()} Companion</h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div className="dashboard-validation-type">
+                    <h3>Validation Type</h3>
+                    <ul>
+                        <li>
+                            <div className="round-percentage">
+                                <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                </svg>
+                            </div>
+                            <h4><strong>{verified_percentage?.toFixed(2)}%</strong></h4>
+                            <h5>Verified</h5>
+                            <h6>Total Count: <strong>{verified?.toLocaleString()}</strong></h6>
+
+                        </li>
+                        <li>
+                            <div className="round-percentage">
+                                <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                </svg>
+                            </div>
+                            <h4><strong>{incomplete_percentage?.toFixed(2)}%</strong></h4>
+                            <h5>Incomplete</h5>
+                            <h6>Total Count: <strong>{incomplete?.toLocaleString()}</strong></h6>
+                        </li>
+                        <li>
+                            <div className="round-percentage">
+                                <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                </svg>
+                            </div>
+                            <h4><strong>{returned_percentage?.toFixed(2)}%</strong></h4>
+                            <h5>Returned</h5>
+                            <h6>Total Count: <strong>{returned?.toLocaleString()}</strong></h6>
+                        </li>
+                        <li>
+                            <div className="round-percentage">
+                                <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                </svg>
+                            </div>
+                            <h4><strong>{reject_percentage?.toFixed(2)}%</strong></h4>
+                            <h5>Rejected</h5>
+                            <h6>Total Count: <strong>{reject?.toLocaleString()}</strong></h6>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="attendance-overview-section">
+                    <ul>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+
+                <div className="ofw-type-section">
+                    <div className="ofw-type-piechart">
+                        <h3>OFW Type</h3>
+                        {ofw && relative_ofw ? (
+                            <OFWtypeChart ofw={ofw} relativeOfw={relative_ofw} />
+                            ) : (
+
+                            <div class="animate-pulse w-96 h-96 block !bg-[#e3e3e3] rounded-full m-auto"></div>
+                        )}
+                    </div>
+
+                    <div className="location-list">
+                        <h3>Locations</h3>
+                        <div className="location-filter">
+                        
+                            {["Country", "Region", "Province", "City"].map((item) => (
+                                <button
+                                key={item}
+                                type="button"
+                                onClick={() => handleFilterChange(item)}
+                                disabled={isLocationLoading}
+                                style={{ pointerEvents: "auto" }}
+                                className={`text-white font-medium py-2 px-4 rounded pointer-events-auto 
+                                    ${filter === item 
+                                    ? "!bg-blue-600"   // ✅ active
+                                    : "!bg-[#ff902b]"} // ✅ default
+                                `}
+                                >
+                                {item}
+                                </button>
+                            ))}
+
+                            <button
+                                type="button"
+                                onClick={() => handleFilterChange("Metro Manila")}
+                                disabled={isLocationLoading}
+                                style={{ pointerEvents: "auto" }}
+                                className={`text-white font-medium py-2 px-4 rounded pointer-events-auto
+                                ${filter === "Metro Manila"
+                                    ? "!bg-blue-600"
+                                    : "!bg-[#ff902b]"}
+                                `}
+                            >
+                                Metro Manila: {metro_manila?.toLocaleString()}
+                            </button>
+
+                        </div>
+                        {isLocationLoading ? (
+                            <div className="flex justify-center py-8">
+                                <img src={Loading} width="200px" style={{ margin: "auto" }} alt="Loading location data" />
+                            </div>
+                        ) : null}
+                        <div style={{ display: isLocationLoading ? "none" : "block" }}>
+                            <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {/* <DashboardTitle />
             
             <div className="admin-divider border p-3 rounded-[10px]">
                 <h4 className="text-1xl font-medium block mt-10">Validation Type</h4>
@@ -249,8 +399,6 @@ const Dashboard = () => {
 
             <div className="admin-divider border p-10 mt-10 rounded-[10px]">
                 <h4 className="text-2xl  font-medium block mt-10">Location</h4>
-                {/* <h4 className="text-lg  font-medium block mb-5">Metro Manila: {metro_manila?.toLocaleString()}</h4> */}
-
                 <div className="flex justify-center gap-4 mb-5">
                     
                     {["Country", "Region", "Province", "City"].map((item) => (
@@ -293,7 +441,7 @@ const Dashboard = () => {
                 <div style={{ display: isLocationLoading ? "none" : "block" }}>
                     <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
                 </div>
-            </div>
+            </div> */}
         </div>
     </>
 }
