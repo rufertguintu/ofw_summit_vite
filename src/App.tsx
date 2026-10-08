@@ -15,7 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
 import GlobalRecords from "./pages/GlobalRecords";
 import GlobalRecordView from "./pages/GlobalRecordView";
-import Records2024 from "./pages/Records2024";
+import Dashboard2025 from "./pages/2025Dashboard";
 import ExportData from "./pages/ExportData";
 import ProfileDashboard from "./pages/ProfileDashboard";
 import ViewProfile from "./pages/ViewProfile";
@@ -77,7 +77,7 @@ function App() {
           <Route path="/records/:id/view-profile" element={<ViewProfile />} />
           <Route path="/global-records" element={<GlobalRecords />} />
           <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
-          <Route path="/2024-records" element={<Records2024 />} />
+          <Route path="/2025-dashboard" element={<Dashboard2025 />} />
           <Route path="/export-data" element={<ExportData />} />
           <Route path="/status-filtered/:status" element={<StatusFiltered />} />
           <Route path="/options-page" element={<OptionsPage />} />

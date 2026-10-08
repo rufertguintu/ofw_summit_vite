@@ -30,7 +30,7 @@ function ViewProfile() {
   const [formData, setFormData] = useState({
     admin_verified: "",
     reason_incomplete: "",
-    attendance: "",
+    attend_event: "",
     companion: "",
   });
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -69,7 +69,9 @@ function ViewProfile() {
     setFormData({
       admin_verified: String(userdata?.admin_verified ?? userdata?.meta?.admin_verified ?? userdata?.status ?? ""),
       reason_incomplete: userdata?.reason_incomplete ?? userdata?.meta?.reason_incomplete ?? "",
-      attendance: String(userdata?.attendance ?? userdata?.meta?.attendance ?? ""),
+      attend_event: String(
+        userdata?.attend_event ?? userdata?.meta?.attend_event ?? userdata?.attend_event ?? userdata?.meta?.attend_event ?? ""
+      ),
       companion: String(userdata?.companion ?? userdata?.meta?.companion ?? ""),
     });
     setSubmitError("");
@@ -260,7 +262,7 @@ function ViewProfile() {
     setSubmitSuccess("");
 
     const nextAdminVerified = formData.admin_verified === "" ? null : Number(formData.admin_verified);
-    const nextAttendance = formData.attendance === "" ? null : Number(formData.attendance);
+    const nextAttendance = formData.attend_event === "" ? null : Number(formData.attend_event);
     const nextCompanion = formData.companion === "" ? null : Number(formData.companion);
     const nextReasonIncomplete = formData.admin_verified === "0" ? formData.reason_incomplete : "";
 
@@ -270,7 +272,7 @@ function ViewProfile() {
         body: JSON.stringify({
           admin_verified: nextAdminVerified,
           reason_incomplete: nextReasonIncomplete,
-          attendance: nextAttendance,
+          attend_event: nextAttendance,
           companion: nextCompanion,
         }),
       });
@@ -283,13 +285,13 @@ function ViewProfile() {
       const updatedFields = payload?.data || {};
       const normalizedAdminVerified = updatedFields.admin_verified === "" ? null : updatedFields.admin_verified ?? nextAdminVerified;
       const normalizedReasonIncomplete = updatedFields.reason_incomplete ?? nextReasonIncomplete;
-      const normalizedAttendance = updatedFields.attendance === "" ? null : updatedFields.attendance ?? nextAttendance;
+      const normalizedAttendance = updatedFields.attend_event === "" ? null : updatedFields.attend_event ?? nextAttendance;
       const normalizedCompanion = updatedFields.companion === "" ? null : updatedFields.companion ?? nextCompanion;
 
       setFormData({
         admin_verified: String(normalizedAdminVerified ?? ""),
         reason_incomplete: normalizedReasonIncomplete,
-        attendance: String(normalizedAttendance ?? ""),
+        attend_event: String(normalizedAttendance ?? ""),
         companion: String(normalizedCompanion ?? ""),
       });
 
@@ -299,7 +301,7 @@ function ViewProfile() {
               ...prev,
               admin_verified: normalizedAdminVerified,
               reason_incomplete: normalizedReasonIncomplete,
-              attendance: normalizedAttendance,
+              attend_event: normalizedAttendance,
               companion: normalizedCompanion,
             }
           : prev
@@ -377,8 +379,8 @@ function ViewProfile() {
             </label>
             <select
               id="attendance"
-              name="attendance"
-              value={formData.attendance}
+              name="attend_event"
+              value={formData.attend_event}
               onChange={handleChange}
               style={fieldControl}
             >

@@ -9,7 +9,7 @@ import LocationChart from "../components/LocationChart";
 import Loading from "../assets/loading-reg.gif";
 
 
-const Dashboard = () => {
+const Dashboard2025 = () => {
 
     const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
 
     const [data, setData] = useState(0);
     useEffect(() => {
-        fetchApi("/wp-json/custom/v1/user-data")
+        fetchApi("/wp-json/custom/v1/records-2025")
             .then(res => res.json())
             .then(json => setData(json))
             .catch(err => console.error(err));
@@ -52,46 +52,56 @@ const Dashboard = () => {
         }
     }, []);
 
+    const registrants = data?.registrants;
+    const attendees = data?.attendees;
     const verified = data?.verified;
+    const verified_percentage = data?.percent_verified;
     const incomplete = data?.incomplete;
+    const incomplete_percentage = data?.percent_incomplete;
     const returned = data?.returned;
+    const returned_percentage = data?.percent_returned;
     const reject = data?.reject;
+    const reject_percentage = data?.percent_reject;
+    // const verified = data?.verified;
+    // const incomplete = data?.incomplete;
+    // const returned = data?.returned;
+    // const reject = data?.reject;
     
-    const attendance = data?.attendance;
-    const attendee_yes = data?.attendee_yes;
-    const attendee_no = data?.attendee_no;
-    const onsite_attendee = data?.onsite_attendee;
-    const online_attendee = data?.online_attendee;
-    const companion = data?.companion;
+    // const attendance = data?.attendance;
+    // const attendee_yes = data?.attendee_yes;
+    // const attendee_no = data?.attendee_no;
+    // const onsite_attendee = data?.onsite_attendee;
+    // const online_attendee = data?.online_attendee;
+    // const companion = data?.companion;
 
-    const online_registrant = data?.online_registrant;
-    const onsite_registrant = data?.onsite_registrant;
-    const mall_registrant = data?.mall_registrant;
-    const networker_registrant = data?.networker_registrant;
-    const owwa_registrant = data?.owwa_registrant;
+    // const online_registrant = data?.online_registrant;
+    // const onsite_registrant = data?.onsite_registrant;
+    // const mall_registrant = data?.mall_registrant;
+    // const networker_registrant = data?.networker_registrant;
+    // const owwa_registrant = data?.owwa_registrant;
 
-    const ofw = data?.ofw;
-    const relative_ofw = data?.relative_ofw;
+    // const ofw = data?.ofw;
+    // const relative_ofw = data?.relative_ofw;
 
-    const total = data?.subscriber_count;
-    const verified_percentage = (verified / total) * 100;
-    const incomplete_percentage = (incomplete / total) * 100;
-    const returned_percentage = (returned / total) * 100;
-    const reject_percentage = (reject / total) * 100;
+    // const total = data?.subscriber_count;
+    // const verified_percentage = (verified / total) * 100;
+    // const incomplete_percentage = (incomplete / total) * 100;
+    // const returned_percentage = (returned / total) * 100;
+    // const reject_percentage = (reject / total) * 100;
 
-    const metro_manila = data?.metro_manila;
+    // const metro_manila = data?.metro_manila;
     
-    const [filter, setFilter] = useState("Metro Manila");
-    const [isLocationLoading, setIsLocationLoading] = useState(false);
+    // const [filter, setFilter] = useState("Metro Manila");
+    // const [isLocationLoading, setIsLocationLoading] = useState(false);
 
-    const handleFilterChange = (nextFilter) => {
-        if (nextFilter === filter || isLocationLoading) {
-            return;
-        }
+    // const handleFilterChange = (nextFilter) => {
+    //     if (nextFilter === filter || isLocationLoading) {
+    //         return;
+    //     }
 
-        setIsLocationLoading(true);
-        setFilter(nextFilter);
-    };
+    //     setIsLocationLoading(true);
+    //     setFilter(nextFilter);
+    // };
 
 
     return <>
@@ -100,22 +110,22 @@ const Dashboard = () => {
             <div className="admin-dashboard-layout">
                 <div className="dashboard-heading">
                     <div className="dashboard-title">
-                        <h1 className="text-3xl font-bold">Dashboard</h1>
+                        <h2 className="text-3xl font-bold">Dashboard 2025</h2>
                     </div>
-                    <div className="list-attendance">
+                    <div className="list-attendance list-attendance-2025">
                         <ul>
                             <li>
                                 <h6>Registrants</h6>
-                                <h3>{total?.toLocaleString()} Registrants</h3>
+                                <h3>{registrants?.toLocaleString()} Registrants</h3>
                             </li>
                             <li>
                                 <h6>Attendance</h6>
-                                <h3>{attendance?.toLocaleString()} Attendance</h3>
+                                <h3>{attendees?.toLocaleString()} Attendance</h3>
                             </li>
-                            <li>
+                            {/* <li>
                                 <h6>Companions</h6>
-                                <h3>{companion?.toLocaleString()} Companion</h3>
-                            </li>
+                                <h3>0 Companion</h3>
+                            </li> */}
                         </ul>
                     </div>
                 </div>
@@ -129,7 +139,7 @@ const Dashboard = () => {
                             
                                     <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${verified_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${verified_percentage} 100`} stroke-linecap="round"></circle>
                                 </svg>
                             </div>
                             <h4><strong>{verified_percentage?.toFixed(2)}%</strong></h4>
@@ -143,7 +153,7 @@ const Dashboard = () => {
                             
                                     <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${incomplete_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${incomplete_percentage} 100`} stroke-linecap="round"></circle>
                                 </svg>
                             </div>
                             <h4><strong>{incomplete_percentage?.toFixed(2)}%</strong></h4>
@@ -156,7 +166,7 @@ const Dashboard = () => {
                             
                                     <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${returned_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${returned_percentage} 100`} stroke-linecap="round"></circle>
                                 </svg>
                             </div>
                             <h4><strong>{returned_percentage?.toFixed(2)}%</strong></h4>
@@ -169,7 +179,7 @@ const Dashboard = () => {
                             
                                     <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
 
-                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${reject_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${reject_percentage} 100`} stroke-linecap="round"></circle>
                                 </svg>
                             </div>
                             <h4><strong>{reject_percentage?.toFixed(2)}%</strong></h4>
@@ -180,29 +190,24 @@ const Dashboard = () => {
                 </div>
 
                 <div className="attendance-overview-section">
-                    <h3>Attendee Overview</h3>
                     <ul>
-                        <li>
-                            <h5>Yes: <strong>{attendee_yes?.toLocaleString()}</strong></h5>
-                        </li>
-                        <li>
-                            <h5>No: <strong>{attendee_no?.toLocaleString()}</strong></h5>
-                        </li>
+                        <li></li>
+                        <li></li>
                     </ul>
                 </div>
 
                 <div className="ofw-type-section">
                     <div className="ofw-type-piechart">
                         <h3>OFW Type</h3>
-                        {ofw && relative_ofw ? (
+                        {/* {ofw && relative_ofw ? (
                             <OFWtypeChart ofw={ofw} relativeOfw={relative_ofw} />
                             ) : (
 
                             <div class="animate-pulse w-96 h-96 block !bg-[#e3e3e3] rounded-full m-auto"></div>
-                        )}
+                        )} */}
                     </div>
 
-                    <div className="location-list">
+                    {/* <div className="location-list">
                         <h3>Locations</h3>
                         <div className="location-filter">
                         
@@ -246,7 +251,7 @@ const Dashboard = () => {
                         <div style={{ display: isLocationLoading ? "none" : "block" }}>
                             <LocationChart filter={filter} onLoadingChange={setIsLocationLoading} />
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
@@ -449,6 +454,6 @@ const Dashboard = () => {
             </div> */}
         </div>
     </>
-}
+};
 
-export default Dashboard;
+export default Dashboard2025;

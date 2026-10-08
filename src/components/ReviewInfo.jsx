@@ -194,10 +194,12 @@ export default function ReviewInfo({ values = {}, onEdit, displayName = "", word
               <button type="button" style={styles.qrButton} onClick={() => setIsQrModalOpen(true)}>
                 View QR Code
               </button>
-            ) : null}
-            <button type="button" style={styles.editButton} onClick={onEdit}>
+            ) : (
+              <button type="button" style={styles.editButton} onClick={onEdit}>
               Edit Profile
             </button>
+            )}
+            
           </div>
         </div>
       </div>

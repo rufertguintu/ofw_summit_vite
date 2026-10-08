@@ -1401,7 +1401,7 @@ const isCurrentStepValid = isStepValid();
             </div>
           ) : null}
 
-          {isReviewMode ? (
+          {isReviewMode || isAdminVerified ? (
             <>
               <div className="profile-heading">
                 <div className="profile-basic-info">
