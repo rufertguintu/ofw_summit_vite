@@ -17,7 +17,19 @@ const Records = () => {
     const [Modalloading, setModalLoading] = useState(true); // ✅ start TRUE
     const [ModalEditloading, setModalEditLoading] = useState(true); // ✅ start TRUE
     const [totalPages, setTotalPages] = useState(1);
+    const [menu, setMenu] = useState(null);
+    const [toast, setToast] = useState(null);
 
+    useEffect(() => {
+        if (!menu) return;
+        const close = () => setMenu(null);
+        window.addEventListener("click", close);
+        window.addEventListener("scroll", close, true);
+        return () => {
+            window.removeEventListener("click", close);
+            window.removeEventListener("scroll", close, true);
+        };
+    }, [menu]);
 
     useEffect(() => {
         setLoading(true); // ✅ loading before fetch
@@ -80,14 +92,45 @@ const Records = () => {
 
 
 
+    const showToast = (message, type = "success") => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+    };
+
     return <>
+
+        {menu && (
+            <div
+                className="fixed z-50 w-44 py-2 bg-white border border-gray-200 rounded-lg shadow-lg text-left"
+                style={{ top: menu.top, right: menu.right }}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <Link className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" to={`/records/${menu.id}/view-profile`}>View</Link>
+                <button
+                    type="button"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => { const id = menu.id; setMenu(null); UpdateUserClick(id); }}
+                >
+                    Edit
+                </button>
+            </div>
+        )}
+
+        {toast && (
+            <div
+                role="alert"
+                className={`fixed bottom-6 right-6 z-[1000] px-5 py-3 rounded-lg shadow-lg text-white text-sm ${toast.type === "error" ? "bg-red-600" : "bg-green-600"}`}
+            >
+                {toast.message}
+            </div>
+        )}
 
         <ModalRecord isOpen={open} userdata={selectedUser} Modalloading={Modalloading} setUsers={setUsers} onClose={() => { setOpen(false); setSelectedUser(null); }}>
             <h2>User Details</h2>
             <p>This is your popup content</p>
         </ModalRecord>
 
-        <ModalUpdateRecord isOpen={openEdit} userdata={selectedUser} ModalEditloading={ModalEditloading} setUsers={setUsers} onClose={() => { setEditOpen(false); setSelectedUser(null); }}>
+        <ModalUpdateRecord isOpen={openEdit} userdata={selectedUser} ModalEditloading={ModalEditloading} setUsers={setUsers} onSuccess={showToast} onClose={() => { setEditOpen(false); setSelectedUser(null); }}>
             <h2>User Details</h2>
             <p>This is your popup content</p>
         </ModalUpdateRecord>
@@ -98,7 +141,7 @@ const Records = () => {
 
         <div className="min-w-full px-10">
             <div className="border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb">
-                <div className="py-3 border-b border-table-line">
+                <div className="py-3 border-table-line">
                 
                 <div className="relative max-w-xs">
                     <label for="hs-table-search" className="sr-only">Search</label>
@@ -113,8 +156,8 @@ const Records = () => {
                 </div>
                 </div>
 
-                <table className="border min-w-full divide-y divide-table-line">
-                    <thead className="bg-muted">
+                <table className="min-w-full divide-y divide-table-line">
+                    <thead className="bg-muted" style={{ backgroundColor: "#F8F9FB" }}>
                         <tr>
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">ID</th>
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">Full Name</th>
@@ -126,7 +169,7 @@ const Records = () => {
                         <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-muted-foreground-1 uppercase">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-table-line">
+                    <tbody className="records-style divide-y divide-table-line">
 
                         {loading ? (
                             // ✅ SHOW LOADING INSIDE TABLE
@@ -151,11 +194,25 @@ const Records = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.email}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.type_registrant == 0 ? "Online Registrant" : user.type_registrant == 1 ? "Mall Registrant" : user.type_registrant == 2 ? "Onsite Registrant" : user.type_registrant == 3 ? "Networker" : "OWWA Member"}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.ofw_type == 0 ? "OFW" : "Relative of OFW"}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : "Returned"}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                                        <span className={user.admin_verified == 2 ? "verified" : user.admin_verified == 1 ? "rejected" : user.admin_verified == 0 ? "incomplete" : "returned"}>{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : "Returned"}</span>
+                                        </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.user_registered}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                         {/* <button  className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " key={user.id} onClick={() => UpdateUserClick(user.id)}>Edit</button> */}
-                                         <Link className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg  focus:outline-hidden  disabled:opacity-50 " to={`/records/${user.id}/view-profile`}>View Profile</Link></td>
+                                         <button
+                                            type="button"
+                                            className="inline-flex items-center gap-x-1 px-2 py-1 text-sm font-medium rounded border border-gray-300 bg-gray-200 hover:bg-gray-300"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (menu?.id === user.id) { setMenu(null); return; }
+                                                const r = e.currentTarget.getBoundingClientRect();
+                                                setMenu({ id: user.id, top: r.bottom + 4, right: window.innerWidth - r.right });
+                                            }}
+                                         >
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
+                                            Action
+                                         </button>
+                                    </td>
                                 </tr>
                             ))
                         )}

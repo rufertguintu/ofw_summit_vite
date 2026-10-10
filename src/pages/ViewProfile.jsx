@@ -429,10 +429,10 @@ function ViewProfile() {
       ) : loadError ? (
         <div style={errorBanner}>{loadError}</div>
       ) : userdata ? (
-        <div style={contentWrapper}>
-          <section style={sectionCard}>
-            <h4 style={sectionTitle}>Profile Details</h4>
-            <div style={infoGrid}>
+        <div className="recordsInfo" style={contentWrapper}>
+          <section className="profile-details-section"  style={sectionCard}>
+            <h4>Profile Details</h4>
+            <div className="records-info" style={infoGrid}>
               {profileItems.map((item) => (
                 <div key={item.label} style={infoItem}>
                   <div style={infoLabel}>{item.label}</div>
@@ -443,9 +443,9 @@ function ViewProfile() {
           </section>
           
           {ofwType && (
-            <section style={sectionCard}>
-            <h4 style={sectionTitle}>OFW Details</h4>
-            <div style={infoGrid}>
+            <section className="ofw-type-details" style={sectionCard}>
+            <h4>OFW Details</h4>
+            <div className="records-info" style={infoGrid}>
               {OFWDetails.map((item) => (
                 <div key={item.label} style={infoItem}>
                   <div style={infoLabel}>{item.label}</div>
@@ -456,9 +456,9 @@ function ViewProfile() {
           </section>
           )}
           
-          <section style={sectionCard}>
-            <h4 style={sectionTitle}>Documents</h4>
-            <div style={documentGrid}>
+          <section className="documents-details" style={sectionCard}>
+            <h4>Documents</h4>
+            <div className="records-info"style={documentGrid}>
               {documentItems.map((item) => (
                 <div key={item.key} style={documentCard}>
                   <h5 style={documentTitle}>{item.label}</h5>
@@ -499,10 +499,7 @@ const contentWrapper = {
 };
 
 const sectionCard = {
-  border: "1px solid #e5e7eb",
-  borderRadius: "12px",
-  padding: "16px",
-  background: "#f9fafb",
+  marginBottom: "20px",
 };
 
 const sectionTitle = {

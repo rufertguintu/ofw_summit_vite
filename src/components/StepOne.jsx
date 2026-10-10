@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function StepOne({ nextStep, handleChange, values, checkError = "", checkingExisting = false }) {
     
@@ -15,6 +15,9 @@ export default function StepOne({ nextStep, handleChange, values, checkError = "
         mobile: false,
     });
 
+    const [termsAccepted, setTermsAccepted] = useState(false);
+    
+
     const isFirstNameValid = values.firstname.trim() !== "";
     const isLastNameValid = values.lastname.trim() !== "";
     const isMobileValid = /^09\d{9}$/.test(values.mobile);
@@ -23,6 +26,12 @@ export default function StepOne({ nextStep, handleChange, values, checkError = "
         isFirstNameValid &&
         isLastNameValid &&
         isMobileValid;
+
+    const termsEnabled = isValid;
+
+    useEffect(() => {
+        if (!termsEnabled) setTermsAccepted(false);
+    }, [termsEnabled]);
 
     // const isValid = 
     //     values.firstname.trim() !== "" &&
@@ -72,13 +81,27 @@ export default function StepOne({ nextStep, handleChange, values, checkError = "
 
                 </div>
             </div>
+            <div className="one-column_field">
+                <p>Alinsunod sa Data Privacy Act of 2012, pinapahintulutan ko ang Villar Foundation na gamitin at iproseso ang mga impormasyong ibinahagi ko sa Registration Form na ito para sa layunin at maayos na pangangasiwa ng 12th OFW & Family Summit 2023 lamang at para na rin sa iba pang mga layunin na naaayon sa batas.<span className="required-field">*</span></p>
+                <div className="agreement-field">
+                    <input
+                        type="checkbox"
+                        name="agree"
+                        value="1"
+                        className={`${!termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
+                        disabled={!termsEnabled}
+                        checked={termsAccepted}
+                        onChange={(e) => setTermsAccepted(e.target.checked)}
+                    /> I Agree
+                </div>
+            </div>
 
             <div className="one-column_field">
                 <div className="reg_field-cont">
                     <button
                         onClick={nextStep}
-                        disabled={!isValid || checkingExisting}
-                        className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!isValid || !isMobileValid || checkingExisting ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`} 
+                        disabled={!isValid || !termsAccepted || checkingExisting}
+                                                className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!isValid || !termsAccepted || checkingExisting ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
                     >
                         {checkingExisting ? "Checking..." : "Next"}
                     </button>

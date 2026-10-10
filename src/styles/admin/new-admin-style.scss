@@ -494,4 +494,138 @@
             color: #333;
         }
     }
+
+    .records-style{
+        tr{
+            &:nth-child(even){
+                background-color: #FFF8F1;
+            }
+            &:nth-child(odd){
+                background-color: #ffffff;
+            }
+
+            td{
+                span{
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    color: #fff;
+
+                    &.verified{
+                        background-color: rgb(88, 190, 117, 0.22);
+                        border: 1px solid rgb(88, 190, 117);
+                        color: #12633A;
+                    }
+                    &.incomplete{
+                        background-color: rgb(254, 102, 1, 0.22);
+                        border: 1px solid rgb(254, 102, 1);
+                        color: #B55A1E;
+                    }
+                    &.rejected{
+                        background-color: rgb(255, 5, 5, 0.22);
+                        border: 1px solid rgb(255, 5, 5);
+                        color: #D00505;
+                    }
+                    &.returned{
+                        background-color: rgb(0, 123, 255, 0.22);
+                        border: 1px solid rgb(0, 123, 255);
+                        color: #004085;
+                    }
+                }
+
+                &:last-child{
+                    a{
+                        padding: 10px;
+                        border: 1px solid #d5d5d5;
+                        background-color: #fff;
+                        color: #6b6464;
+                    }
+                }
+            }
+        }
+    }
+
+    .recordsInfo{
+        h4{
+            padding: 12px 20px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .records-info{
+            padding: 20px;
+        }
+
+        .profile-details-section{
+            background-color: #FFF8F1;
+            h4{
+                background-color: #3babc8;
+            }
+        }
+        .ofw-type-details{
+            background-color: #FFF8F1;
+            h4{
+                background-color: #0094cb;
+            }
+        }
+        .documents-details{
+            background-color: #FFF8F1;
+            h4{
+                background-color: #01b6ad;
+            }
+        }
+    }
+
+    .modalbody{
+        padding: 40px;
+        background-color: #fff;
+
+        .modal-edit-heading{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            .action-btn{
+                display: flex;
+                gap: 10px;
+
+                button{
+                    padding: 8px 20px;
+                    border: none;
+                    border-radius: 5px;
+                    color: #fff;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    
+                    &:first-child{
+                        background-color: #3babc8;
+                    }
+                    &:last-child{
+                        background-color: #6c757d;
+                    }
+                }
+            }
+        }
+
+        .update-form{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+
+            select, input[type="text"], input[type="email"], input[type="password"]{
+                padding: 10px;
+                line-height: 100%;
+                border-radius: 10px;
+                border: 1px solid #cfcece;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            label{
+                display: block;
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+        }
+    }
+    
 }

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import StepOne from "../components/StepOne";
 import StepTwo from "../components/StepTwo";
+import EmailIdentifier from "../components/EmailIdentifier";
 import { fetchApi } from "../store/api";
 
 import logo from "../assets/ofw-summit-15th.svg";
@@ -17,6 +18,7 @@ const Online_Register = () => {
     const [checkError, setCheckError] = useState("");
     const [alreadyRegistered, setAlreadyRegistered] = useState(false);
     const [alreadyRegisteredEmail, setAlreadyRegisteredEmail] = useState("");
+    const [showEmailIdentifier, setShowEmailIdentifier] = useState(false);
     const [showExistingPrompt, setShowExistingPrompt] = useState(false);
     const [existingPromptError, setExistingPromptError] = useState("");
     const [retrievingExistingData, setRetrievingExistingData] = useState(false);
@@ -127,7 +129,7 @@ const Online_Register = () => {
 
             if (data?.matched) {
                 setMatchedYear(data?.matched_year || null);
-                setShowExistingPrompt(true);
+                setShowEmailIdentifier(true);
                 return;
             }
 
@@ -262,6 +264,16 @@ const Online_Register = () => {
                                     </button>
                                 </div>
                             </div>
+                        ) : showEmailIdentifier ? (
+                            <EmailIdentifier
+                                values={formData}
+                                onBack={() => setShowEmailIdentifier(false)}
+                                onCreateNew={() => {
+                                    localStorage.removeItem(RETRIEVED_ACCOUNT_STORAGE_KEY);
+                                    setShowEmailIdentifier(false);
+                                    setStep(2);
+                                }}
+                            />
                         ) : showExistingPrompt ? (
                             <div className="match-record-result">
                                 <h3>You have been previously registered</h3>
