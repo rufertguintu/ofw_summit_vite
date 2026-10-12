@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 
 // import assets from "../assets/";
-import banner from "../assets/hero-banner-2026.jpg";
+import banner from "../assets/home-2026.jpg";
 import whiteLogo2026 from "../assets/2026-white-logo.svg";
 import blackLogo2026 from "../assets/ofw-summit-15th.svg";
 import qr2026 from "../assets/2026-QR.jpg";
-import eventbg2026 from "../assets/event-bg-2026.png";
+import eventbg2026 from "../assets/prize-2026.png";
 import vicinity_map from "../assets/vicinity-map-2026.svg";
 import camella_logo from "../assets/camella.png";
 import all_day from "../assets/all-day.png";

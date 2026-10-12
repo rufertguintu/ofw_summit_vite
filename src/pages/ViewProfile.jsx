@@ -9,9 +9,15 @@ const STATUS_OPTIONS = [
   { label: "Complete Verified", value: "2" },
 ];
 
+const REASON_STATUSES = ["0", "1", "3"];
+
 const REASON_OPTIONS = [
   { label: "No Documents Submitted", value: "No Documents Submitted" },
   { label: "Incomplete: Only passport submitted.", value: "Incomplete: Only passport submitted." },
+  { label: "Incomplete: Requires immediate family supporting document.", value: "Incomplete: Requires immediate family supporting document." },
+  { label: "Incorrect: Wrong scanned document/s.", value: "Incorrect: Wrong scanned document/s." },
+  { label: "Incomplete: No passport submitted.", value: "Incomplete: No passport submitted." },
+  { label: "Unclear scanned document/s.", value: "Unclear scanned document/s." },
 ];
 
 const ATTENDANCE_OPTIONS = [
@@ -231,7 +237,7 @@ function ViewProfile() {
 
   const ofwType = meta.ofw_type === "1";
 
-  const showReasonIncomplete = formData.admin_verified === "0";
+  const showReasonIncomplete = REASON_STATUSES.includes(formData.admin_verified);
 
   const companionValue = useMemo(() => {
     if (formData.companion === "") {
@@ -248,7 +254,7 @@ function ViewProfile() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "admin_verified" && value !== "0" ? { reason_incomplete: "" } : null),
+      ...(name === "admin_verified" && !REASON_STATUSES.includes(value) ? { reason_incomplete: "" } : null),
     }));
   };
 
@@ -264,7 +270,7 @@ function ViewProfile() {
     const nextAdminVerified = formData.admin_verified === "" ? null : Number(formData.admin_verified);
     const nextAttendance = formData.attend_event === "" ? null : Number(formData.attend_event);
     const nextCompanion = formData.companion === "" ? null : Number(formData.companion);
-    const nextReasonIncomplete = formData.admin_verified === "0" ? formData.reason_incomplete : "";
+    const nextReasonIncomplete = REASON_STATUSES.includes(formData.admin_verified) ? formData.reason_incomplete : "";
 
     try {
       const res = await fetchApi(`/wp-json/custom/v1/user/${userdata.id}/record-status`, {

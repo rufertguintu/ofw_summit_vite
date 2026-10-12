@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { fetchApi } from "../store/api";
-import blackLogo2026 from "../assets/ofw-summit-15th.svg";
-import bannerImage from "../assets/about-banner.jpg";
+import blackLogo2026 from "../assets/about-logo-2026.svg";
+import bannerImage from "../assets/about-banner-2026.jpg";
 import gal1 from "../assets/gal-1.png";
 import gal2 from "../assets/gal-2.png";
 import gal3 from "../assets/gal-3.png";
@@ -48,9 +48,7 @@ const AboutUs = () => {
 	// console.log(data.acf.other_hero_image);
 
 	return <>
-		<div className="other-page-banner">
-			{ImageUrl && <img src={ImageUrl} alt="Hero Banner" />}
-		</div>
+		
 
 		<div className="about-us">
 			<div className="custom-container">
