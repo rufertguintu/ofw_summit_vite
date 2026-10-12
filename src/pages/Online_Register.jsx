@@ -18,6 +18,7 @@ const Online_Register = () => {
     const [checkError, setCheckError] = useState("");
     const [alreadyRegistered, setAlreadyRegistered] = useState(false);
     const [alreadyRegisteredEmail, setAlreadyRegisteredEmail] = useState("");
+    const [maskedEmail, setMaskedEmail] = useState("");
     const [showEmailIdentifier, setShowEmailIdentifier] = useState(false);
     const [showExistingPrompt, setShowExistingPrompt] = useState(false);
     const [existingPromptError, setExistingPromptError] = useState("");
@@ -129,6 +130,7 @@ const Online_Register = () => {
 
             if (data?.matched) {
                 setMatchedYear(data?.matched_year || null);
+                setMaskedEmail(data?.masked_email || "");
                 setShowEmailIdentifier(true);
                 return;
             }
@@ -267,6 +269,7 @@ const Online_Register = () => {
                         ) : showEmailIdentifier ? (
                             <EmailIdentifier
                                 values={formData}
+                                maskedEmail={maskedEmail}
                                 onBack={() => setShowEmailIdentifier(false)}
                                 onCreateNew={() => {
                                     localStorage.removeItem(RETRIEVED_ACCOUNT_STORAGE_KEY);

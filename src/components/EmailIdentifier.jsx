@@ -4,7 +4,7 @@ import { fetchApi } from "../store/api";
 const MAX_EMAIL_ATTEMPTS = 3;
 const alertBase = "mt-[20px] border text-sm rounded-lg p-3";
 
-export default function EmailIdentifier({ values, onCreateNew, onBack }) {
+export default function EmailIdentifier({ values, maskedEmail = "", onCreateNew, onBack }) {
     const [email, setEmail] = useState("");
     const [attempts, setAttempts] = useState(0);
     const [status, setStatus] = useState({ state: "idle", message: "" });
@@ -48,6 +48,7 @@ export default function EmailIdentifier({ values, onCreateNew, onBack }) {
         <div className="match-record-result">
             <h3>We found a previous record</h3>
             <p>Enter the email address you used before so we can help you recover your account.</p>
+            {maskedEmail && <p>Email on record: <strong>{maskedEmail}</strong></p>}
 
             {!found && !exceeded && (
                 <div className="one-column_field">
