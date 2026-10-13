@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import DashboardTitle from "../components/DashboardTitle";
 import { API_BASE_URL } from "../store/api";
+import download_icon from "../assets/feather/download.svg";
 
 const EXPORT_OPTIONS = [
   {
@@ -87,15 +88,21 @@ const ExportData = () => {
       <div className="export-data-options">
         {EXPORT_OPTIONS.map((option) => (
           <div className="export-data-card" key={option.type}>
-            <h3>{option.label}</h3>
-            <p>{option.description}</p>
-            <button
-              type="button"
-              disabled={loadingType === option.type}
-              onClick={() => handleExport(option.type, option.label)}
-            >
-              {loadingType === option.type ? "Exporting..." : "Export CSV"}
-            </button>
+            <div className="export-label">
+              <h3>{option.label}</h3>
+              <p>{option.description}</p>
+            </div>
+            
+            <div className="export-btn">
+              <button
+                type="button"
+                disabled={loadingType === option.type}
+                onClick={() => handleExport(option.type, option.label)}
+              >
+                <img src={download_icon} alt="Download Icon" />
+                {loadingType === option.type ? "Exporting..." : "Export CSV"}
+              </button>
+            </div>
           </div>
         ))}
       </div>

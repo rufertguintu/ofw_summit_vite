@@ -627,5 +627,55 @@
             }
         }
     }
+
+    .export-data-page{
+        padding: 40px;
+        background-color: #fff;
+        width: 90%;
+        margin: 0 auto;
+
+        .export-data-options{
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .export-data-card{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                gap: 20px;
+                padding: 20px;
+                border-bottom: 1px solid #cfcece8c;
+
+                button{
+                    padding: 20px 60px;
+                    border: 1px solid #D8D8D8;
+                    border-radius: 5px;
+                    color: #000;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+            }
+        }
+        
+    }
+
+    .options-page{
+        padding: 40px;
+        background-color: #fff;
+        width: 90%;
+        margin: 0 auto;
+
+        .option-buttons{
+            display: flex;
+            gap: 20px;
+        }
+    }
     
 }
