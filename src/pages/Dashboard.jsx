@@ -124,6 +124,7 @@ const Dashboard = () => {
                     <h3>Validation Type</h3>
                     <ul>
                         <li>
+                            <Link to="/status-filtered/verified">
                             <div className="round-percentage">
                                 <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                             
@@ -135,9 +136,10 @@ const Dashboard = () => {
                             <h4><strong>{verified_percentage?.toFixed(2)}%</strong></h4>
                             <h5>Verified</h5>
                             <h6>Total Count: <strong>{verified?.toLocaleString()}</strong></h6>
-
+                            </Link>
                         </li>
                         <li>
+                            <Link to="/status-filtered/incomplete">
                             <div className="round-percentage">
                                 <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                             
@@ -149,8 +151,10 @@ const Dashboard = () => {
                             <h4><strong>{incomplete_percentage?.toFixed(2)}%</strong></h4>
                             <h5>Incomplete</h5>
                             <h6>Total Count: <strong>{incomplete?.toLocaleString()}</strong></h6>
+                            </Link>
                         </li>
                         <li>
+                            <Link to="/status-filtered/returned">
                             <div className="round-percentage">
                                 <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                             
@@ -162,8 +166,10 @@ const Dashboard = () => {
                             <h4><strong>{returned_percentage?.toFixed(2)}%</strong></h4>
                             <h5>Returned</h5>
                             <h6>Total Count: <strong>{returned?.toLocaleString()}</strong></h6>
+                            </Link>
                         </li>
                         <li>
+                            <Link to="/status-filtered/rejected">
                             <div className="round-percentage">
                                 <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
                             
@@ -175,6 +181,7 @@ const Dashboard = () => {
                             <h4><strong>{reject_percentage?.toFixed(2)}%</strong></h4>
                             <h5>Rejected</h5>
                             <h6>Total Count: <strong>{reject?.toLocaleString()}</strong></h6>
+                            </Link>
                         </li>
                     </ul>
                 </div>

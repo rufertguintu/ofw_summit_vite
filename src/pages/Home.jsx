@@ -8,7 +8,7 @@ import qr2026 from "../assets/2026-QR.jpg";
 import eventbg2026 from "../assets/prize-2026.png";
 import vicinity_map from "../assets/vicinity-map-2026.svg";
 import camella_logo from "../assets/camella.png";
-import all_day from "../assets/all-day.png";
+import alfamart_logo from "../assets/alfamart-logo.png";
 import all_home from "../assets/all-home.png";
 import petron_logo from "../assets/petron.png";
 
@@ -46,7 +46,7 @@ const Home = () => {
                     <ul>
                         <li>Mag-register online sa <a href="https://ofwsummit.villarfoundation.com.ph/"><strong>https://ofwsummit.villarfoundation.com.ph/</strong></a>;</li>
                         <li><strong>I-scan ang QR code</strong> na makikita sa harap ng flyer/poster na ito at sundan ang instructions;</li>
-                        <li>On-site registration sa <strong>November 18, 2026 Friday</strong>, <br />Magpunta sa <strong>The Tent at Vista Global South, C5 Extension Road, Las Piñas City</strong></li>
+                        <li>On-site registration sa <strong>November 26, 2026 Thursday</strong>, <br />Magpunta sa <strong>The Tent at Vista Global South, C5 Extension Road, Las Piñas City</strong></li>
                     </ul>
                     <div className="join-via-qrcode">
                         <h3>SALI NA!<br/>Scan QR Code to <strong>Register!</strong></h3>
@@ -132,7 +132,7 @@ const Home = () => {
                 <ul>
                     <li><img src={camella_logo} alt=""/></li>
                     
-                    <li><img src={all_day} alt=""/></li>
+                    <li><img src={alfamart_logo} alt=""/></li>
                     
                     <li><img src={all_home} alt=""/></li>
                     
