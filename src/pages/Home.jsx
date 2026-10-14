@@ -9,6 +9,7 @@ import eventbg2026 from "../assets/prize-2026.png";
 import vicinity_map from "../assets/vicinity-map-2026.svg";
 import camella_logo from "../assets/camella.png";
 import alfamart_logo from "../assets/alfamart-logo.png";
+import savemart_logo from "../assets/savemart-logo.png";
 import all_home from "../assets/all-home.png";
 import petron_logo from "../assets/petron.png";
 
@@ -133,6 +134,7 @@ const Home = () => {
                     <li><img src={camella_logo} alt=""/></li>
                     
                     <li><img src={alfamart_logo} alt=""/></li>
+                    <li><img src={savemart_logo} alt=""/></li>
                     
                     <li><img src={all_home} alt=""/></li>
                     
