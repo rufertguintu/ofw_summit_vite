@@ -131,10 +131,10 @@ const Home = () => {
             <div className="custom-container">
                 <h3>Corporate Sponsors</h3>
                 <ul>
-                    <li><img src={camella_logo} alt=""/></li>
+                    <li><img src={camella_logo} alt="" style={{ width: "300px", height: "auto" }}/></li>
                     
-                    <li><img src={alfamart_logo} alt=""/></li>
-                    <li><img src={savemart_logo} alt=""/></li>
+                    <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li>
+                    <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li>
                     
                     <li><img src={all_home} alt=""/></li>
                     

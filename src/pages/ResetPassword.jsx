@@ -81,10 +81,7 @@ function ResetPassword() {
   };
 
   return (
-    <div className="login-section">
-      <div className="login-banner">
-        <img src={Logo} alt="" />
-      </div>
+    <div className="resetpassword-section">
       <div className="custom-container">
         <div className="login-wrapper">
           <h2>Reset Password</h2>
@@ -113,7 +110,7 @@ function ResetPassword() {
                     />
                   </div>
                 </div>
-                <div className="two-column_fields">
+                <div className="one-column_field">
                   <div className="reg_field-cont">
                     <label htmlFor="confirm-password">Confirm Password</label>
                     <input
