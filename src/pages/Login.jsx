@@ -86,6 +86,7 @@ function Login() {
               <div className="registration-info">
                   <div className="join-event-instruction">
                       <img src={logo} alt=""/>
+                      <h4>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h4>
 
                       <h2>How to create an <span>Online Account</span></h2>
                       <ul>

@@ -46,7 +46,7 @@ const Home = () => {
                     <ul>
                         <li>Mag-register online sa <a href="https://ofwsummit.villarfoundation.com.ph/"><strong>https://ofwsummit.villarfoundation.com.ph/</strong></a>;</li>
                         <li><strong>I-scan ang QR code</strong> na makikita sa harap ng flyer/poster na ito at sundan ang instructions;</li>
-                        <li>On-site registration sa <strong>November 27, 2026 Friday</strong>, <br />Magpunta sa <strong>The Tent at Vista Global South, C5 Extension Road, Las Piñas City</strong></li>
+                        <li>On-site registration sa <strong>November 18, 2026 Friday</strong>, <br />Magpunta sa <strong>The Tent at Vista Global South, C5 Extension Road, Las Piñas City</strong></li>
                     </ul>
                     <div className="join-via-qrcode">
                         <h3>SALI NA!<br/>Scan QR Code to <strong>Register!</strong></h3>
