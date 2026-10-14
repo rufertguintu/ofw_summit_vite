@@ -78,7 +78,6 @@ const Home = () => {
                             <li>Seaman's book:</li>
                             <li>Job contract;</li>
                             <li>Kopya ng mga dokumento a magpapatunay na ikaw ay kamag-anak ng OFW (Marriage Certificate, Birth Certificate, etc.);</li>
-                            <li>Katunayan na ikaw ay bakunado laban sa COVID- 19 gaya ng vaccination card, vaccination certificate (Vax Cert) o international certificate of vaccination (IC) with 1st dose and 2nd dose;</li>
                             <li>Kung ang kamag-anak ang attend upang kumatawan sa OFW, magdala ng karagdagang dokumento batay sa mga sumusunod:</li>
                         </ul>
                     </div>

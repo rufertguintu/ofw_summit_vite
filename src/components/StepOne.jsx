@@ -69,7 +69,7 @@ export default function StepOne({ nextStep, handleChange, values, checkError = "
                 <input type="date" name="date_birth" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" placeholder="YYYY-MM-DD" required value={values.date_birth} onChange={handleChange("date_birth")} />
             </div>
             <div className="one-column_field">
-                <label>Mobile Number</label>
+                <label>Mobile Number *</label>
                 <input type="text" name="mobile" placeholder="Ex. 09123456789" className="py-2.5 sm:py-3 px-4 rounded-lg block w-full bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none mobile"  id="phoneNum" maxLength="11" value={values.mobile} onChange={handleChange("mobile")} onBlur={() => setTouched({ ...touched, mobile: true })} style={{ borderColor: !isMobileValid && touched.mobile ? "red" : "" }}/>
                 <div id="error-container">
                     
