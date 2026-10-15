@@ -205,8 +205,12 @@
 		}
 	}
 
-	table{
+	.table-cont{
+		overflow-x: auto;
 		margin: 40px 0;
+	}
+
+	table{
 		width: 100%;
 		border-collapse: collapse;
 

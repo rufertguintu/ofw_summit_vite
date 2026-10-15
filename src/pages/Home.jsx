@@ -83,38 +83,40 @@ const Home = () => {
                         </ul>
                     </div>
                 </div>
-                    
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Para sa mga:</th>
-                            <th>Kailangan ng OFW:</th>
-                            <th>Kailangan ng Kakatawan (Representative)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Asawa ng OFW</td>
-                            <td>Marriage Certificate</td>
-                            <td>Valid ID</td>
-                        </tr>
-                        <tr>
-                            <td>Anak ng OFW</td>
-                            <td>&nbsp;</td>
-                            <td>Valid ID and Birth Certificate</td>
-                        </tr>
-                        <tr>
-                            <td>Magulang ng OFW (Walang Asawa)</td>
-                            <td>Birth Certificate</td>
-                            <td>Valid ID</td>
-                        </tr>
-                        <tr>
-                            <td>Kapatid ng OFW (Walang Asawa)</td>
-                            <td>Birth Certificate</td>
-                            <td>Valid ID and Birth Certificate</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div className="table-cont">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Para sa mga:</th>
+                                <th>Kailangan ng OFW:</th>
+                                <th>Kailangan ng Kakatawan (Representative)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Asawa ng OFW</td>
+                                <td>Marriage Certificate</td>
+                                <td>Valid ID</td>
+                            </tr>
+                            <tr>
+                                <td>Anak ng OFW</td>
+                                <td>&nbsp;</td>
+                                <td>Valid ID and Birth Certificate</td>
+                            </tr>
+                            <tr>
+                                <td>Magulang ng OFW (Walang Asawa)</td>
+                                <td>Birth Certificate</td>
+                                <td>Valid ID</td>
+                            </tr>
+                            <tr>
+                                <td>Kapatid ng OFW (Walang Asawa)</td>
+                                <td>Birth Certificate</td>
+                                <td>Valid ID and Birth Certificate</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
 
                 <p>Hintayin ang ipapadalang verification sa inyong email o mobile para maka-attend sa summit at makasali sa raffle.</p>
             </div>
