@@ -195,7 +195,7 @@ const Records = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.type_registrant == 0 ? "Online Registrant" : user.type_registrant == 1 ? "Mall Registrant" : user.type_registrant == 2 ? "Onsite Registrant" : user.type_registrant == 3 ? "Networker" : "OWWA Member"}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.ofw_type == 0 ? "OFW" : "Relative of OFW"}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
-                                        <span className={user.admin_verified == 2 ? "verified" : user.admin_verified == 1 ? "rejected" : user.admin_verified == 0 ? "incomplete" : "returned"}>{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : "Returned"}</span>
+                                        <span className={user.admin_verified == 2 ? "verified" : user.admin_verified == 1 ? "rejected" : user.admin_verified == 0 ? "incomplete" : user.admin_verified == 3 ? "returned" : user.admin_verified == 4 ? "validating" : "n/a"}>{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : user.admin_verified == 3 ? "Returned" : user.admin_verified == 4 ? "Validating" : "N/A"}</span>
                                         </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.user_registered}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">

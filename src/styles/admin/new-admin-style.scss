@@ -530,6 +530,11 @@
                         border: 1px solid rgb(0, 123, 255);
                         color: #004085;
                     }
+                    &.validating{
+                        background-color: rgb(255, 193, 7, 0.22);
+                        border: 1px solid rgb(255, 193, 7);
+                        color: #856404;
+                    }
                 }
 
                 &:last-child{

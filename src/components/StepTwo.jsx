@@ -410,7 +410,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 )}
             </div>
             <div className="one-column_field">
-                <p>Alinsunod sa Data Privacy Act of 2012, pinapahintulutan ko ang Villar Foundation na gamitin at iproseso ang mga impormasyong ibinahagi ko sa Registration Form na ito para sa layunin at maayos na pangangasiwa ng 12th OFW & Family Summit 2023 lamang at para na rin sa iba pang mga layunin na naaayon sa batas.<span className="required-field">*</span></p>
+                <p>Alinsunod sa Data Privacy Act of 2012, pinapahintulutan ko ang Villar Foundation na gamitin at iproseso ang mga impormasyong ibinahagi ko sa Registration Form na ito para sa layunin at maayos na pangangasiwa ng 15th OFW & Family Summit 2026 lamang at para na rin sa iba pang mga layunin na naaayon sa batas.<span className="required-field">*</span></p>
                 <div className="agreement-field">
                     <input
                         type="checkbox"

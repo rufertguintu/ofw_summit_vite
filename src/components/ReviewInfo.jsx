@@ -69,6 +69,8 @@ const FILE_FIELDS = [
   { key: "owwa_poea", label: "OWWA / POEA registration" },
   { key: "remittance", label: "Remittance slip" },
   { key: "allotment", label: "Allotment certificate" },
+  { key: "other_doc_1", label: "Other Document 1", labelKey: "other_doc_1_label" },
+  { key: "other_doc_2", label: "Other Document 2", labelKey: "other_doc_2_label" },
 ];
 
 const isEmptyValue = (value) =>
@@ -227,7 +229,7 @@ export default function ReviewInfo({ values = {}, onEdit, displayName = "", word
               {FILE_FIELDS.map((field) => (
                 <FieldCard
                   key={field.key}
-                  label={field.label}
+                  label={(field.labelKey && String(values[field.labelKey] || "").trim()) || field.label}
                   value={values[field.key]}
                   variant="file"
                   displayName={displayName}
