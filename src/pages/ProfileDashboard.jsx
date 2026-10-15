@@ -1,4 +1,4 @@
-import { Navigate, useNavigate, Link } from "react-router-dom";
+﻿import { Navigate, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import ReviewInfo from "../components/ReviewInfo";
@@ -3445,18 +3445,27 @@ const isCurrentStepValid = isStepValid();
                           </div>
                         </div>
 
-                        {[1, 2].map((n) => (
-                          <div className="profile-info" key={`other_doc_${n}`}>
-                            <label>Other Document {n}</label>
-                            <div className="field-wrap">
-                              <div className="fill-info upload-docs">
-                                <input type="text" className="form-control" name={`other_doc_${n}_label`} defaultValue={meta?.[`other_doc_${n}_label`] || ""} placeholder="Document label (e.g. Police Clearance)" style={{ marginBottom: "8px" }} />
-                                <input type="file" className="upload-file-input" id={`other_doc_${n}`} name={`other_doc_${n}`} accept="image/png, application/pdf, image/jpeg" />
-                                {renderDocumentPreview(`other_doc_${n}`, meta?.[`other_doc_${n}_label`] || `Other Document ${n}`)}
-                              </div>
+                        <div className="profile-info">
+                          <label>Other Document 1</label>
+                          <div className="field-wrap">
+                            <div className="fill-info upload-docs">
+                              <input type="text" className="form-control" name="other_doc_1_label" defaultValue={meta?.other_doc_1_label || ""} placeholder="Document label (e.g. Police Clearance)" style={{ marginBottom: "8px" }} />
+                              <input type="file" className="upload-file-input" id="other_doc_1" name="other_doc_1" accept="image/png, application/pdf, image/jpeg" />
+                              {renderDocumentPreview("other_doc_1", meta?.other_doc_1_label || "Other Document 1")}
                             </div>
                           </div>
-                        ))}
+                        </div>
+
+                        <div className="profile-info">
+                          <label>Other Document 2</label>
+                          <div className="field-wrap">
+                            <div className="fill-info upload-docs">
+                              <input type="text" className="form-control" name="other_doc_2_label" defaultValue={meta?.other_doc_2_label || ""} placeholder="Document label (e.g. Police Clearance)" style={{ marginBottom: "8px" }} />
+                              <input type="file" className="upload-file-input" id="other_doc_2" name="other_doc_2" accept="image/png, application/pdf, image/jpeg" />
+                              {renderDocumentPreview("other_doc_2", meta?.other_doc_2_label || "Other Document 2")}
+                            </div>
+                          </div>
+                        </div>
                         
                         <div className="proceed-btn-section profile-info">
                           <div style={{ display: "flex", gap: "10px" }}>

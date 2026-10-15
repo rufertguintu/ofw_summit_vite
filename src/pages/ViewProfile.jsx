@@ -141,7 +141,8 @@ function ViewProfile() {
       { key: "owwa_poea", label: "OWWA / POEA", value: meta.owwa_poea, alt: "owwa poea" },
       { key: "remittance", label: "Remittance", value: meta.remittance, alt: "remittance" },
       { key: "allotment", label: "Allotment", value: meta.allotment, alt: "allotment" },
-    ];
+            { key: "other_doc_1", label: meta.other_doc_1_label || "Other Document 1", value: meta.other_doc_1, alt: meta.other_doc_1_label || "other document 1" },
+            { key: "other_doc_2", label: meta.other_doc_2_label || "Other Document 2", value: meta.other_doc_2, alt: meta.other_doc_2_label || "other document 2" },    ];
   } else if (meta.type_registrant === "2") {
     documentItems = [
       { key: "passport", label: "Passport", value: meta.passport_checked },
