@@ -5,8 +5,9 @@ import { fetchApi, API_BASE_URL } from "../store/api";
 const STATUS_OPTIONS = [
   { label: "Incomplete", value: "0" },
   { label: "Reject", value: "1" },
-  { label: "Return", value: "3" },
   { label: "Complete Verified", value: "2" },
+  { label: "Returned", value: "3" },
+  { label: "Validating", value: "4" },
 ];
 
 const REASON_STATUSES = ["0", "1", "3"];

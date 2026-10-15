@@ -872,7 +872,8 @@ const isCurrentStepValid = isStepValid();
     0: "incomplete",
     1: "rejected",
     2: "verified",
-    3: "return",
+    3: "returned",
+    4: "validating",
   }[meta.admin_verified] || "Not provided";
 
   // QR code is only available once the admin has fully verified the user.
@@ -1457,6 +1458,7 @@ const isCurrentStepValid = isStepValid();
                 <div className="user-status-section">
                   <h4>Profile Status:</h4>
                   <h2 className={`status-${adminVerifiedLabel.toLowerCase()}`}>{adminVerifiedLabel}</h2>
+                  {adminVerifiedLabel.toLowerCase() === "validating" && <h6>Pending for review and validation</h6>}
                 </div>
 
                 {profileCompletionBar}

@@ -539,6 +539,14 @@ header{
                     &.status-reject{
                         color: red;
                     }
+                    &.status-validating{
+                        color: #FFA500;
+                    }
+                }
+
+                h6{
+                    font-style: italic;
+                    color: hsl(0, 0%, 58%);
                 }
             }
 
