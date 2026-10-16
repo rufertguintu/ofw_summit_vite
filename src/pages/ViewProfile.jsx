@@ -52,6 +52,9 @@ function ViewProfile() {
     setLoading(true);
     setLoadError("");
     setUserdata(null);
+    
+    setSubmitError("");
+    setSubmitSuccess("");
 
     fetchApi(`/wp-json/custom/v1/user/${id}`)
       .then((res) => {
@@ -82,7 +85,6 @@ function ViewProfile() {
       companion: String(userdata?.companion ?? userdata?.meta?.companion ?? ""),
     });
     setSubmitError("");
-    setSubmitSuccess("");
   }, [userdata]);
 
   const meta = userdata?.meta || {};
