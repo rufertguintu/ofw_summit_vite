@@ -56,6 +56,7 @@ const Dashboard = () => {
     const incomplete = data?.incomplete;
     const returned = data?.returned;
     const reject = data?.reject;
+    const validation = data?.validation;
     
     const attendance = data?.attendance;
     const attendee_yes = data?.attendee_yes;
@@ -78,6 +79,7 @@ const Dashboard = () => {
     const incomplete_percentage = (incomplete / total) * 100;
     const returned_percentage = (returned / total) * 100;
     const reject_percentage = (reject / total) * 100;
+    const validation_percentage = (validation / total) * 100;
 
     const metro_manila = data?.metro_manila;
     
@@ -136,6 +138,21 @@ const Dashboard = () => {
                             <h4><strong>{verified_percentage?.toFixed(2)}%</strong></h4>
                             <h5>Verified</h5>
                             <h6>Total Count: <strong>{verified?.toLocaleString()}</strong></h6>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/status-filtered/validation">
+                            <div className="round-percentage">
+                                <svg className="rotate-135 size-full" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+                            
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-based text-foreground/10" stroke-width="5.5" stroke-dasharray="100 100" stroke-linecap="round"></circle>
+
+                                    <circle cx="18" cy="18" r="16" fill="none" className="stroke-current " stroke-width="5.5" stroke-dasharray={`${validation_percentage?.toFixed(2)} 100`} stroke-linecap="round"></circle>
+                                </svg>
+                            </div>
+                            <h4><strong>{validation_percentage?.toFixed(2)}%</strong></h4>
+                            <h5>Validation</h5>
+                            <h6>Total Count: <strong>{validation?.toLocaleString()}</strong></h6>
                             </Link>
                         </li>
                         <li>
