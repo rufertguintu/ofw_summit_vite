@@ -1,12 +1,21 @@
 
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-export default function ProtectedRoute({ children }) {
+/** @param {{ children?: import("react").ReactNode, allowedRoles?: string[] }} props */
+export default function ProtectedRoute({ children, allowedRoles }) {
   const token = localStorage.getItem("token");
 
   if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  if (allowedRoles) {
+    const role = localStorage.getItem("role")?.toLowerCase();
+
+    if (!role || !allowedRoles.includes(role)) {
+      return <Navigate to="/profile-dashboard" replace />;
+    }
+  }
+
+  return children ?? <Outlet />;
 }

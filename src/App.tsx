@@ -72,15 +72,17 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/records" element={<Records />} />
-          <Route path="/records/:id/view-profile" element={<ViewProfile />} />
-          <Route path="/global-records" element={<GlobalRecords />} />
-          <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
-          <Route path="/2025-dashboard" element={<Dashboard2025 />} />
+          <Route element={<ProtectedRoute allowedRoles={["contributor", "administrator"]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/records" element={<Records />} />
+            <Route path="/records/:id/view-profile" element={<ViewProfile />} />
+            <Route path="/global-records" element={<GlobalRecords />} />
+            <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
+            <Route path="/2025-dashboard" element={<Dashboard2025 />} />
+            <Route path="/options-page" element={<OptionsPage />} />
+          </Route>
           <Route path="/export-data" element={<ExportData />} />
           <Route path="/status-filtered/:status" element={<StatusFiltered />} />
-          <Route path="/options-page" element={<OptionsPage />} />
         </Route>
 
       </Routes>
