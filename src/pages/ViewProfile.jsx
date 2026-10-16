@@ -116,6 +116,7 @@ function ViewProfile() {
   ];
 
   const OFWDetails = [
+    { label: "Relationship", value: meta.relationship || "N/A" },
     { label: "OFW First Name", value: meta.ofw_firstname || "N/A" },
     { label: "OFW Middle Name", value: meta.ofw_middlename || "N/A" },
     { label: "OFW Last Name", value: meta.ofw_lastname || "N/A" },
