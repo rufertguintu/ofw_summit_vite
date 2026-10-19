@@ -329,6 +329,7 @@ const styles = {
   },
   sectionTitle: {
     margin: "0 0 12px",
+    padding: "8px 12px",
     fontSize: "18px",
     fontWeight: 700,
     color: "#1f2937",
