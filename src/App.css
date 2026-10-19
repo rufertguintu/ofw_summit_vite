@@ -94,3 +94,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+.zoom-image {
+  transition: transform 0.3s ease;
+  cursor: zoom-in;
+}
+
+.zoom-image:hover {
+  transform: scale(2.5);
+  position: relative;
+  z-index: 10;
+}
+
+.zoom-image-wrapper {
+  overflow: hidden;
+}

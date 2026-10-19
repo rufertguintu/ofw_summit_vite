@@ -48,14 +48,14 @@ const SECTIONS = [
   },
 ];
 
-const SUPPORTING_DOCS = [
-  { key: "select_docs1", label: "Employment Contract" },
-  { key: "select_docs2", label: "Working Visa" },
-  { key: "select_docs3", label: "OWWA / POEA Registration" },
-  { key: "select_docs4", label: "Remittance Slip" },
-  { key: "select_docs5", label: "Allotment Certificate" },
-  { key: "select_docs6", label: "Seaman's Book" },
-];
+// const SUPPORTING_DOCS = [
+//   { key: "select_docs1", label: "Employment Contract" },
+//   { key: "select_docs2", label: "Working Visa" },
+//   { key: "select_docs3", label: "OWWA / POEA Registration" },
+//   { key: "select_docs4", label: "Remittance Slip" },
+//   { key: "select_docs5", label: "Allotment Certificate" },
+//   { key: "select_docs6", label: "Seaman's Book" },
+// ];
 
 const FILE_FIELDS = [
   { key: "passport", label: "Passport attachment" },
@@ -239,7 +239,7 @@ export default function ReviewInfo({ values = {}, onEdit, displayName = "", word
             </div>
           </section>
 
-          <section style={styles.section}>
+          {/* <section style={styles.section}>
             <h3 style={styles.sectionTitle}>Supporting Documents</h3>
             <div style={styles.grid}>
               {SUPPORTING_DOCS.map((field) => (
@@ -251,7 +251,7 @@ export default function ReviewInfo({ values = {}, onEdit, displayName = "", word
                 />
               ))}
             </div>
-          </section>
+          </section> */}
         </>
       ) : (
         <div style={styles.emptyState}>No submitted information found.</div>

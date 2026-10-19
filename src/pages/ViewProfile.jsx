@@ -234,6 +234,7 @@ function ViewProfile() {
     ) : (
       <img
         src={previewUrl}
+        className="zoom-image"
         alt={`${alt} preview`}
         style={{ width: "100%", maxWidth: "220px", borderRadius: "6px", border: "1px solid #e5e7eb" }}
       />

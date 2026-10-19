@@ -12,6 +12,7 @@ import alfamart_logo from "../assets/alfamart-logo.png";
 import savemart_logo from "../assets/savemart-logo.png";
 import all_home from "../assets/all-home.png";
 import petron_logo from "../assets/petron.png";
+import instruction from "../assets/instruction-2026.png";
 
 
 const heroStyle = {
@@ -84,37 +85,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="table-cont">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Para sa mga:</th>
-                                <th>Kailangan ng OFW:</th>
-                                <th>Kailangan ng Kakatawan (Representative)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Asawa ng OFW</td>
-                                <td>Marriage Certificate</td>
-                                <td>Valid ID</td>
-                            </tr>
-                            <tr>
-                                <td>Anak ng OFW</td>
-                                <td>&nbsp;</td>
-                                <td>Valid ID and Birth Certificate</td>
-                            </tr>
-                            <tr>
-                                <td>Magulang ng OFW (Walang Asawa)</td>
-                                <td>Birth Certificate</td>
-                                <td>Valid ID</td>
-                            </tr>
-                            <tr>
-                                <td>Kapatid ng OFW (Walang Asawa)</td>
-                                <td>Birth Certificate</td>
-                                <td>Valid ID and Birth Certificate</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <img src={instruction} alt="Instruction 2026" />
                 </div>
                 
 
