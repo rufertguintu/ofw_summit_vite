@@ -1567,7 +1567,7 @@ const isCurrentStepValid = isStepValid();
 
                       <div className="profile-details two-column">
                         <div className="profile-info">
-                          <label>Current Location (Country) <span className="required-field">*</span></label>
+                          <label>Country <span className="required-field">*</span></label>
                           <div className="field-wrap">
                             <div className="fill-info">
                                 <select name="current_location" id="current_location" value={currentLocation} onChange={(e) => setCurrentLocation(e.target.value)} onBlur={() => setTouched({ ...touched, currentLocation: true })} style={{ borderColor: !currentLocation.trim() && touched.currentLocation ? "red" : "" }} required>
@@ -2138,7 +2138,7 @@ const isCurrentStepValid = isStepValid();
                               {!currentLocation.trim() && touched.currentLocation && (
                   
                                   <div className="mt-[20px] bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-3 dark:bg-red-500/20 dark:border-red-900 dark:text-red-400" role="alert" tabIndex="-1" aria-labelledby="hs-soft-color-danger-label">
-                                      Current location is required 
+                                      Country is required 
                                   </div>
                               )}
                             </div>
