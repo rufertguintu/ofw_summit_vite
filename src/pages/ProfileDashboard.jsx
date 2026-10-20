@@ -307,6 +307,8 @@ const ProfileDashboard = () => {
   const [profession, setProfession] = useState("");
   const [ofw_profession, setOfwProfession] = useState("");
   const [ofw_emailaddress, setofw_emailaddress] = useState("");
+  const isValidEmail = (value) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(value || "").trim());
   const [ofwIncome, setOfwIncome] = useState("");
   const [workCountry, setWorkCountry] = useState("");
   const [passportFile, setPassportFile] = useState(null);
@@ -752,7 +754,7 @@ const isStepValid = () => {
           !ofwLastname.trim() ||
           !ofw_status ||
           !ofw_profession.trim() ||
-          !ofw_emailaddress.trim() ||
+          !isValidEmail(ofw_emailaddress) ||
           !workCountry ||
           !ofwYearService
         ) {
@@ -2633,7 +2635,10 @@ const isCurrentStepValid = isStepValid();
                                       {/* {meta.ofw_emailaddress ? (
                                         <h5>{getMetaValue("ofw_emailaddress", "Not provided")}</h5>
                                       ) : ( */}
-                                        <input type="text" name="ofw_emailaddress" value={ofw_emailaddress} onChange={(e) => setofw_emailaddress(e.target.value)} placeholder="OFW Email Address" required />
+                                        <input type="email" name="ofw_emailaddress" value={ofw_emailaddress} onChange={(e) => setofw_emailaddress(e.target.value)} placeholder="OFW Email Address" required />
+                                        {ofw_emailaddress.trim() && !isValidEmail(ofw_emailaddress) && (
+                                          <small className="error-text" style={{ color: "red" }}>Please enter a valid email address.</small>
+                                        )}
                                       {/* )} */}
                                     </div>
                                   </div>

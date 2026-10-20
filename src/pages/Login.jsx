@@ -136,7 +136,7 @@ function Login() {
                     </div>
                     <div className="one-column_field">
                       <div className="reg_field-cont create-account-cta">
-                        <p>Wala pang Account? <Link to="/register">Gumawa dito</Link></p>
+                        <p>Wala pang Account? <Link to="/online-register">Gumawa dito</Link></p>
                       </div>
                     </div>
                   </div>

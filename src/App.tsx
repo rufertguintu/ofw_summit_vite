@@ -1,5 +1,6 @@
-// import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+﻿// import { useState } from 'react';
+import { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 import Users from "./layout/Users";
 import AdminLayout from "./layout/AdminLayout";
@@ -27,10 +28,41 @@ import RegistrationAvailability from "./components/RegistrationAvailability";
 // import { Button } from "@/components/ui/button"
 import './App.css'
 
+const PAGE_TITLES: [RegExp, string][] = [
+  [/^\/$/, "Home"],
+  [/^\/about-us/, "About Us"],
+  [/^\/login/, "Login"],
+  [/^\/forgot-password/, "Forgot Password"],
+  [/^\/reset-password/, "Reset Password"],
+  [/^\/online-register/, "Online Registration"],
+  [/^\/onsite-registration/, "Onsite Registration"],
+  [/^\/networker-registration/, "Networker Registration"],
+  [/^\/profile-dashboard/, "Profile Dashboard"],
+  [/^\/dashboard/, "Dashboard"],
+  [/^\/records\/.+\/view-profile/, "View Profile"],
+  [/^\/records/, "Records"],
+  [/^\/global-records\/.+/, "Global Record"],
+  [/^\/global-records/, "Global Records"],
+  [/^\/2025-dashboard/, "2025 Dashboard"],
+  [/^\/options-page/, "Options"],
+  [/^\/export-data/, "Export Data"],
+  [/^\/status-filtered/, "Status Filtered"],
+];
+
+function TitleUpdater() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const match = PAGE_TITLES.find(([re]) => re.test(pathname));
+    document.title = match ? `OFW Summit - ${match[1]}` : "OFW Summit";
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   // const role = localStorage.getItem("role");
   return (
     <Router>
+      <TitleUpdater />
       <Routes>
 
         {/* ✅ PUBLIC PAGES */}
