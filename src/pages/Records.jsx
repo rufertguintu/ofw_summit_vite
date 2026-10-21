@@ -31,20 +31,34 @@ const Records = () => {
         };
     }, [menu]);
 
-    useEffect(() => {
-        setLoading(true); // ✅ loading before fetch
-        const delay = setTimeout(() => {
-            fetchApi(`/wp-json/custom/v1/users-search?search=${search}&page=${page}&per_page=10`)
-                .then(res => res.json())
-                .then(res => {
-                    setUsers(res.data);
-                    setTotalPages(res.pagination.pages);
-                })
-                .catch(err => console.error(err))
-                .finally(() => setLoading(false));
-        }, 1); // ✅ debounce
+    // useEffect(() => {
+    //     setLoading(true); // ✅ loading before fetch
+    //     const delay = setTimeout(() => {
+    //         fetchApi(`/wp-json/custom/v1/users-search?search=${search}&page=${page}&per_page=10`)
+    //             .then(res => res.json())
+    //             .then(res => {
+    //                 setUsers(res.data);
+    //                 setTotalPages(res.pagination.pages);
+    //             })
+    //             .catch(err => console.error(err))
+    //             .finally(() => setLoading(false));
+    //     }, 0); // ✅ debounce
 
-        return () => clearTimeout(delay);
+    //     return () => clearTimeout(delay);
+    // }, [search, page]);
+
+    useEffect(() => {
+        setLoading(true);
+
+        fetchApi(`/wp-json/custom/v1/users-search?search=${search}&page=${page}&per_page=10`)
+            .then(res => res.json())
+            .then(res => {
+                setUsers(res.data);
+                setTotalPages(res.pagination.pages);
+            })
+            .catch(err => console.error(err))
+            .finally(() => setLoading(false));
+
     }, [search, page]);
 
 
