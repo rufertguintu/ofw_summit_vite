@@ -934,7 +934,7 @@ const isCurrentStepValid = isStepValid();
 
   const profileCompletionBar = (
     <div className="user-progressbar">
-
+      
       {isAdminVerified ? (
         <div className="profile-info qr-code-profile">
           <QRCodeSVG value={profileViewUrl} size={150} includeMargin />
@@ -1400,6 +1400,13 @@ const isCurrentStepValid = isStepValid();
 
   return (
     <div className="profile-section">
+      {isAdminVerified ? (<div className="profile-disclaimer">
+        <h4>Please present your QR Code and one valid ID at the event.</h4>
+      </div>) : (<div className="profile-disclaimer">
+        <h4>Disclaimer: Please ensure that your profile information and documents are accurate and up-to-date.</h4>
+      </div>)}
+
+      
         <div className="custom-container">
           {submitMessage ? (
             <div className="alert alert-success" style={{ marginBottom: "20px" }}>

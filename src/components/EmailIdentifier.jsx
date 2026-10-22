@@ -88,7 +88,8 @@ export default function EmailIdentifier({ values, maskedEmail = "", onCreateNew,
 
             {exceeded && !found && (
                 <>
-                    <p>You have used all {MAX_EMAIL_ATTEMPTS} attempts. We suggest creating a new account instead.</p>
+                    {/* <p>You have used all {MAX_EMAIL_ATTEMPTS} attempts. We suggest creating a new account instead.</p> */}
+                    <p>You have reached the maximum of {MAX_EMAIL_ATTEMPTS} consecutive attempts. We recommend creating a new account to continue.</p>
                     <div className="match-record-actions">
                         <button type="button" className="proceed-button" onClick={onCreateNew}>Create New Account</button>
                     </div>

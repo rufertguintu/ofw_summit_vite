@@ -22,8 +22,10 @@ function Login() {
   const user_role = localStorage.getItem("role");
 
   if (token) {
-    if (user_role == "contributor") {
+    if (user_role == "contributor" || user_role == "editor") {
       return <Navigate to="/dashboard" />;
+    } else if (user_role == "author") {
+      return <Navigate to="/records" />;
     } else {
       return <Navigate to="/profile-dashboard" />;
     }
@@ -63,7 +65,7 @@ function Login() {
       }));
 
       // ✅ ROLE-BASED REDIRECT
-      if (role === "contributor") {
+      if (role === "contributor" || role === "author") {
         navigate("/dashboard");
       } else {
         navigate("/profile-dashboard");
@@ -86,7 +88,7 @@ function Login() {
               <div className="registration-info">
                   <div className="join-event-instruction">
                       <img src={logo} alt=""/>
-                      <h4>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h4>
+                      <h4> Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h4>
 
                       <h2>How to create an <span>Online Account</span></h2>
                       <ul>

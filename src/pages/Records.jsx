@@ -12,6 +12,9 @@ const Records = () => {
     const [user_data, setUsers] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
     const [search, setSearch] = useState("");
+    const [typeFilter, setTypeFilter] = useState("");
+    const [ofwFilter, setOfwFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true); // ✅ start TRUE
     const [Modalloading, setModalLoading] = useState(true); // ✅ start TRUE
@@ -50,7 +53,12 @@ const Records = () => {
     useEffect(() => {
         setLoading(true);
 
-        fetchApi(`/wp-json/custom/v1/users-search?search=${search}&page=${page}&per_page=10`)
+        const params = new URLSearchParams({ search, page, per_page: 10 });
+        if (typeFilter !== "") params.set("type_registrant", typeFilter);
+        if (ofwFilter !== "") params.set("ofw_type", ofwFilter);
+        if (statusFilter !== "") params.set("admin_verified", statusFilter);
+
+        fetchApi(`/wp-json/custom/v1/users-search?${params.toString()}`)
             .then(res => res.json())
             .then(res => {
                 setUsers(res.data);
@@ -59,7 +67,7 @@ const Records = () => {
             .catch(err => console.error(err))
             .finally(() => setLoading(false));
 
-    }, [search, page]);
+    }, [search, page, typeFilter, ofwFilter, statusFilter]);
 
 
     // Load user list
@@ -119,7 +127,7 @@ const Records = () => {
                 style={{ top: menu.top, right: menu.right }}
                 onClick={(e) => e.stopPropagation()}
             >
-                <Link className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" to={`/records/${menu.id}/view-profile`}>View</Link>
+                <Link className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" to={`/records/${menu.id}/view-profile`} target="_blank">View</Link>
                 <button
                     type="button"
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -157,9 +165,10 @@ const Records = () => {
             <div className="border-table-line rounded-lg overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-none [&::-webkit-scrollbar-track]:bg-scrollbar-track [&::-webkit-scrollbar-thumb]:bg-scrollbar-thumb">
                 <div className="py-3 border-table-line">
                 
+                <div className="flex flex-wrap items-center gap-3">
                 <div className="relative max-w-xs">
                     <label for="hs-table-search" className="sr-only">Search</label>
-                    <input type="text" name="hs-table-search" id="hs-table-search" className="py-1.5 sm:py-2 px-3 ps-9 block w-full bg-layer border-layer-line shadow-2xs rounded-lg sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:z-10 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" placeholder="Search for items" value={search}
+                    <input type="text" name="hs-table-search" id="hs-table-search" className="py-1.5 sm:py-2 px-3 ps-9 block w-full bg-layer border-layer-line shadow-2xs rounded-lg sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:z-10 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" placeholder="Search by ID, name or email" value={search}
                 onChange={(e) => {
                     setSearch(e.target.value);
                     setPage(1); // ✅ reset page
@@ -167,6 +176,25 @@ const Records = () => {
                     {/* <div className="absolute inset-y-0 inset-s-0 flex items-center pointer-events-none ps-3">
                     <svg className="size-4 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </div> */}
+                </div>
+
+                {[
+                    [typeFilter, setTypeFilter, "All Registrant Types", [["0", "Online Registrant"], ["1", "Mall Registrant"], ["2", "Onsite Registrant"], ["3", "Networker"], ["4", "OWWA Member"]]],
+                    [ofwFilter, setOfwFilter, "All OFW Types", [["0", "OFW"], ["1", "Relative of OFW"]]],
+                    [statusFilter, setStatusFilter, "All Statuses", [["0", "Incomplete"], ["1", "Rejected"], ["2", "Verified"], ["3", "Returned"], ["4", "Validating"]]],
+                ].map(([value, setter, label, options]) => (
+                    <select
+                        key={label}
+                        aria-label={label}
+                        className="py-1.5 sm:py-2 px-3 block bg-layer border border-layer-line shadow-2xs rounded-lg sm:text-sm text-foreground"
+                        style={{ minWidth: "250px" }}
+                        value={value}
+                        onChange={(e) => { setter(e.target.value); setPage(1); }}
+                    >
+                        <option value="">{label}</option>
+                        {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
+                    </select>
+                ))}
                 </div>
                 </div>
 

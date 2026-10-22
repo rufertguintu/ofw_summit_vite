@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, Link, useLocation, Navigate } from "react-router-dom";
 import Logo from "../assets/ofwsummit-2026-logo.svg";
 import LogoutIcon from "../assets/feather/log-out.svg";
 import adminStylesUrl from "../styles/admin/new-admin-style.scss?url";
@@ -11,6 +11,8 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const isContributor = localStorage.getItem("role") === "contributor";
+  const isAuthor = localStorage.getItem("role") === "author";
+  const isEditor = localStorage.getItem("role") === "editor";
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -18,7 +20,7 @@ export default function AdminLayout() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (!isContributor) {
+    if (!isContributor && !isAuthor && !isEditor) {
       document.getElementById(CONTRIBUTOR_ADMIN_STYLE_ID)?.remove();
       return undefined;
     }
@@ -49,6 +51,10 @@ export default function AdminLayout() {
     navigate("/login");
   };
 
+  if (isAuthor && location.pathname.startsWith("/options-page")) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="admin-wrapper text-[#000]">
       <div className="admin-header-layout">
@@ -69,15 +75,23 @@ export default function AdminLayout() {
         <div className="admin-navigation">
           <ul>
             <li className={location.pathname === "/dashboard" ? "active" : ""}><Link to="/dashboard">Dashboard</Link></li>
-            <li className={location.pathname === "/records" ? "active" : ""}><Link to="/records">Records</Link></li>
+            {!isEditor && (
+              <li className={location.pathname === "/records" ? "active" : ""}><Link to="/records">Records</Link></li>
+            )}
+            {!isEditor && (
             <li className={location.pathname === "/global-records" ? "active" : ""}><Link to="/global-records">Global Records</Link></li>
-            <li className={location.pathname === "/options-page" ? "active" : ""}><Link to="/options-page">Options Page</Link></li>
+            )}
+            {!isAuthor && !isEditor && (
+              <li className={location.pathname === "/options-page" ? "active" : ""}><Link to="/options-page">Options Page</Link></li>
+            )}
           </ul>
         </div>
 
         <div className="admin-logout">
           <ul>
-            <li><Link to="/export-data">Export Data</Link></li>
+            {!isAuthor && !isEditor && (
+              <li><Link to="/export-data">Export Data</Link></li>
+            )}
             <li>
                 <button onClick={logout}>
                   <em className="fa fa-sign-out"></em>

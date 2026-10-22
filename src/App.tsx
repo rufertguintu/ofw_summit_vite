@@ -104,7 +104,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route element={<ProtectedRoute allowedRoles={["contributor", "administrator"]} />}>
+          <Route element={<ProtectedRoute allowedRoles={["contributor", "administrator", "author", "editor"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/records" element={<Records />} />
             <Route path="/records/:id/view-profile" element={<ViewProfile />} />
