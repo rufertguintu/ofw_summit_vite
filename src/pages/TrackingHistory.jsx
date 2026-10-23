@@ -11,6 +11,7 @@ const TrackingHistory = () => {
     const [admins, setAdmins] = useState([]);
     const [adminFilter, setAdminFilter] = useState("");
     const [actionFilter, setActionFilter] = useState("");
+    const [participantFilter, setParticipantFilter] = useState("");
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ const TrackingHistory = () => {
         const params = new URLSearchParams({ page, per_page: 10 });
         if (adminFilter) params.set("admin_name", adminFilter);
         if (actionFilter) params.set("action", actionFilter);
+        if (participantFilter) params.set("participant_name", participantFilter);
 
         fetchApi(`/wp-json/custom/v1/tracking-history?${params.toString()}`)
             .then(res => res.json())
@@ -38,7 +40,7 @@ const TrackingHistory = () => {
                 setError("Unable to load tracking history.");
             })
             .finally(() => setLoading(false));
-    }, [page, adminFilter, actionFilter]);
+    }, [page, adminFilter, actionFilter, participantFilter]);
 
     return (
         <div className="admin-divider border p-3 rounded-[10px]">
@@ -46,6 +48,13 @@ const TrackingHistory = () => {
 
             <div className="min-w-full px-10">
                 <div className="py-3 flex flex-wrap items-center gap-3">
+                    <input type="text" 
+                        aria-label="Participant Name"
+                        className={selectClass}
+                        style={{ minWidth: "250px" }}
+                        value={participantFilter}
+                        onChange={(e) => { setParticipantFilter(e.target.value); setPage(1); }}
+                    />
                     <select
                         aria-label="Admin Name"
                         className={selectClass}
