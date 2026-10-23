@@ -79,6 +79,9 @@ export default function AdminLayout() {
               <li className={location.pathname === "/records" ? "active" : ""}><Link to="/records">Records</Link></li>
             )}
             {!isEditor && (
+              <li className={location.pathname === "/tracking-history" ? "active" : ""}><Link to="/tracking-history">Tracking History</Link></li>
+            )}
+            {!isEditor && (
             <li className={location.pathname === "/global-records" ? "active" : ""}><Link to="/global-records">Global Records</Link></li>
             )}
             {!isAuthor && !isEditor && (

@@ -14,6 +14,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Online_Register from "./pages/Online_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
+import TrackingHistory from "./pages/TrackingHistory";
 import GlobalRecords from "./pages/GlobalRecords";
 import GlobalRecordView from "./pages/GlobalRecordView";
 import Dashboard2025 from "./pages/2025Dashboard";
@@ -41,6 +42,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/dashboard/, "Dashboard"],
   [/^\/records\/.+\/view-profile/, "View Profile"],
   [/^\/records/, "Records"],
+  [/^\/tracking-history/, "Tracking History"],
   [/^\/global-records\/.+/, "Global Record"],
   [/^\/global-records/, "Global Records"],
   [/^\/2025-dashboard/, "2025 Dashboard"],
@@ -107,6 +109,7 @@ function App() {
           <Route element={<ProtectedRoute allowedRoles={["contributor", "administrator", "author", "editor"]} />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/records" element={<Records />} />
+            <Route path="/tracking-history" element={<TrackingHistory />} />
             <Route path="/records/:id/view-profile" element={<ViewProfile />} />
             <Route path="/global-records" element={<GlobalRecords />} />
             <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
