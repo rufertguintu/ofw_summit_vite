@@ -6,6 +6,18 @@ import ModalRecord from "../components/ModalRecord";
 import ModalUpdateRecord from "../components/ModalUpdateRecord";
 import { fetchApi } from "../store/api";
 
+const getPageItems = (page, total) => {
+    if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+    const items = new Set([1, total, page - 1, page, page + 1]);
+    const sorted = [...items].filter(n => n >= 1 && n <= total).sort((a, b) => a - b);
+    const result = [];
+    sorted.forEach((n, i) => {
+        if (i > 0 && n - sorted[i - 1] > 1) result.push("...");
+        result.push(n);
+    });
+    return result;
+};
+
 const Records = () => {
     const [open, setOpen] = useState(false);
     const [openEdit, setEditOpen] = useState(false);
@@ -263,24 +275,55 @@ const Records = () => {
                 
             </div>
             {/* PAGINATION */}
-                <div style={{ marginTop: "20px" }}>
+                <div className="mt-5 flex flex-wrap items-center gap-2">
                     <button
+                        type="button"
+                        aria-label="Previous page"
+                        className="size-8 rounded-full text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:pointer-events-none"
                         onClick={() => setPage(page - 1)}
                         disabled={page === 1}
                     >
-                        Prev
+                        &lsaquo;
                     </button>
 
-                    <span style={{ margin: "0 10px" }}>
-                        Page {page} of {totalPages}
-                    </span>
+                    {getPageItems(page, totalPages).map((item, i) =>
+                        item === "..." ? (
+                            <span key={`gap-${i}`} className="px-1 text-gray-500">...</span>
+                        ) : (
+                            <button
+                                key={item}
+                                type="button"
+                                onClick={() => setPage(item)}
+                                className={`size-8 rounded-full text-sm ${item === page ? "bg-indigo-600 text-white" : "text-gray-700 hover:bg-gray-100"}`}
+                            >
+                                {item}
+                            </button>
+                        )
+                    )}
 
                     <button
+                        type="button"
+                        aria-label="Next page"
+                        className="size-8 rounded-full text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:pointer-events-none"
                         onClick={() => setPage(page + 1)}
-                        disabled={page === totalPages}
+                        disabled={page >= totalPages}
                     >
-                        Next
+                        &rsaquo;
                     </button>
+
+                    <label className="ms-4 flex items-center gap-2 text-sm text-gray-600">
+                        Go to
+                        <select
+                            aria-label="Go to page"
+                            className="mx-1 py-1 px-4 bg-gray-100 border border-layer-line rounded-lg text-sm text-foreground"
+                            value={page}
+                            onChange={(e) => setPage(Number(e.target.value))}
+                        >
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+                                <option key={n} value={n}>{n}</option>
+                            ))}
+                        </select>
+                    </label>
                 </div>
             
         </div>
