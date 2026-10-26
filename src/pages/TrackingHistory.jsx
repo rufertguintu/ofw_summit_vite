@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { fetchApi } from "../store/api";
 
 const ACTIONS = ["Incomplete", "Returned", "Reject", "Validating", "Verified"];
@@ -87,6 +88,7 @@ const TrackingHistory = () => {
                                 <th className={thClass}>Action</th>
                                 <th className={thClass}>Remarks</th>
                                 <th className={thClass}>Date</th>
+                                <th className={thClass}>Action</th>
                             </tr>
                         </thead>
                         <tbody className="records-style divide-y divide-table-line">
@@ -104,6 +106,13 @@ const TrackingHistory = () => {
                                     <td className={tdClass}>{row.action}</td>
                                     <td className={tdClass}>{row.remarks}</td>
                                     <td className={`${tdClass} whitespace-nowrap`}>{row.date}</td>
+                                    <td className={tdClass}>
+                                        {row.user_id ? (
+                                            <Link to={`/records/${row.user_id}/view-profile`} target="_blank" rel="noopener noreferrer">View</Link>
+                                        ) : (
+                                            <span className="text-muted-foreground-1">N/A</span>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
