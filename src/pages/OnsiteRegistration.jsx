@@ -52,7 +52,7 @@ const selectOptions = {
   gender: ["Male", "Female", "Prefer not to say"],
   source_info: ["Social Media", "Villar Foundation", "OWWA", "Family/Friend", "Other"],
   owwa_member: [["yes", "Yes (Oo)"], ["no", "No (Hindi)"]],
-  ofw_status: ["Active OFW", "Returned OFW", "Former OFW"],
+  ofw_status: ["Single", "Married", "Widowed", "Separated"],
   ofw_income: ["1.00 - 25,000.00", "25,001.00 - 50,000.00", "50,000.01 - 100,000.00", "100,001.00 - 125,000.00", "125,001.00 - 150,000.00", "Above 150,000.00"],
 };
 
