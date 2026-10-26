@@ -204,6 +204,27 @@ const Dashboard = () => {
                 </div>
 
                 <div className="attendance-overview-section">
+                    <h3>Registrant Type</h3>
+                    <ul>
+                        <li>
+                            <h5>Online Registrant: <strong>{online_registrant?.toLocaleString()}</strong></h5>
+                        </li>
+                        <li>
+                            <h5>Onsite Registrant: <strong>{onsite_registrant?.toLocaleString()}</strong></h5>
+                        </li>
+                        <li>
+                            <h5>Mall Registrant: <strong>{mall_registrant?.toLocaleString()}</strong></h5>
+                        </li>
+                        <li>
+                            <h5>Networker: <strong>{networker_registrant?.toLocaleString()}</strong></h5>
+                        </li>
+                        <li>
+                            <h5>OWWA: <strong>{owwa_registrant?.toLocaleString()}</strong></h5>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="attendance-overview-section">
                     <h3>Attendee Overview</h3>
                     <ul>
                         <li>

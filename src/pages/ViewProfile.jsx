@@ -91,7 +91,7 @@ function ViewProfile() {
 
   const profileItems = [
     { label: "User ID", value: meta.custom_id || userdata?.id || "N/A" },
-    { label: "Type of Registrant", value: meta.type_registrant == 0 ? "Online Registrant" : "Onsite Registrant" },
+    { label: "Type of Registrant", value: meta.type_registrant == 0 ? "Online Registrant" : meta.type_registrant == 1 ? "Mall Registrant" : meta.type_registrant == 2 ? "Onsite Registrant" : meta.type_registrant == 3 ? "Networker" : meta.type_registrant == 4 ? "OWWA" : "N/A" },
     { label: "Type of OFW", value: meta.ofw_type === "0" ? "OFW" : "Relative of OFW" },
     { label: "Full Name", value: userdata?.name || "N/A" },
     { label: "Email Address", value: userdata?.email || "N/A" },
