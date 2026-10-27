@@ -21,6 +21,17 @@ const REASON_OPTIONS = [
   { label: "Unclear scanned document/s.", value: "Unclear scanned document/s." },
 ];
 
+// Extra reasons that only appear for a specific status (Reject = "1", Returned = "3")
+const STATUS_REASON_OPTIONS = {
+  "1": [
+    { label: "Ineligible to participate", value: "Ineligible to participate" },
+    { label: "Marital status", value: "Marital status" },
+  ],
+  "3": [
+    { label: "Provide valid government ID for OFW/relative", value: "Provide valid government ID for OFW/relative" },
+  ],
+};
+
 const ATTENDANCE_OPTIONS = [
   { label: "Yes", value: "0" },
   { label: "No", value: "1" },
@@ -246,6 +257,18 @@ function ViewProfile() {
 
   const showReasonIncomplete = REASON_STATUSES.includes(formData.admin_verified);
 
+  const reasonOptions = useMemo(() => {
+    const options = [...REASON_OPTIONS, ...(STATUS_REASON_OPTIONS[formData.admin_verified] ?? [])];
+    const current = formData.reason_incomplete;
+
+    // Keep a previously saved custom reason selectable
+    if (current && !options.some((option) => option.value === current)) {
+      options.push({ label: current, value: current });
+    }
+
+    return options;
+  }, [formData.admin_verified, formData.reason_incomplete]);
+
   const companionValue = useMemo(() => {
     if (formData.companion === "") {
       return "";
@@ -377,7 +400,7 @@ function ViewProfile() {
                 style={fieldControl}
               >
                 <option value="">Select reason</option>
-                {REASON_OPTIONS.map((option) => (
+                {reasonOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
