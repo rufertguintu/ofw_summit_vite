@@ -90,6 +90,7 @@ function ViewProfile() {
   const meta = userdata?.meta || {};
 
   const profileItems = [
+    { label: "Account Type", value: meta.recover_acct ? `Retrieved - ${meta.recover_acct}` : "New Registrant" },
     { label: "User ID", value: meta.custom_id || userdata?.id || "N/A" },
     { label: "Type of Registrant", value: meta.type_registrant == 0 ? "Online Registrant" : meta.type_registrant == 1 ? "Mall Registrant" : meta.type_registrant == 2 ? "Onsite Registrant" : meta.type_registrant == 3 ? "Networker" : meta.type_registrant == 4 ? "OWWA" : "N/A" },
     { label: "Type of OFW", value: meta.ofw_type === "0" ? "OFW" : "Relative of OFW" },
