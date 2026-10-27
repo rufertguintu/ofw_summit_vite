@@ -188,7 +188,7 @@ function ViewProfile() {
   const renderDocumentPreview = (value, alt) => {
     
       console.log(value);
-    if (!value) {
+    if (!String(value || '').trim()) {
       return (
         <p style={{ margin: 0, color: "#6b7280" }}>
           No file uploaded
