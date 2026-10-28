@@ -197,6 +197,13 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
         }
     };
 
+    const requiredRelativeFieldsFilled =
+        !!values.relative_company &&
+        (!hasRelativeCompany ||
+            (!!values.company_relationship?.trim() && !!values.company_relative_fullname?.trim())) &&
+        !!values.ofw_type &&
+        (!hasRelativeOFW || !!values.relationship?.trim());
+
     return <>
         <h2>Step 2</h2>
         <div className="flex w-full h-1.5 bg-surface-1 rounded-full overflow-hidden" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
@@ -234,6 +241,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                             /> No (Wala)
                         </div>
                     </div>
+                    {!values.relative_company && <small style={{ color: "red" }}>Please select Yes or No.</small>}
                 </div>
             </div>
             {hasRelativeCompany && (
@@ -241,7 +249,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                 <p>Kung meron, ano ang relasyon mo sakanya:</p>
                 <div className="two-column_inner-wrapper">
                     <div className="reg_field-cont">
-                        <label>Relative Relationship (Relasyon)</label>
+                        <label>Relative Relationship (Relasyon) <span className="required-field">*</span></label>
                         <select name="company_relationship" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" id="company_relationship" value={values.company_relationship} onChange={handleChange("company_relationship")}>
                             <option value="">- Select Relationship -</option>
                             <option value="Parent">Parent (Magulang)</option>
@@ -249,11 +257,12 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                             <option value="Spouse">Spouse (Asawa)</option>
                             <option value="Child">Child (Anak)</option>
                         </select>
+                        {!values.company_relationship?.trim() && <small style={{ color: "red" }}>Relationship is required.</small>}
                     </div>
                     <div className="reg_field-cont">
-                        <label>Relative Full Name (Buong Pangalan)</label>
+                        <label>Relative Full Name (Buong Pangalan) <span className="required-field">*</span></label>
                         <input type="text" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" name="company_relative_fullname" placeholder="Full Name (Buong Pangalan)" value={values.company_relative_fullname} onChange={handleChange("company_relative_fullname")}/>
-                    </div>
+                                                {!values.company_relative_fullname?.trim() && <small style={{ color: "red" }}>Full name is required.</small>}                    </div>
                 </div>
             </div>
             )}
@@ -275,12 +284,13 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         <option value="0">OFW</option>
                         <option value="1">Relative of OFW (Kamag-anak ng OFW)</option>
                     </select>
+                    {!values.ofw_type && <small style={{ color: "red" }}>Registrant type is required.</small>}
                 </div>
             </div>
             {hasRelativeOFW && (
             <div className="one-column_field"  id="relationship_ofw_f" >
                 <div className="reg_field-cont">
-                    <label>Relationship with OFW (Relasyon sa OFW) </label>
+                    <label>Relationship with OFW (Relasyon sa OFW) <span className="required-field">*</span></label>
                     <select name="relationship" id="relationship" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" required value={values.relationship} onChange={handleChange("relationship")}>
                         <option value="">- Select Relationship -</option>
                         <option value="Parent">Parent (Magulang)</option>
@@ -288,6 +298,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         <option value="Spouse">Spouse (Asawa)</option>
                         <option value="Child">Child (Anak)</option>
                     </select>
+                    {!values.relationship?.trim() && <small style={{ color: "red" }}>Relationship with OFW is required.</small>}
                 </div>
             </div>
             )}
@@ -431,8 +442,8 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
             <div className="one-column_field required_fill">
                                 
                 <button onClick={handleSubmit} 
-                className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!termsAccepted || !termsEnabled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
-                disabled={!termsAccepted || !termsEnabled || isSubmitting}
+                className={`py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-secondary-line text-secondary-foreground hover:bg-secondary-hover focus:outline-hidden focus:bg-secondary-hover  ${!termsAccepted || !termsEnabled || !requiredRelativeFieldsFilled ? "validate_submit disabled disabled:opacity-50 disabled:pointer-events-none" : "validate_submit"}`}
+                disabled={!termsAccepted || !termsEnabled || !requiredRelativeFieldsFilled || isSubmitting}
                 aria-busy={isSubmitting}>
                 {isSubmitting ? (
                     <>
