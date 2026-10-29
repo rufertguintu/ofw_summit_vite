@@ -5,7 +5,7 @@ import banner from "../assets/home-2026.jpg";
 import whiteLogo2026 from "../assets/2026-white-logo.svg";
 import blackLogo2026 from "../assets/ofw-summit-15th.svg";
 import qr2026 from "../assets/2026-QR.jpg";
-import eventbg2026 from "../assets/prize-2026.png";
+import eventbg2026 from "../assets/new-update-banner-2026.jpg";
 import vicinity_map from "../assets/vicinity-map-2026.svg";
 import camella_logo from "../assets/camella.png";
 import alfamart_logo from "../assets/alfamart-logo.png";
@@ -36,7 +36,7 @@ const Home = () => {
                 <h4>Online Registration will end on November 9, 2023 12pm.</h4>
             </div> */}
         </div>
-        <div className="event-section">
+        <div className="event-section" style={{backgroundColor: "#fff"}}>
             <div className="event-wrapper">	
                 <div className="event-img">
                     <img src={eventbg2026} alt="Event 2026"/>
@@ -106,8 +106,8 @@ const Home = () => {
                 <ul>
                     <li><img src={camella_logo} alt="" style={{ width: "300px", height: "auto" }}/></li>
                     
-                    <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li>
-                    <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li>
+                    {/* <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
+                    {/* <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
                     
                     <li><img src={all_home} alt=""/></li>
                     

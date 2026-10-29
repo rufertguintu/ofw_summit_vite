@@ -16,6 +16,11 @@ import gal10 from "../assets/gal-10.png";
 import gal11 from "../assets/gal-11.png";
 import gal12 from "../assets/gal-12.png";
 import gal13 from "../assets/gal-13.png";
+import camella_logo from "../assets/camella.png";
+import alfamart_logo from "../assets/alfamart-logo.png";
+import savemart_logo from "../assets/savemart-logo.png";
+import all_home from "../assets/all-home.png";
+import petron_logo from "../assets/petron.png";
 
 
 
@@ -101,15 +106,15 @@ const AboutUs = () => {
 			<div className="custom-container">
 				<h3>Corporate Sponsors</h3>
 				<ul>
-					<li><img src="<?php echo IMAGES; ?>camella.png" alt="" /></li>
-
-
-					<li><img src="<?php echo IMAGES; ?>all-home.png" alt="" /></li>
-					<li><img src="<?php echo IMAGES; ?>all-day.png" alt="" /></li>
-
-					<li><img src="<?php echo IMAGES; ?>petron.png" alt="" /></li>
-
-				</ul>
+                    <li><img src={camella_logo} alt="" style={{ width: "300px", height: "auto" }}/></li>
+                    
+                    {/* <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
+                    {/* <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
+                    
+                    <li><img src={all_home} alt=""/></li>
+                    
+                    <li><img src={petron_logo} alt=""/></li>
+                </ul>
 			</div>
 		</div>
 		<div id="myModal" className="modal">
