@@ -468,6 +468,15 @@ function ViewProfile() {
         <div style={errorBanner}>{loadError}</div>
       ) : userdata ? (
         <div className="recordsInfo" style={contentWrapper}>
+          <section className="ofw-type-details" >
+            <h4>Will attend on event: </h4>
+            <div className="records-info" style={infoGrid}>
+              <div style={infoItem}>
+                <div style={infoLabel}>Will attend?</div>
+                <div style={infoValue}>{userdata.attend ? "Yes" : "No"}</div>
+              </div>
+            </div>
+          </section>
           <section className="profile-details-section"  style={sectionCard}>
             <h4>Profile Details</h4>
             <div className="records-info" style={infoGrid}>

@@ -219,6 +219,7 @@ const Records = () => {
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">Type of Registrant</th>
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">OFW Type</th>
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">Status</th>
+                        <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">Attendee</th>
                         <th scope="col" className="px-6 py-3 text-start text-xs font-medium text-muted-foreground-1 uppercase">Registered Date</th>
                         <th scope="col" className="px-6 py-3 text-end text-xs font-medium text-muted-foreground-1 uppercase">Action</th>
                         </tr>
@@ -242,7 +243,7 @@ const Records = () => {
                         ) : (
                             // ✅ NORMAL DATA
                             user_data.map(user => (
-                                <tr key={user.id}>
+                                <tr key={user.id} style={{ backgroundColor: user.has_documents === 0 ? "#ffe6e6" : "transparent" }}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{user.id}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.email}</td>
@@ -250,7 +251,10 @@ const Records = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.ofw_type == 0 ? "OFW" : user.ofw_type == 1 ? "Relative of OFW" : "N/A"}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                                         <span className={user.admin_verified == 2 ? "verified" : user.admin_verified == 1 ? "rejected" : user.admin_verified == 0 ? "incomplete" : user.admin_verified == 3 ? "returned" : user.admin_verified == 4 ? "validating" : "n/a"}>{user.admin_verified == 0 ? "Incomplete" : user.admin_verified == 1 ? "Rejected" : user.admin_verified == 2 ? "Verified" : user.admin_verified == 3 ? "Returned" : user.admin_verified == 4 ? "Validating" : "N/A"}</span>
-                                        </td>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                                        <span style={{ color: user.attend ? "green" : "red" }}>{user.attend}</span>
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.user_registered}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                          <button
