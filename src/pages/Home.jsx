@@ -12,6 +12,7 @@ import alfamart_logo from "../assets/alfamart-logo.png";
 import savemart_logo from "../assets/savemart-logo.png";
 import all_home from "../assets/all-home.png";
 import petron_logo from "../assets/petron.png";
+import allday from "../assets/all-day.png";
 import instruction from "../assets/instruction-2026.png";
 
 
@@ -108,8 +109,8 @@ const Home = () => {
                     
                     {/* <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
                     {/* <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
-                    
-                    {/* <li><img src={all_home} alt=""/></li> */}
+                    <li><img src={allday} alt=""/></li>
+                    <li><img src={all_home} alt=""/></li>
                     
                     <li><img src={petron_logo} alt=""/></li>
                 </ul>
