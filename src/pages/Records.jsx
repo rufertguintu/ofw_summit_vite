@@ -248,7 +248,7 @@ const Records = () => {
                         ) : (
                             // ✅ NORMAL DATA
                             user_data.map(user => (
-                                <tr key={user.id} style={{ backgroundColor: user.has_documents === 0 ? "#ffe6e6" : "transparent" }}>
+                                <tr key={user.id} style={{ color: user.has_documents === 0 ? "red" : "#000" }}>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{user.id}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">{user.email}</td>
