@@ -109,7 +109,7 @@ const Home = () => {
                     {/* <li><img src={alfamart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
                     {/* <li><img src={savemart_logo} alt="" style={{ width: "150px", height: "auto" }}/></li> */}
                     
-                    <li><img src={all_home} alt=""/></li>
+                    {/* <li><img src={all_home} alt=""/></li> */}
                     
                     <li><img src={petron_logo} alt=""/></li>
                 </ul>
