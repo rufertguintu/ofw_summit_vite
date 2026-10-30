@@ -27,6 +27,8 @@ const Records = () => {
     const [typeFilter, setTypeFilter] = useState("");
     const [ofwFilter, setOfwFilter] = useState("");
     const [statusFilter, setStatusFilter] = useState("");
+    const [HasDocumentFilter, setHasDocumentFilter] = useState("");
+    const [attendFilter, setAttendFilter] = useState("");
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true); // ✅ start TRUE
     const [Modalloading, setModalLoading] = useState(true); // ✅ start TRUE
@@ -69,6 +71,8 @@ const Records = () => {
         if (typeFilter !== "") params.set("type_registrant", typeFilter);
         if (ofwFilter !== "") params.set("ofw_type", ofwFilter);
         if (statusFilter !== "") params.set("admin_verified", statusFilter);
+        // if (HasDocumentFilter !== "") params.set("has_document", HasDocumentFilter);
+        if (attendFilter !== "") params.set("attend", attendFilter);
 
         fetchApi(`/wp-json/custom/v1/users-search?${params.toString()}`)
             .then(res => res.json())
@@ -79,7 +83,7 @@ const Records = () => {
             .catch(err => console.error(err))
             .finally(() => setLoading(false));
 
-    }, [search, page, typeFilter, ofwFilter, statusFilter]);
+    }, [search, page, typeFilter, ofwFilter, statusFilter, attendFilter]);
 
 
     // Load user list
@@ -194,6 +198,7 @@ const Records = () => {
                     [typeFilter, setTypeFilter, "All Registrant Types", [["0", "Online Registrant"], ["1", "Mall Registrant"], ["2", "Onsite Registrant"], ["3", "Networker"], ["4", "OWWA Member"]]],
                     [ofwFilter, setOfwFilter, "All OFW Types", [["0", "OFW"], ["1", "Relative of OFW"]]],
                     [statusFilter, setStatusFilter, "All Statuses", [["0", "Incomplete"], ["1", "Rejected"], ["2", "Verified"], ["3", "Returned"], ["4", "Validating"]]],
+                    [attendFilter, setAttendFilter, "All Attendance", [["yes", "Yes"], ["no", "No"]]],
                 ].map(([value, setter, label, options]) => (
                     <select
                         key={label}
