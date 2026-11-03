@@ -306,6 +306,42 @@
         max-width: 1720px;
         margin: 0 auto;
 
+        .dashboard-filter-section{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 20px;
+
+            .dashboard-title{
+                margin-right: 20px;
+                h3{
+                    font-size: 1rem;
+                    font-weight: 700;
+                    margin-bottom: 0;
+                }
+            }
+
+            .date-range-cont{
+                display: flex;
+                gap: 10px;
+
+                input[type="date"]{
+                    padding: 5px 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                }
+
+                button{
+                    padding: 5px 10px;
+                    border: none;
+                    background-color: #000;
+                    color: #fff;
+                    border-radius: 5px;
+                    cursor: pointer;
+                }
+            }
+        }
+
         .dashboard-heading{
             display: flex;
             flex-direction: column;

@@ -20,6 +20,13 @@ const Dashboard = () => {
     }
 
     const [data, setData] = useState(0);
+    const [filteredData, setFilteredData] = useState(null);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [filteredTotal, setFilteredTotal] = useState(null);
+    const [dateFilterError, setDateFilterError] = useState("");
+    const [isDateLoading, setIsDateLoading] = useState(false);
+
     useEffect(() => {
         fetchApi("/wp-json/custom/v1/user-data")
             .then(res => res.json())
@@ -52,39 +59,81 @@ const Dashboard = () => {
         }
     }, []);
 
-    const verified = data?.verified;
-    const incomplete = data?.incomplete;
-    const returned = data?.returned;
-    const reject = data?.reject;
-    const validation = data?.validation;
+    const verified = filteredData?.verified ?? data?.verified;
+    const incomplete = filteredData?.incomplete ?? data?.incomplete;
+    const returned = filteredData?.returned ?? data?.returned;
+    const reject = filteredData?.reject ?? data?.reject;
+    const validation = filteredData?.validation ?? data?.validation;
     
-    const attendance = data?.attendance;
-    const attendee_yes = data?.attendee_yes;
-    const attendee_no = data?.attendee_no;
-    const onsite_attendee = data?.onsite_attendee;
-    const online_attendee = data?.online_attendee;
-    const companion = data?.companion;
+    const attendance = filteredData?.attendance ?? data?.attendance;
+    const attendee_yes = filteredData?.attendee_yes ?? data?.attendee_yes;
+    const attendee_no = filteredData?.attendee_no ?? data?.attendee_no;
+    const onsite_attendee = filteredData?.onsite_attendee ?? data?.onsite_attendee;
+    const online_attendee = filteredData?.online_attendee ?? data?.online_attendee;
+    const companion = filteredData?.companion ?? data?.companion;
 
-    const online_registrant = data?.online_registrant;
-    const onsite_registrant = data?.onsite_registrant;
-    const mall_registrant = data?.mall_registrant;
-    const networker_registrant = data?.networker_registrant;
-    const owwa_registrant = data?.owwa_registrant;
+    const online_registrant = filteredData?.online_registrant ?? data?.online_registrant;
+    const onsite_registrant = filteredData?.onsite_registrant ?? data?.onsite_registrant;
+    const mall_registrant = filteredData?.mall_registrant ?? data?.mall_registrant;
+    const networker_registrant = filteredData?.networker_registrant ?? data?.networker_registrant;
+    const owwa_registrant = filteredData?.owwa_registrant ?? data?.owwa_registrant;
 
-    const ofw = data?.ofw;
-    const relative_ofw = data?.relative_ofw;
+    const ofw = filteredData?.ofw ?? data?.ofw;
+    const relative_ofw = filteredData?.relative_ofw ?? data?.relative_ofw;
 
     const total = data?.subscriber_count;
-    const verified_percentage = (verified / total) * 100;
-    const incomplete_percentage = (incomplete / total) * 100;
-    const returned_percentage = (returned / total) * 100;
-    const reject_percentage = (reject / total) * 100;
-    const validation_percentage = (validation / total) * 100;
+    const displayedTotal = filteredData?.total ?? total;
+    const verified_percentage = (verified / displayedTotal) * 100;
+    const incomplete_percentage = (incomplete / displayedTotal) * 100;
+    const returned_percentage = (returned / displayedTotal) * 100;
+    const reject_percentage = (reject / displayedTotal) * 100;
+    const validation_percentage = (validation / displayedTotal) * 100;
 
-    const metro_manila = data?.metro_manila;
+    const metro_manila = filteredData?.metro_manila ?? data?.metro_manila;
+   
     
     const [filter, setFilter] = useState("Metro Manila");
     const [isLocationLoading, setIsLocationLoading] = useState(false);
+
+    const handleDateFilterApply = async () => {
+        setDateFilterError("");
+
+        if (startDate && endDate && startDate > endDate) {
+            setDateFilterError("The start date must be before or equal to the end date.");
+            return;
+        }
+
+        setIsDateLoading(true);
+
+        try {
+            const params = new URLSearchParams();
+
+            if (startDate) {
+                params.set("start_date", startDate);
+            }
+
+            if (endDate) {
+                params.set("end_date", endDate);
+            }
+
+            const query = params.toString();
+            const response = await fetchApi(
+                `/wp-json/custom/v1/user-count${query ? `?${query}` : ""}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to load the registration count.");
+            }
+
+            const result = await response.json();
+            setFilteredData(result);
+        } catch (error) {
+            console.error("Unable to load filtered registration count:", error);
+            setDateFilterError("Unable to load the registration count. Please try again.");
+        } finally {
+            setIsDateLoading(false);
+        }
+    };
 
     const handleFilterChange = (nextFilter) => {
         if (nextFilter === filter || isLocationLoading) {
@@ -100,6 +149,36 @@ const Dashboard = () => {
         <div>
             
             <div className="admin-dashboard-layout">
+                <div className="dashboard-filter-section">
+                    <div className="dashboard-title">
+                        <h3>Date Range Filter:</h3>
+                    </div>
+                    <div className="date-range-cont">
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(event) => setStartDate(event.target.value)}
+                            aria-label="Registration start date"
+                        />
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(event) => setEndDate(event.target.value)}
+                            aria-label="Registration end date"
+                        />
+                        <button
+                            type="button"
+                            onClick={handleDateFilterApply}
+                            disabled={isDateLoading}
+                        >
+                            {isDateLoading ? "Loading..." : "Apply"}
+                        </button>
+                        {dateFilterError && (
+                            <p role="alert">{dateFilterError}</p>
+                        )}
+                    </div>
+                </div>
+
                 <div className="dashboard-heading">
                     <div className="dashboard-title">
                         <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -108,15 +187,15 @@ const Dashboard = () => {
                         <ul>
                             <li>
                                 <h6>Registrants</h6>
-                                <h3>{total?.toLocaleString()} Registrants</h3>
+                                <h3>{displayedTotal?.toLocaleString()} Registrants</h3>
                             </li>
                             <li>
                                 <h6>Attendance</h6>
-                                <h3>{attendance?.toLocaleString()} Attendance</h3>
+                                <h3>{filteredData?.attendance?.toLocaleString() ?? attendance?.toLocaleString()} Attendance</h3>
                             </li>
                             <li>
                                 <h6>Companions</h6>
-                                <h3>{companion?.toLocaleString()} Companion</h3>
+                                <h3>{filteredData?.companion?.toLocaleString() ?? companion?.toLocaleString()} Companion</h3>
                             </li>
                         </ul>
                     </div>
@@ -199,6 +278,18 @@ const Dashboard = () => {
                             <h5>Rejected</h5>
                             <h6>Total Count: <strong>{reject?.toLocaleString()}</strong></h6>
                             </Link>
+                        </li>
+                    </ul>
+                </div>
+
+                <div className="dashboard-validation-type">
+                    <h3>Retrieved and New Registrants</h3>
+                    <ul>
+                        <li>
+                            <h5>Retrieved: <strong>{filteredData?.recover_acct ?? data?.recover_acct?.toLocaleString()}</strong></h5>
+                        </li>
+                        <li>
+                            <h5>New Registrants: <strong>{filteredData?.new_registrants ?? data?.new_registrants?.toLocaleString()}</strong></h5>
                         </li>
                     </ul>
                 </div>
