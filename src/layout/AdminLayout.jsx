@@ -75,6 +75,9 @@ export default function AdminLayout() {
         <div className="admin-navigation">
           <ul>
             <li className={location.pathname === "/dashboard" ? "active" : ""}><Link to="/dashboard">Dashboard</Link></li>
+            {/* {!isEditor && !isAuthor && (
+            <li className={location.pathname === "/data-comparison" ? "active" : ""}><Link to="/data-comparison">Data Comparison</Link></li>
+            )} */}
             {!isEditor && (
               <li className={location.pathname === "/records" ? "active" : ""}><Link to="/records">Records</Link></li>
             )}

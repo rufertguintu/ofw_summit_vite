@@ -18,6 +18,7 @@ import TrackingHistory from "./pages/TrackingHistory";
 import GlobalRecords from "./pages/GlobalRecords";
 import GlobalRecordView from "./pages/GlobalRecordView";
 import Dashboard2025 from "./pages/2025Dashboard";
+import DataComparison from "./pages/DataComparison";
 import ExportData from "./pages/ExportData";
 import ProfileDashboard from "./pages/ProfileDashboard";
 import ViewProfile from "./pages/ViewProfile";
@@ -46,6 +47,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/global-records\/.+/, "Global Record"],
   [/^\/global-records/, "Global Records"],
   [/^\/2025-dashboard/, "2025 Dashboard"],
+  [/^\/data-comparison/, "Data Comparison"],
   [/^\/options-page/, "Options"],
   [/^\/export-data/, "Export Data"],
   [/^\/status-filtered/, "Status Filtered"],
@@ -114,6 +116,7 @@ function App() {
             <Route path="/global-records" element={<GlobalRecords />} />
             <Route path="/global-records/:recordId" element={<GlobalRecordView />} />
             <Route path="/2025-dashboard" element={<Dashboard2025 />} />
+            <Route path="/data-comparison" element={<DataComparison />} />
             <Route path="/options-page" element={<OptionsPage />} />
           </Route>
           <Route path="/export-data" element={<ExportData />} />
