@@ -9,7 +9,7 @@ const COMPARISONS = [
     { key: "type_registrant", title: "Registrant Type" },
 ];
 
-const chartColors = ["#6366f1", "#f59e0b"];
+const chartColors = ["#10b981", "#6366f1", "#f59e0b"];
 
 function ComparisonChart({ title, comparison }) {
     const options = {
@@ -41,6 +41,7 @@ function ComparisonChart({ title, comparison }) {
     };
 
     const series = [
+        { name: "2024", data: comparison["2024"] },
         { name: "2025", data: comparison["2025"] },
         { name: "Current", data: comparison.current },
     ];
@@ -113,6 +114,12 @@ export default function DataComparison() {
                 <div className="border border-table-line rounded-lg bg-layer p-5">
                     <p className="text-sm text-muted-foreground-1">Total Registered</p>
                     <div className="mt-3 flex flex-wrap gap-8">
+                    <div>
+                            <p className="text-2xl font-bold text-foreground">
+                                {data.total_registered["2024"].toLocaleString()}
+                            </p>
+                            <p className="text-sm text-muted-foreground-1">2024</p>
+                        </div>
                         <div>
                             <p className="text-2xl font-bold text-foreground">
                                 {data.total_registered["2025"].toLocaleString()}
