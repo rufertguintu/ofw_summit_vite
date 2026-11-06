@@ -29,13 +29,13 @@ function ComparisonChart({ title, comparison }) {
         xaxis: { categories: comparison.labels },
         yaxis: {
             labels: {
-                formatter: (value) => Math.round(value).toLocaleString(),
+                formatter: (value) => Math.round(value),
             },
         },
         legend: { position: "top" },
         tooltip: {
             y: {
-                formatter: (value) => value.toLocaleString(),
+                formatter: (value) => value,
             },
         },
     };
@@ -116,19 +116,19 @@ export default function DataComparison() {
                     <div className="mt-3 flex flex-wrap gap-8">
                     <div>
                             <p className="text-2xl font-bold text-foreground">
-                                {data.total_registered["2024"].toLocaleString()}
+                                {data.total_registered["2024"]}
                             </p>
                             <p className="text-sm text-muted-foreground-1">2024</p>
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-foreground">
-                                {data.total_registered["2025"].toLocaleString()}
+                                {data.total_registered["2025"]}
                             </p>
                             <p className="text-sm text-muted-foreground-1">2025</p>
                         </div>
                         <div>
                             <p className="text-2xl font-bold text-foreground">
-                                {data.total_registered.current.toLocaleString()}
+                                {data.total_registered.current}
                             </p>
                             <p className="text-sm text-muted-foreground-1">Current</p>
                         </div>
