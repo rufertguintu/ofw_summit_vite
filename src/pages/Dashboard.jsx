@@ -286,7 +286,9 @@ const Dashboard = () => {
                     <h3>Retrieved and New Registrants</h3>
                     <ul>
                         <li>
-                            <h5>Retrieved: <strong>{filteredData?.recover_acct ?? data?.recover_acct?.toLocaleString()}</strong></h5>
+                            <Link to="/retrieved-filtered/">
+                                <h5>Retrieved: <strong>{filteredData?.recover_acct ?? data?.recover_acct?.toLocaleString()}</strong></h5>
+                            </Link>
                         </li>
                         <li>
                             <h5>New Registrants: <strong>{filteredData?.new_registrants ?? data?.new_registrants?.toLocaleString()}</strong></h5>
