@@ -25,6 +25,7 @@ import ViewProfile from "./pages/ViewProfile";
 import OnsiteRegistration from "./pages/OnsiteRegistration";
 import NetworkerRegistration from "./pages/NetworkerRegistration";
 import StatusFiltered from "./pages/StatusFiltered";
+import RetrievedFiltered from "./pages/RetrievedFiltered";
 import OptionsPage from "./pages/OptionsPage";
 import RegistrationAvailability from "./components/RegistrationAvailability";
 // import { Button } from "@/components/ui/button"
@@ -51,6 +52,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/options-page/, "Options"],
   [/^\/export-data/, "Export Data"],
   [/^\/status-filtered/, "Status Filtered"],
+  [/^\/retrieved-filtered/, "Retrieved Account Filtered"],
 ];
 
 function TitleUpdater() {
@@ -121,6 +123,7 @@ function App() {
           </Route>
           <Route path="/export-data" element={<ExportData />} />
           <Route path="/status-filtered/:status" element={<StatusFiltered />} />
+          <Route path="/retrieved-filtered/" element={<RetrievedFiltered />} />
         </Route>
 
       </Routes>

@@ -84,6 +84,8 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
 
     };
 
+    const OfwType = formData.meta.ofw_type !== "1";
+
     
     // PSGC location lists (names are stored, codes are used for lookups)
     const PSGC = "https://psgc.gitlab.io/api";
@@ -794,6 +796,75 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     placeholder="Profession"
                     class="form-control"
                 /></div>
+
+            {!OfwType ? (
+                <>
+                    <div><label>OFW First Name:</label> <input
+                        type="text"
+                        name="ofw_firstname"
+                        data-type="meta"
+                        value={formData.meta.ofw_firstname}
+                        onChange={handleChange}
+                        placeholder="OFW First Name"
+                        class="form-control"
+                    /></div>
+
+                    <div><label>OFW Middle Name:</label> <input
+                        type="text"
+                        name="ofw_middlename"
+                        data-type="meta"
+                        value={formData.meta.ofw_middlename}
+                        onChange={handleChange}
+                        placeholder="OFW Middle Name"
+                        class="form-control"
+                    /></div>
+
+                    <div><label>OFW Last Name:</label> <input
+                        type="text"
+                        name="ofw_lastname"
+                        data-type="meta"
+                        value={formData.meta.ofw_lastname}
+                        onChange={handleChange}
+                        placeholder="OFW Last Name"
+                        class="form-control"
+                    /></div>
+
+                    <div><label>OFW Email Address:</label> <input
+                        type="text"
+                        name="ofw_emailaddress"
+                        data-type="meta"
+                        value={formData.meta.ofw_emailaddress}
+                        onChange={handleChange}
+                        placeholder="OFW Email Address"
+                        class="form-control"
+                    /></div>
+
+                    <div><label>OFW Status:</label> <input
+                        type="text"
+                        name="ofw_status"
+                        data-type="meta"
+                        value={formData.meta.ofw_status}
+                        onChange={handleChange}
+                        placeholder="OFW Status"
+                        class="form-control"
+                    /></div>
+
+                    <div><label>OFW Profession:</label> <input
+                        type="text"
+                        name="ofw_profession"
+                        data-type="meta"
+                        value={formData.meta.ofw_profession}
+                        onChange={handleChange}
+                        placeholder="OFW Profession"
+                        class="form-control"
+                    /></div>
+                </>
+            ) : null }
+
+                
+
+
+
                 <div><label>Passport ID:</label> <input
                     type="text"
                     name="passport_id"

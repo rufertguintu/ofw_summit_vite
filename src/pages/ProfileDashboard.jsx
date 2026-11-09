@@ -307,8 +307,53 @@ const ProfileDashboard = () => {
   const [profession, setProfession] = useState("");
   const [ofw_profession, setOfwProfession] = useState("");
   const [ofw_emailaddress, setofw_emailaddress] = useState("");
+  const [verifiedOfwEmail, setVerifiedOfwEmail] = useState("");
+  const [ofwEmailChecking, setOfwEmailChecking] = useState(false);
+  const [ofwEmailError, setOfwEmailError] = useState("");
   const isValidEmail = (value) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(value || "").trim());
+
+  // Real-time (debounced) deliverability check while the user types
+  useEffect(() => {
+    const email = ofw_emailaddress.trim();
+    setOfwEmailError("");
+
+    if (!email || !isValidEmail(email) || email.toLowerCase() === verifiedOfwEmail) {
+      setOfwEmailChecking(false);
+      return undefined;
+    }
+
+    let cancelled = false;
+    setOfwEmailChecking(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const apiKey = "603eac429296455d859fc14cd034cbbc";
+        const response = await fetch(
+          `https://emailreputation.abstractapi.com/v1/?api_key=${apiKey}&email=${encodeURIComponent(email)}`
+        );
+        const result = await response.json();
+        if (cancelled) return;
+
+        if (result?.email_deliverability?.status === "deliverable") {
+          setVerifiedOfwEmail(email.toLowerCase());
+        } else {
+          setOfwEmailError("Please enter a valid email.");
+        }
+      } catch (error) {
+        if (cancelled) return;
+        console.error("Error validating OFW email:", error);
+        setOfwEmailError("Unable to validate email.");
+      } finally {
+        if (!cancelled) setOfwEmailChecking(false);
+      }
+    }, 600);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [ofw_emailaddress]);
   const [ofwIncome, setOfwIncome] = useState("");
   const [workCountry, setWorkCountry] = useState("");
   const [passportFile, setPassportFile] = useState(null);
@@ -698,6 +743,10 @@ const [touched, setTouched] = useState({
     ofw_year_service: false,
 });
 
+const isOfwEmailSameAsUserEmail = Boolean(ofw_emailaddress.trim())
+  && ofw_emailaddress.trim().toLowerCase() === String(user?.email || user?.user_email || "").trim().toLowerCase()
+  && String(user?.email || user?.user_email || "").trim() !== "";
+
 const isStepValid = () => {
   switch (step) {
     case 1:
@@ -755,6 +804,10 @@ const isStepValid = () => {
           !ofw_status ||
           !ofw_profession.trim() ||
           !isValidEmail(ofw_emailaddress) ||
+          isOfwEmailSameAsUserEmail ||
+          ofwEmailChecking ||
+          ofwEmailError ||
+          ofw_emailaddress.trim().toLowerCase() !== verifiedOfwEmail ||
           !workCountry ||
           !ofwYearService
         ) {
@@ -1204,6 +1257,7 @@ const isCurrentStepValid = isStepValid();
         setProfession(String(data?.meta?.profession || data?.meta?.ofw_profession || "").trim());
         setOfwProfession(String(data?.meta?.ofw_profession || "").trim());
         setofw_emailaddress(String(data?.meta?.ofw_emailaddress || "").trim());
+        setVerifiedOfwEmail(String(data?.meta?.ofw_emailaddress || "").trim().toLowerCase());
         setOfwIncome(resolveOption(data?.meta?.ofw_income, OFW_INCOME_OPTIONS));
         setWorkCountry(String(data?.meta?.work_country || "").trim());
 
@@ -2643,10 +2697,15 @@ const isCurrentStepValid = isStepValid();
                                         <h5>{getMetaValue("ofw_emailaddress", "Not provided")}</h5>
                                       ) : ( */}
                                         <input type="email" name="ofw_emailaddress" value={ofw_emailaddress} onChange={(e) => setofw_emailaddress(e.target.value)} placeholder="OFW Email Address" required />
+                                        {ofwEmailChecking && <small>Validating email...</small>}
+                                        {ofwEmailError && <small className="error-text" style={{ color: "red" }}>{ofwEmailError}</small>}
                                         {ofw_emailaddress.trim() && !isValidEmail(ofw_emailaddress) && (
                                           <small className="error-text" style={{ color: "red" }}>Please enter a valid email address.</small>
                                         )}
-                                      {/* )} */}
+                                                                                  {isOfwEmailSameAsUserEmail && (
+                                                                                    <small className="error-text" style={{ color: "red" }}>OFW email address must be different from your account email.</small>
+                                                                                  )}
+                                                                                {/* )} */}
                                     </div>
                                   </div>
                                 </div>
