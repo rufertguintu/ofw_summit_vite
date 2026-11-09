@@ -32,14 +32,17 @@ const RetrievedFiltered = () => {
     }, []);
 
     const summaryCards = [
-        { value: data?.total_retrieved, label: "Total Retrieved" },
-        { value: data?.ofw, label: "Total OFW" },
-        { value: data?.relative_ofw, label: "Total Relative OFW" },
         { value: data?.online_registrant, label: "Total Online Registrant" },
         { value: data?.onsite_registrant, label: "Total Onsite Registrant" },
         { value: data?.mall_registrant, label: "Total Mall Registrant" },
         { value: data?.networker_registrant, label: "Total Networker" },
     ];
+
+    const TotalRetrieved = data?.total_retrieved ?? 0;
+
+    const TotalOFW = data?.ofw ?? 0;
+    const TotalRelativeOFW = data?.relative_ofw ?? 0;
+
     const locationGroups = [
         { label: "Region", counts: data?.region_count },
         { label: "Province", counts: data?.province_count },
@@ -51,6 +54,33 @@ const RetrievedFiltered = () => {
                 Back to Dashboard
             </Link>
             <h3 className="mt-10 text-2xl font-semibold">Retrieved Account Records</h3>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div className="rounded bg-[#ff902b] p-8">
+                    <h3 className="text-4xl font-medium text-white">
+                        {data ? Number(TotalRetrieved).toLocaleString() : "..."}
+                    </h3>
+                    <h5 className="mt-2 font-medium text-white">Total Retrieved</h5>
+                </div>
+            </div>
+
+            <h3 className="mt-6 text-2xl font-semibold" style={{ marginTop: "2rem" }}>OFW and Relative OFW</h3>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                
+                <div className="rounded bg-[#ff902b] p-8">
+                    <h3 className="text-4xl font-medium text-white">
+                        {data ? Number(TotalOFW).toLocaleString() : "..."}
+                    </h3>
+                    <h5 className="mt-2 font-medium text-white">Total OFW</h5>
+                </div>
+                <div className="rounded bg-[#ff902b] p-8">
+                    <h3 className="text-4xl font-medium text-white">
+                        {data ? Number(TotalRelativeOFW).toLocaleString() : "..."}
+                    </h3>
+                    <h5 className="mt-2 font-medium text-white">Total Relative OFW</h5>
+                </div>
+            </div>
+            <h3 className="mt-6 text-2xl font-semibold" style={{ marginTop: "2rem" }}>Type of Registrants</h3>
 
             {error ? (
                 <p role="alert" className="mt-6 rounded bg-red-100 p-4 text-red-700">{error}</p>
@@ -66,6 +96,7 @@ const RetrievedFiltered = () => {
                     ))}
                 </div>
             )}
+            <h3 className="mt-6 text-2xl font-semibold" style={{ marginTop: "2rem" }}>Locations</h3>
 
             {data && (
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">

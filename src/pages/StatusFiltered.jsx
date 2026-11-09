@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Navigate, useParams, Link } from "react-router-dom";
-import DashboardTitle from "../components/DashboardTitle";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { fetchApi } from "../store/api";
 
 const statusLabels = {
@@ -13,7 +12,6 @@ const statusLabels = {
 
 const StatusFiltered = () => {
     const { status } = useParams();
-    const token = localStorage.getItem("token");
     const statusName = statusLabels[status];
     const [data, setData] = useState(null);
     const [error, setError] = useState("");
@@ -21,6 +19,7 @@ const StatusFiltered = () => {
     useEffect(() => {
         if (!statusName) return;
 
+        let active = true;
         setData(null);
         setError("");
 
@@ -34,11 +33,18 @@ const StatusFiltered = () => {
 
                 return json;
             })
-            .then(setData)
-            .catch((err) => setError(err.message));
+            .then((result) => {
+                if (active) setData(result);
+            })
+            .catch((err) => {
+                if (active) setError(err.message);
+            });
+
+        return () => {
+            active = false;
+        };
     }, [status, statusName]);
 
-    console.log(data?.province_count);
     const summaryCards = [
         { value: data?.total_status, label: `Total ${statusName}` },
         { value: data?.ofw_status, label: `Total OFW` },
@@ -67,6 +73,28 @@ const StatusFiltered = () => {
                         </div>
                     ))}
                 </div>
+            )}
+
+            {statusName === "Returned" && data?.status === status && !error && (
+                <section className="mt-6 rounded bg-[#ff902b] p-8 text-white">
+                    <h4 className="text-2xl font-semibold text-white">Returned Remarks</h4>
+                    <p className="mt-2 text-white">
+                        Latest returned remark per participant in history
+                        {" "}({data.returned_remarks.total_participants.toLocaleString()} participants).
+                    </p>
+                    {data.returned_remarks.total_participants > 0 ? (
+                        <ul className="mt-4 space-y-2">
+                            {data.returned_remarks.breakdown.map(({ remark, count }) => (
+                                <li key={remark} className="text-white">
+                                    {remark || "No remark"}: {count.toLocaleString()}
+                                    {" "}({((count / data.returned_remarks.total_participants) * 100).toFixed(2)}%)
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="mt-4">No returned remarks found.</p>
+                    )}
+                </section>
             )}
 
             <div className="mt-6 p-4 text-red-700 rounded bg-[#ff902b] p-8">
