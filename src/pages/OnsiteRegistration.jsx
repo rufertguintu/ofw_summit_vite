@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "../store/api";
+import logo from "../assets/ofw-summit-15th.svg";
 
 const PSGC_API = "https://psgc.gitlab.io/api";
 
@@ -209,6 +210,10 @@ const OnsiteRegistration = () => {
 
   return (
     <div className="registration-page join-now-page onsite-registration-page">
+      <div className="logo-tagline">
+        <img src={logo} alt=""/>
+        <h4>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h4>
+      </div>
       <div className="onsite-registration-container">
         <div className="onsite-registration-heading">
           <h2>Onsite Registration</h2>

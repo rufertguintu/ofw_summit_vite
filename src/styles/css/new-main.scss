@@ -225,7 +225,21 @@ header{
     .registration-page{
         position: relative;
         z-index: 2;
-        padding: 200px 0;
+        padding: 150px 0;
+
+        .logo-tagline{
+            text-align: center;
+            margin-bottom: 50px;
+            img{
+                max-width: 400px;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+            h4{
+                font-weight: 700;
+                font-size: 18px;
+            }
+        }
 
         .registration-wrapper{
             display: flex;
