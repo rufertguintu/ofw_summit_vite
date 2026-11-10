@@ -97,6 +97,28 @@ const StatusFiltered = () => {
                 </section>
             )}
 
+            {(statusName === "Returned" || statusName === "Incomplete") && (
+                <>
+                    <h3 className="text-2xl font-semibold text-black" style={{ marginTop: "2rem" }}>Overview Attendance</h3>
+                    <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
+                        <div className="rounded bg-[#ff902b] p-8">
+                            <h3 className="text-4xl font-medium text-white">
+                                {data?.overview_attendance?.attendance_breakdown?.yes?.toLocaleString() || 0}
+                            </h3>
+                            <h5 className="mt-2 font-medium text-white">YES</h5>
+                        </div>
+
+                        <div className="rounded bg-[#ff902b] p-8">
+                            <h3 className="text-4xl font-medium text-white">
+                                {data?.overview_attendance?.attendance_breakdown?.no?.toLocaleString() || 0}
+                            </h3>
+                            <h5 className="mt-2 font-medium text-white">NO</h5>
+                        </div>
+                    </div>
+                </>
+            )}
+
+
             <div className="mt-6 p-4 text-red-700 rounded bg-[#ff902b] p-8">
                 <h4 className="text-2xl font-semibold text-white">Region Count</h4>
                 {data?.region_count &&
