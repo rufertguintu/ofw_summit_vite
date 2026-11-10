@@ -65,7 +65,7 @@ const StatusFiltered = () => {
             ) : (
                 <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
                     {summaryCards.map(({ value, label }) => (
-                        <div key={label} className="rounded bg-[#ff902b] p-8">
+                        <div key={label} className="rounded bg-[#3babc8] p-8">
                             <h3 className="text-4xl font-medium text-white">
                                 {data ? Number(value || 0).toLocaleString() : "..."}
                             </h3>
@@ -76,7 +76,7 @@ const StatusFiltered = () => {
             )}
 
             {statusName === "Returned" && data?.status === status && !error && (
-                <section className="mt-6 rounded bg-[#ff902b] p-8 text-white">
+                <section className="mt-6 rounded bg-[#494d4d] p-8 text-white">
                     <h4 className="text-2xl font-semibold text-white">Returned Remarks</h4>
                     <p className="mt-2 text-white">
                         Latest returned remark per participant in history
@@ -101,14 +101,14 @@ const StatusFiltered = () => {
                 <>
                     <h3 className="text-2xl font-semibold text-black" style={{ marginTop: "2rem" }}>Overview Attendance</h3>
                     <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-                        <div className="rounded bg-[#ff902b] p-8">
+                        <div className="rounded bg-[#f35839] p-8">
                             <h3 className="text-4xl font-medium text-white">
                                 {data?.overview_attendance?.attendance_breakdown?.yes?.toLocaleString() || 0}
                             </h3>
                             <h5 className="mt-2 font-medium text-white">YES</h5>
                         </div>
 
-                        <div className="rounded bg-[#ff902b] p-8">
+                        <div className="rounded bg-[#f35839] p-8">
                             <h3 className="text-4xl font-medium text-white">
                                 {data?.overview_attendance?.attendance_breakdown?.no?.toLocaleString() || 0}
                             </h3>
@@ -129,7 +129,7 @@ const StatusFiltered = () => {
                     ))
                 }
             </div>
-            <div className="mt-6 p-4 text-red-700 rounded bg-[#ff902b] p-8">
+            <div className="mt-6 p-4 text-red-700 rounded bg-[#7bbf62] p-8">
                 <h4 className="text-2xl font-semibold text-white">Province Count</h4>
                 {data?.province_count &&
                     Object.entries(data.province_count).map(([province, count]) => (
