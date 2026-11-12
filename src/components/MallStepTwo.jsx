@@ -216,16 +216,16 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                     <label>Mall Location</label>
                     <select name="mall_location" className="rounded-lg bg-layer border-layer-line sm:text-sm text-foreground placeholder:text-muted-foreground-1 focus:border-primary-focus focus:ring-primary-focus disabled:opacity-50 disabled:pointer-events-none" id="mall_location" value={values.mall_location} onChange={handleChange("mall_location")}>
                         <option value="">- Select Mall Location -</option>
-                        <option value="Taguig">Taguig</option>
-                        <option value="SOMO">SOMO</option>
-                        <option value="Sta. Rosa">Sta. Rosa</option>
-                        <option value="Las Pinas">Las Piñas</option>
-                        <option value="San Jose Del Monte">San Jose Del Monte</option>
-                        <option value="Bataan">Bataan</option>
-                        <option value="General Trias">General Trias</option>
-                        <option value="Tanza">Tanza</option>
-                        <option value="Pampanga">Pampanga</option>
-                        <option value="Dasma">Dasma</option>
+                        <option value="Taguig">Vista Mall Taguig</option>
+                        <option value="SOMO">Vista Mall SoMo, Molino 4 Bacoor City</option>
+                        <option value="Santa Rosa">Vista Mall Santa Rosa City</option>
+                        <option value="Las Pinas">Vista Mall Las Piñas</option>
+                        <option value="San Jose Del Monte">Starmall San Jose Del Monte</option>
+                        <option value="Bataan">Vista Mall Balanga, Bataan</option>
+                        <option value="General Trias">Vista Mall Gen. Trias Arnaldo Hway</option>
+                        <option value="Tanza">Vista Mall Tanza, Cavite</option>
+                        <option value="Pampanga">Vista Mall Pampanga, San Fernando City</option>
+                        <option value="Dasmarinas">Vista Mall Dasmariñas City</option>
                     </select>
                 </div>
             </div>
