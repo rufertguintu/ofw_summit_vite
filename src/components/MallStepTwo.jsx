@@ -197,7 +197,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
         }
     };
 
-    const requiredRelativeFieldsFilled =
+    const requiredRelativeFieldsFilled = !!values.mall_location &&
         !!values.relative_company &&
         (!hasRelativeCompany ||
             (!!values.company_relationship?.trim() && !!values.company_relative_fullname?.trim())) &&
@@ -228,6 +228,7 @@ export default function StepTwo({nextStep, prevStep, handleChange, values}) {
                         <option value="Dasmarinas">Vista Mall Dasmariñas City</option>
                     </select>
                 </div>
+                {!values.mall_location && <small style={{ color: "red" }}>Please select a mall location.</small>}
             </div>
             <div className="one-column_field">
                 <div className="reg_field-cont">
