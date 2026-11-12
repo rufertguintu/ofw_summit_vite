@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Online_Register from "./pages/Online_Register";
+import Mall_Register from "./pages/Mall_Register";
 import Dashboard from "./pages/Dashboard";
 import Records from "./pages/Records";
 import TrackingHistory from "./pages/TrackingHistory";
@@ -38,6 +39,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/forgot-password/, "Forgot Password"],
   [/^\/reset-password/, "Reset Password"],
   [/^\/online-register/, "Online Registration"],
+  [/^\/mall-register/, "Mall Registration"],
   [/^\/onsite-registration/, "Onsite Registration"],
   [/^\/networker-registration/, "Networker Registration"],
   [/^\/profile-dashboard/, "Profile Dashboard"],
@@ -94,6 +96,7 @@ function App() {
               </RegistrationAvailability>
             }
           />
+          <Route path="/mall-register" element={<Mall_Register />} />
           <Route path="/networker-registration" element={<NetworkerRegistration />} />
           <Route path="/profile-dashboard" element={<ProfileDashboard />} />
         </Route>

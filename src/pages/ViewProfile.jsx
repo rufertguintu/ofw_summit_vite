@@ -99,7 +99,7 @@ function ViewProfile() {
   }, [userdata]);
 
   const meta = userdata?.meta || {};
-
+  
   const profileItems = [
     { label: "Account Type", value: meta.recover_acct ? `Retrieved: ${meta.recover_acct}` : "New Registrant" },
     { label: "User ID", value: meta.custom_id || userdata?.id || "N/A" },
@@ -143,7 +143,7 @@ function ViewProfile() {
 
   let documentItems = [];
 
-  if (meta.type_registrant === "0") {
+  if ((meta.type_registrant === "0") || (meta.type_registrant === "1")) {
     documentItems = [
       { key: "passport", label: "Passport", value: meta.passport, alt: "passport" },
       { key: "married_cert", label: "Married Certificate", value: meta.married_cert, alt: "married certificate" },
@@ -314,7 +314,7 @@ function ViewProfile() {
           companion: nextCompanion,
         }),
       });
-
+      
       if (!res.ok) {
         throw new Error("Failed to update record status.");
       }
@@ -325,6 +325,8 @@ function ViewProfile() {
       const normalizedReasonIncomplete = updatedFields.reason_incomplete ?? nextReasonIncomplete;
       const normalizedAttendance = updatedFields.attend_event === "" ? null : updatedFields.attend_event ?? nextAttendance;
       const normalizedCompanion = updatedFields.companion === "" ? null : updatedFields.companion ?? nextCompanion;
+
+      
 
       setFormData({
         admin_verified: String(normalizedAdminVerified ?? ""),
@@ -509,7 +511,7 @@ function ViewProfile() {
               {documentItems.map((item) => (
                 <div key={item.key} style={documentCard}>
                   <h5 style={documentTitle}>{item.label}</h5>
-                  {meta.type_registrant === "0" ? renderDocumentPreview(item.value, item.alt) : item.value}
+                  {(meta.type_registrant === "0" || meta.type_registrant === "1") ? renderDocumentPreview(item.value, item.alt) : item.value}
                 </div>
               ))}
             </div>
