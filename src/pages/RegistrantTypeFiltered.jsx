@@ -49,11 +49,7 @@ const RegistrantTypeFiltered = () => {
         { value: data?.total_registrants_type, label: `Total ${typeName}` },
         { value: data?.ofw_status, label: `Total OFW` },
         { value: data?.relative_ofw_status, label: `Total Relative OFW` },
-        { value: data?.online_registrant_status, label: `Total Online Registrant` },
-        { value: data?.onsite_registrant_status, label: `Total Onsite Registrant` },
     ];
-
-    console.log(data);
 
     return (
         <div className="p-[40px]">
@@ -65,7 +61,7 @@ const RegistrantTypeFiltered = () => {
             {error ? (
                 <p className="mt-6 rounded bg-red-100 p-4 text-red-700">{error}</p>
             ) : (
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     {summaryCards.map(({ value, label }) => (
                         <div key={label} className="rounded bg-[#3babc8] p-8">
                             <h3 className="text-4xl font-medium text-white">
@@ -77,19 +73,19 @@ const RegistrantTypeFiltered = () => {
                 </div>
             )}
 
-            {typeName === "Mall" && data?.mall_locations && !error && (
+            {typeName === "Mall" && !error && (
                 <section className="mt-6 rounded bg-[#494d4d] p-8 text-white">
                     <h4 className="text-2xl font-semibold text-white">Mall Locations</h4>
-                    {data.mall_locations && Object.keys(data.mall_locations).length > 0 ? (
+                    {data?.mall_locations_list && Object.keys(data.mall_locations_list).length > 0 ? (
                         <ul className="mt-4 space-y-2">
-                            {Object.entries(data.mall_locations).map(([location, count]) => (
+                            {Object.entries(data.mall_locations_list).map(([location, count]) => (
                                 <li key={location} className="text-white">
-                                    {location || "No location"}: {count.toLocaleString()}
+                                    {location || "No location"}: {Number(count).toLocaleString()}
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="mt-4">No mall locations found.</p>
+                        <p className="mt-4 text-white">No mall locations found.</p>
                     )}
                 </section>
             )}
