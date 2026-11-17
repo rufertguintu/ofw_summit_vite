@@ -1,0 +1,122 @@
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { fetchApi } from "../store/api";
+
+const typeLabels = {
+    online: "Online",
+    onsite: "Onsite",
+    mall: "Mall",
+    networker: "Networker",
+    owwa: "OWWA",
+};
+
+const RegistrantTypeFiltered = () => {
+    const { type } = useParams();
+    const typeName = typeLabels[type];
+    const [data, setData] = useState(null);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        if (!typeName) return;
+
+        let active = true;
+        setData(null);
+        setError("");
+
+        fetchApi(`/wp-json/custom/v1/registrant-type-filtered/${type}`)
+            .then(async (res) => {
+                const json = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(json.message || "Unable to load status totals.");
+                }
+
+                return json;
+            })
+            .then((result) => {
+                if (active) setData(result);
+            })
+            .catch((err) => {
+                if (active) setError(err.message);
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [type, typeName]);
+
+    const summaryCards = [
+        { value: data?.total_registrants_type, label: `Total ${typeName}` },
+        { value: data?.ofw_status, label: `Total OFW` },
+        { value: data?.relative_ofw_status, label: `Total Relative OFW` },
+        { value: data?.online_registrant_status, label: `Total Online Registrant` },
+        { value: data?.onsite_registrant_status, label: `Total Onsite Registrant` },
+    ];
+
+    console.log(data);
+
+    return (
+        <div className="p-[40px]">
+            <Link to="/dashboard">
+                Back to Dashboard
+            </Link>
+            <h3 className="mt-10 text-2xl font-semibold">Registrant Type: {typeName}</h3>
+
+            {error ? (
+                <p className="mt-6 rounded bg-red-100 p-4 text-red-700">{error}</p>
+            ) : (
+                <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                    {summaryCards.map(({ value, label }) => (
+                        <div key={label} className="rounded bg-[#3babc8] p-8">
+                            <h3 className="text-4xl font-medium text-white">
+                                {data ? Number(value || 0).toLocaleString() : "..."}
+                            </h3>
+                            <h5 className="mt-2 font-medium text-white">{label}</h5>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {typeName === "Mall" && data?.mall_locations && !error && (
+                <section className="mt-6 rounded bg-[#494d4d] p-8 text-white">
+                    <h4 className="text-2xl font-semibold text-white">Mall Locations</h4>
+                    {data.mall_locations && Object.keys(data.mall_locations).length > 0 ? (
+                        <ul className="mt-4 space-y-2">
+                            {Object.entries(data.mall_locations).map(([location, count]) => (
+                                <li key={location} className="text-white">
+                                    {location || "No location"}: {count.toLocaleString()}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="mt-4">No mall locations found.</p>
+                    )}
+                </section>
+            )}
+
+
+            <div className="mt-6 p-4 text-red-700 rounded bg-[#ff902b] p-8">
+                <h4 className="text-2xl font-semibold text-white">Region Count</h4>
+                {data?.region_count &&
+                    Object.entries(data.region_count).map(([region, count]) => (
+                        <div key={region} className="text-white">
+                            {region}: {count}
+                        </div>
+                    ))
+                }
+            </div>
+            <div className="mt-6 p-4 text-red-700 rounded bg-[#7bbf62] p-8">
+                <h4 className="text-2xl font-semibold text-white">Province Count</h4>
+                {data?.province_count &&
+                    Object.entries(data.province_count).map(([province, count]) => (
+                        <div key={province} className="text-white">
+                            {province}: {count}
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    );
+};
+
+export default RegistrantTypeFiltered;

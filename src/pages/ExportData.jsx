@@ -11,6 +11,11 @@ const EXPORT_OPTIONS = [
     description: "Download a CSV of every registered user and their metadata.",
   },
   {
+    type: "validation",
+    label: "Export All Validated Users",
+    description: "Download a CSV of users status as validated.",
+  },
+  {
     type: "ofw",
     label: "Export OFW User",
     description: "Download a CSV of users registered as OFW.",

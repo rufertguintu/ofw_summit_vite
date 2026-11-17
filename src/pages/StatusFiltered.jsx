@@ -53,6 +53,8 @@ const StatusFiltered = () => {
         { value: data?.onsite_registrant_status, label: `Total Onsite Registrant` },
     ];
 
+    console.log(data);
+
     return (
         <div className="p-[40px]">
             <Link to="/dashboard">

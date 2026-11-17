@@ -23,12 +23,16 @@ const REASON_OPTIONS = [
 
 // Extra reasons that only appear for a specific status (Reject = "1", Returned = "3")
 const STATUS_REASON_OPTIONS = {
+  "0": [
+    { label: "Provide proof of employment record", value: "Provide proof of employment record" },
+  ],
   "1": [
     { label: "Ineligible to participate", value: "Ineligible to participate" },
     { label: "Marital status", value: "Marital status" },
   ],
   "3": [
     { label: "Provide valid government ID for OFW/relative", value: "Provide valid government ID for OFW/relative" },
+    { label: "Provide proof of employment record", value: "Provide proof of employment record" }
   ],
 };
 

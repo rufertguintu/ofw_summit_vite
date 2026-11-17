@@ -46,7 +46,7 @@ function Login() {
       const loginData = await loginRes.json();
 
       if (!loginRes.ok || !loginData.token) {
-        alert(loginData?.message || "Login failed ❌");
+        alert("Login failed ❌ Please check your credentials and try again.");
 
         return;
       }

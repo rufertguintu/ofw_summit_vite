@@ -306,7 +306,9 @@ const Dashboard = () => {
                             <h5>Onsite Registrant: <strong>{onsite_registrant?.toLocaleString()}</strong></h5>
                         </li>
                         <li>
-                            <h5>Mall Registrant: <strong>{mall_registrant?.toLocaleString()}</strong></h5>
+                            <Link to={`/registrant-type-filtered/mall`}>
+                                <h5>Mall Registrant: <strong>{mall_registrant?.toLocaleString()}</strong></h5>
+                            </Link> 
                         </li>
                         <li>
                             <h5>Networker: <strong>{networker_registrant?.toLocaleString()}</strong></h5>
@@ -321,10 +323,14 @@ const Dashboard = () => {
                     <h3>Attendee Overview</h3>
                     <ul>
                         <li>
-                            <h5>Yes: <strong>{attendee_yes?.toLocaleString()}</strong></h5>
+                            <Link to={`/attendee-filtered/${attendee_yes}`}>
+                                <h5>Yes: <strong>{attendee_yes?.toLocaleString()}</strong></h5>
+                            </Link>
                         </li>
                         <li>
-                            <h5>No: <strong>{attendee_no?.toLocaleString()}</strong></h5>
+                            <Link to={`/attendee-filtered/${attendee_no}`}>
+                                <h5>No: <strong>{attendee_no?.toLocaleString()}</strong></h5>
+                            </Link>
                         </li>
                     </ul>
                 </div>
