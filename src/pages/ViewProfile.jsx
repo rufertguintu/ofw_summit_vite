@@ -515,7 +515,11 @@ function ViewProfile() {
               {documentItems.map((item) => (
                 <div key={item.key} style={documentCard}>
                   <h5 style={documentTitle}>{item.label}</h5>
-                  {(meta.type_registrant === "0" || meta.type_registrant === "1") ? renderDocumentPreview(item.value, item.alt) : item.value}
+                  {(meta.type_registrant === "0" || meta.type_registrant === "1")
+                    ? (meta[`${item.key}_checked`]
+                      ? "Presented"
+                      : renderDocumentPreview(item.value, item.alt))
+                    : item.value}
                 </div>
               ))}
             </div>

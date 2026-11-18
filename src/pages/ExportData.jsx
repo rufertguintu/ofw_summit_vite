@@ -30,6 +30,12 @@ const EXPORT_OPTIONS = [
     label: "Export All noemail@mandalay.com.ph",
     description: "Download a CSV of users whose email address is a mandalay.com.ph placeholder.",
   },
+  {
+    type: "history",
+    label: "Export History",
+    description: "Download a CSV of all records from the tracking history table.",
+    endpoint: "export-history",
+  },
 ];
 
 const ExportData = () => {
@@ -47,13 +53,13 @@ const ExportData = () => {
     return <Navigate to="/profile-dashboard" replace />;
   }
 
-  const handleExport = async (type, label) => {
+  const handleExport = async (type, label, endpoint = "export-users") => {
     setErrorMessage("");
     setLoadingType(type);
 
     try {
       const authToken = localStorage.getItem("token");
-      const response = await fetch(`${API_BASE_URL}/wp-json/custom/v1/export-users?type=${type}`, {
+      const response = await fetch(`${API_BASE_URL}/wp-json/custom/v1/${endpoint}${endpoint === "export-users" ? `?type=${type}` : ""}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -102,7 +108,7 @@ const ExportData = () => {
               <button
                 type="button"
                 disabled={loadingType === option.type}
-                onClick={() => handleExport(option.type, option.label)}
+                onClick={() => handleExport(option.type, option.label, option.endpoint)}
               >
                 <img src={download_icon} alt="Download Icon" />
                 {loadingType === option.type ? "Exporting..." : "Export CSV"}

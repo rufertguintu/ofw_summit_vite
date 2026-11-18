@@ -54,6 +54,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     ofw_income: userdata.meta?.ofw_income || "",
                     work_country: userdata.meta?.work_country || "",
                     ofw_year_service: userdata.meta?.ofw_year_service || "",
+                    passport_checked: String(userdata.meta?.passport_checked ?? "0"),
             },
             passport: userdata?.passport || "",
 
@@ -65,20 +66,21 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
     // ✅ Handle input
     const handleChange = (e) => {
         
-        const { name, value, dataset } = e.target;
+        const { name, value, dataset, type, checked } = e.target;
+        const newValue = type === "checkbox" ? (checked ? "1" : "0") : value;
 
         if (dataset.type === "meta") {
         setFormData({
             ...formData,
             meta: {
             ...formData.meta,
-            [name]: value
+            [name]: newValue
             }
         });
         } else {
         setFormData({
             ...formData,
-            [name]: value
+            [name]: newValue
         });
         }
 
@@ -917,6 +919,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     name="passport"
                     onChange={handleFileChange}
                     />
+                    Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={formData.meta.passport_checked === "1"} onChange={handleChange} />
                 </div>
                 <div><label>Married Certificate:</label> 
                     {userdata?.married_cert ? (
@@ -1078,6 +1081,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     name="visa"
                     onChange={handleFileChange}
                     />
+
                 </div>
 
                 <div><label>OWWA POEA:</label> 

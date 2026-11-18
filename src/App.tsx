@@ -24,7 +24,7 @@ import ExportData from "./pages/ExportData";
 import ProfileDashboard from "./pages/ProfileDashboard";
 import ViewProfile from "./pages/ViewProfile";
 import OnsiteRegistration from "./pages/OnsiteRegistration";
-import NetworkerRegistration from "./pages/NetworkerRegistration";
+import OWWARegistration from "./pages/OWWARegistration";
 import StatusFiltered from "./pages/StatusFiltered";
 import RetrievedFiltered from "./pages/RetrievedFiltered";
 import AttendeeFiltered from "./pages/AttendeeFiltered";
@@ -43,7 +43,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/online-register/, "Online Registration"],
   [/^\/mall-register/, "Mall Registration"],
   [/^\/onsite-registration/, "Onsite Registration"],
-  [/^\/networker-registration/, "Networker Registration"],
+  [/^\/owwa-registration/, "OWWA Registration"],
   [/^\/profile-dashboard/, "Profile Dashboard"],
   [/^\/dashboard/, "Dashboard"],
   [/^\/records\/.+\/view-profile/, "View Profile"],
@@ -101,7 +101,7 @@ function App() {
             }
           />
           <Route path="/mall-register" element={<Mall_Register />} />
-          <Route path="/networker-registration" element={<NetworkerRegistration />} />
+          <Route path="/owwa-registration" element={<OWWARegistration />} />
           <Route path="/profile-dashboard" element={<ProfileDashboard />} />
         </Route>
 
