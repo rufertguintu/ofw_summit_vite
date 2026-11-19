@@ -103,6 +103,8 @@ const GlobalDashboard = () => {
     //     setFilter(nextFilter);
     // };
 
+    console.log(data);
+
 
     return <>
         <div>
