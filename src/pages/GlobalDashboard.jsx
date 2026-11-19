@@ -110,7 +110,7 @@ const GlobalDashboard = () => {
             <div className="admin-dashboard-layout">
                 <div className="dashboard-heading">
                     <div className="dashboard-title">
-                        <h2 className="text-3xl font-bold">Dashboard 2025</h2>
+                        <h2 className="text-3xl font-bold">Global User Data Dashboard</h2>
                     </div>
                     <div className="list-attendance list-attendance-2025">
                         <ul>
