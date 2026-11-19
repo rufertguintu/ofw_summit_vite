@@ -36,6 +36,12 @@ const EXPORT_OPTIONS = [
     description: "Download a CSV of all records from the tracking history table.",
     endpoint: "export-history",
   },
+  {
+    type: "global-records",
+    label: "Export Global Records",
+    description: "Download a CSV of all records and columns from the global unique user data view.",
+    endpoint: "export-global-records",
+  },
 ];
 
 const ExportData = () => {
