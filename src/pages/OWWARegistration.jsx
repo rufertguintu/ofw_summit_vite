@@ -27,7 +27,7 @@ const OwwaRegistration = () => {
     try {
       const formData = new FormData(form);
       formData.set("type_registrant", "3");
-      formData.set("registrant_type", "Networker Registrant");
+      formData.set("registrant_type", "OWWA");
       formData.set("attend_type", formData.get("attend_type") || "Onsite");
 
       const response = await fetchApi("/wp-json/custom/v1/submit-form-networker", {
@@ -37,23 +37,13 @@ const OwwaRegistration = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data?.message || "Unable to submit networker registration.");
+        throw new Error(data?.message || "Unable to submit owwa registration.");
       }
 
       form.reset();
-      setOfwType("");
-      setRelativeCompany("");
-      setOwwaMember("");
-      setSelectedRegion("");
-      setSelectedProvince("");
-      setSelectedCity("");
-      setSelectedBarangay("");
-      setProvinces([]);
-      setCities([]);
-      setBarangays([]);
       setMessage(data?.message || "OWWA registration submitted successfully.");
     } catch (error) {
-      setMessage(error.message || "Unable to submit networker registration.");
+      setMessage(error.message || "Unable to submit owwa registration.");
     } finally {
       setIsSubmitting(false);
     }
@@ -95,7 +85,7 @@ const OwwaRegistration = () => {
 
 
           <div className="onsite-registration-actions">
-            <button type="submit" disabled={isSubmitting}>{isSubmitting ? "Submitting..." : "Submit Networker Registration"}</button>
+            <button type="submit" disabled={isSubmitting}>{isSubmitting ? "Submitting..." : "Submit OWWA Registration"}</button>
           </div>
           {message && <p className="onsite-registration-message" role="status">{message}</p>}
         </form>
