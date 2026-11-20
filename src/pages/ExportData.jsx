@@ -32,9 +32,16 @@ const EXPORT_OPTIONS = [
   },
   {
     type: "history",
-    label: "Export History",
+    label: "Export All History",
     description: "Download a CSV of all records from the tracking history table.",
     endpoint: "export-history",
+  },
+
+  {
+    type: "history-latest-id",
+    label: "Export History Latest ID",
+    description: "Download a CSV of the latest ID from the tracking history table.",
+    endpoint: "export-history-latest-id",
   },
   {
     type: "global-records",

@@ -273,7 +273,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
           <>
             <div className="update-form">
                 <div><label>User ID:</label> {userdata.meta.custom_id}</div>
-                <div><label style={{ display: "block" }}>Type of Registrant: </label> 
+                <div><label style={{ display: "block" }}>OFW Type: </label> 
                 
                     <select
                     name="ofw_type"
