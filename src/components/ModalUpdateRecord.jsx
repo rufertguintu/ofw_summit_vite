@@ -23,7 +23,6 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
             date_birth: "",
             ofw_type: ""
         },
-        passport: "",
     });
 
     
@@ -71,7 +70,6 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         `${field}_checked`, String(userdata.meta?.[`${field}_checked`] ?? "0")
                     ])),
             },
-            passport: userdata?.passport || "",
 
         });
         }
@@ -905,17 +903,17 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     class="form-control"
                 /></div>
                 <div><label>Passport:</label> 
-                {userdata?.passport ? (
-                    userdata.passport.toLowerCase().endsWith(".pdf") ? (
+                {documentData?.passport ? (
+                    documentData.passport.toLowerCase().endsWith(".pdf") ? (
                     <embed
-                        src={userdata.passport}
+                        src={documentData.passport}
                         width="300px"
                         height="400px"
                         type="application/pdf"
                     />
                     ) : (
                     <img
-                        src={userdata.passport}
+                        src={documentData.passport}
                         alt="passport"
                         width="250px"
                     />
