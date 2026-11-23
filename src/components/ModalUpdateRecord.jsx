@@ -3,8 +3,17 @@ import React, { useEffect, useState } from "react";
 
 import { fetchApi } from "../store/api";
 
+const documentFields = [
+    "married_cert", "ofw_birthcert", "valid_id", "seaman_book",
+    "employment_contract", "visa", "owwa_poea", "remittance", "allotment",
+];
+const isPresented = value => value === "1" || value === "presented";
+
 function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUsers, onSuccess }) {
-  
+    const [selectedFiles, setSelectedFiles] = useState({});
+    const [fileInputVersions, setFileInputVersions] = useState({});
+    const [uploadedUrls, setUploadedUrls] = useState({});
+    const [submitting, setSubmitting] = useState(false);
 //   console.log(userdata);
   
     const [formData, setFormData] = useState({
@@ -21,6 +30,9 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
     // ✅ Fill form when user loads
     useEffect(() => {
         if (userdata) {
+        setSelectedFiles({});
+        setFileInputVersions({});
+        setUploadedUrls({});
         setFormData({
             name: userdata?.name || "",
             email: userdata?.email || "",
@@ -55,6 +67,9 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     work_country: userdata.meta?.work_country || "",
                     ofw_year_service: userdata.meta?.ofw_year_service || "",
                     passport_checked: String(userdata.meta?.passport_checked ?? "0"),
+                    ...Object.fromEntries(documentFields.map(field => [
+                        `${field}_checked`, String(userdata.meta?.[`${field}_checked`] ?? "0")
+                    ])),
             },
             passport: userdata?.passport || "",
 
@@ -167,19 +182,17 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-
-        setFormData({
-            ...formData,
-            [name]: files[0] // ✅ store file object
-        });
+        setSelectedFiles(prev => ({ ...prev, [name]: files[0] }));
     };
 
 
     
     // ✅ Submit update
     const handleSubmit = async () => {
-
-
+        if (submitting || !userdata || ModalEditloading) return;
+        setSubmitting(true);
+        let profileSaved = false;
+        let currentField = "";
         try {
             const res = await fetchApi(
                 `/wp-json/custom/v1/user/${userdata.id}`,
@@ -193,54 +206,50 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                 }
             );
 
-            
-            if (formData.passport) {
+            if (!res.ok) {
+                const error = await res.json();
+                throw new Error(error.message || "Failed to update profile.");
+            }
+            profileSaved = true;
+            setUsers(prevUsers => prevUsers.map(u => u.id === userdata.id
+                ? { ...u, name: formData.name, email: formData.email, meta: { ...u.meta, ...formData.meta } }
+                : u));
 
+            for (const field of documentFields) {
+                if (!selectedFiles[field]) continue;
+                currentField = field;
                 const fileData = new FormData();
-                fileData.append("passport", formData.passport);
+                fileData.append(field, selectedFiles[field]);
                 fileData.append("user_id", userdata.id);
-
-                await fetchApi(
-                "/wp-json/custom/v1/upload-files",
-                {
+                const uploadResponse = await fetchApi("/wp-json/custom/v1/upload-files", {
                     method: "POST",
                     body: fileData
+                });
+                const uploadResult = await uploadResponse.json();
+                if (!uploadResponse.ok) {
+                    throw new Error(uploadResult.message || "Upload failed.");
                 }
-                );
+                setSelectedFiles(prev => {
+                    const remaining = { ...prev };
+                    delete remaining[field];
+                    return remaining;
+                });
+                setFileInputVersions(prev => ({ ...prev, [field]: (prev[field] || 0) + 1 }));
+                setUploadedUrls(prev => ({ ...prev, [field]: uploadResult.url }));
+                setUsers(prevUsers => prevUsers.map(u => u.id === userdata.id
+                    ? { ...u, [field]: uploadResult.url, meta: { ...u.meta, [field]: uploadResult.url } }
+                    : u));
             }
-
-
-            
-            if (res.ok) {
-                // ✅ Update UI instantly
-                setUsers(prevUsers =>
-                    prevUsers.map(u =>
-                    u.id === userdata.id
-                        ? 
-                        {
-                            ...u,
-                            name: formData.name,
-                            email: formData.email,
-                            meta: {
-                            ...u.meta,
-                            ...formData.meta
-                            }
-                        }
-
-                        : u
-                    )
-                );
-
-                onSuccess?.("Profile updated successfully!");
-                onClose();
-            } else {
-                onSuccess?.("Failed to update profile.", "error");
-            }
-
-        
+            onSuccess?.("Profile updated successfully!");
+            onClose();
         } catch (error) {
             console.error(error);
-            onSuccess?.("Failed to update profile.", "error");
+            const prefix = profileSaved
+                ? `Profile saved, but ${currentField.replaceAll("_", " ")} upload failed. `
+                : "Failed to update profile. ";
+            onSuccess?.(`${prefix}${error.message}`, "error");
+        } finally {
+            setSubmitting(false);
         }
 
 
@@ -251,19 +260,20 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
 
 
   if (!isOpen) return null;
+  const documentData = { ...userdata, ...uploadedUrls };
 
   return (
-    <div style={overlay} className="z-999" onClick={onClose}>
+    <div style={overlay} className="z-999" onClick={submitting ? undefined : onClose}>
       <div className="modalbody !max-w-[1200px]" style={modal} onClick={(e) => e.stopPropagation()}>
         
         <div className="modal-edit-heading">
             <h4>Update Information</h4>
             
             <div className="action-btn">
-                <button onClick={handleSubmit}>
-                    Update
+                <button onClick={handleSubmit} disabled={submitting || ModalEditloading || !userdata}>
+                    {submitting ? "Updating..." : "Update"}
                 </button>
-                <button onClick={onClose}>Close</button>
+                <button onClick={onClose} disabled={submitting}>Close</button>
             </div>
         </div>
         
@@ -914,25 +924,21 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     <p>No Passport uploaded</p>
                 )}
                     <br />
-                    <input
-                    type="file"
-                    name="passport"
-                    onChange={handleFileChange}
-                    />
-                    Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={formData.meta.passport_checked === "1"} onChange={handleChange} />
+                    {/* <input type="file" name="passport" onChange={handleFileChange} /> */}
+                    Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={isPresented(formData.meta.passport_checked)} onChange={handleChange} />
                 </div>
                 <div><label>Married Certificate:</label> 
-                    {userdata?.married_cert ? (
-                        userdata.married_cert.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.married_cert ? (
+                        documentData.married_cert.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.married_cert}
+                            src={documentData.married_cert}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.married_cert}
+                            src={documentData.married_cert}
                             alt="married_cert"
                             width="250px"
                         />
@@ -941,25 +947,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Married Certificate uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="married_cert"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.married_cert || 0} type="file" name="married_cert" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="married_cert_checked" data-type="meta" checked={isPresented(formData.meta.married_cert_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>OFW Birth Certificate:</label> 
-                    {userdata?.ofw_birth_cert ? (
-                        userdata.ofw_birth_cert.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.ofw_birthcert ? (
+                        documentData.ofw_birthcert.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.ofw_birth_cert}
+                            src={documentData.ofw_birthcert}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.ofw_birth_cert}
+                            src={documentData.ofw_birthcert}
                             alt="ofw_birth_cert"
                             width="250px"
                         />
@@ -968,25 +971,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No OFW Birth Certificate uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="ofw_birth_cert"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.ofw_birthcert || 0} type="file" name="ofw_birthcert" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="ofw_birthcert_checked" data-type="meta" checked={isPresented(formData.meta.ofw_birthcert_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Valid ID:</label> 
-                    {userdata?.valid_id ? (
-                        userdata.valid_id.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.valid_id ? (
+                        documentData.valid_id.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.valid_id}
+                            src={documentData.valid_id}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.valid_id}
+                            src={documentData.valid_id}
                             alt="valid_id"
                             width="250px"
                         />
@@ -995,25 +995,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Valid ID uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="valid_id"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.valid_id || 0} type="file" name="valid_id" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="valid_id_checked" data-type="meta" checked={isPresented(formData.meta.valid_id_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Seaman Book:</label> 
-                    {userdata?.seaman_book ? (
-                        userdata.seaman_book.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.seaman_book ? (
+                        documentData.seaman_book.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.seaman_book}
+                            src={documentData.seaman_book}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.seaman_book}
+                            src={documentData.seaman_book}
                             alt="seaman_book"
                             width="250px"
                         />
@@ -1022,25 +1019,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Seaman Book uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="seaman_book"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.seaman_book || 0} type="file" name="seaman_book" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="seaman_book_checked" data-type="meta" checked={isPresented(formData.meta.seaman_book_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Employment Contract:</label> 
-                    {userdata?.employment_contract ? (
-                        userdata.employment_contract.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.employment_contract ? (
+                        documentData.employment_contract.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.employment_contract}
+                            src={documentData.employment_contract}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.employment_contract}
+                            src={documentData.employment_contract}
                             alt="employment_contract"
                             width="250px"
                         />
@@ -1049,25 +1043,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Employment Contract uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="employment_contract"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.employment_contract || 0} type="file" name="employment_contract" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="employment_contract_checked" data-type="meta" checked={isPresented(formData.meta.employment_contract_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Working Visa:</label> 
-                    {userdata?.visa ? (
-                        userdata.visa.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.visa ? (
+                        documentData.visa.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.visa}
+                            src={documentData.visa}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.visa}
+                            src={documentData.visa}
                             alt="visa"
                             width="250px"
                         />
@@ -1076,26 +1067,23 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Working Visa uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="visa"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.visa || 0} type="file" name="visa" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="visa_checked" data-type="meta" checked={isPresented(formData.meta.visa_checked)} onChange={handleChange} />
 
                 </div>
 
                 <div><label>OWWA POEA:</label> 
-                    {userdata?.owwa_poea ? (
-                        userdata.owwa_poea.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.owwa_poea ? (
+                        documentData.owwa_poea.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.owwa_poea}
+                            src={documentData.owwa_poea}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.owwa_poea}
+                            src={documentData.owwa_poea}
                             alt="owwa_poea"
                             width="250px"
                         />
@@ -1104,25 +1092,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Working owwa_poea uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="owwa_poea"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.owwa_poea || 0} type="file" name="owwa_poea" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="owwa_poea_checked" data-type="meta" checked={isPresented(formData.meta.owwa_poea_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Remittance:</label> 
-                    {userdata?.remittance ? (
-                        userdata.remittance.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.remittance ? (
+                        documentData.remittance.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.remittance}
+                            src={documentData.remittance}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.remittance}
+                            src={documentData.remittance}
                             alt="remittance"
                             width="250px"
                         />
@@ -1131,25 +1116,22 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No Remittance uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="remittance"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.remittance || 0} type="file" name="remittance" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="remittance_checked" data-type="meta" checked={isPresented(formData.meta.remittance_checked)} onChange={handleChange} />
                 </div>
 
                 <div><label>Allotment:</label> 
-                    {userdata?.allotment ? (
-                        userdata.allotment.toLowerCase().endsWith(".pdf") ? (
+                    {documentData.allotment ? (
+                        documentData.allotment.toLowerCase().endsWith(".pdf") ? (
                         <embed
-                            src={userdata.allotment}
+                            src={documentData.allotment}
                             width="300px"
                             height="400px"
                             type="application/pdf"
                         />
                         ) : (
                         <img
-                            src={userdata.allotment}
+                            src={documentData.allotment}
                             alt="allotment"
                             width="250px"
                         />
@@ -1158,11 +1140,8 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                         <p>No allotment uploaded</p>
                     )}
                     <br />
-                    <input
-                    type="file"
-                    name="allotment"
-                    onChange={handleFileChange}
-                    />
+                    <input key={fileInputVersions.allotment || 0} type="file" name="allotment" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
+                    Presented: <input type="checkbox" name="allotment_checked" data-type="meta" checked={isPresented(formData.meta.allotment_checked)} onChange={handleChange} />
                 </div>
             </div>
           </>

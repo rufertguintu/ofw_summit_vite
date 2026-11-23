@@ -1,5 +1,16 @@
 # React + TypeScript + Vite
 
+## Record document uploads
+
+The record edit modal accepts PDF, JPEG, and PNG documents. Uploads require a
+logged-in user with the WordPress `edit_posts` capability. The OFW birth
+certificate uses the existing `ofw_birthcert` user-meta key.
+
+The profile is saved before documents are uploaded individually. If an upload
+fails, already saved changes remain in place and the remaining documents can
+be retried. Documents are stored under the WordPress uploads directory and
+are accessible by their direct URLs, like existing uploaded documents.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

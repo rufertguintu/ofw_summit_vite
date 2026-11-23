@@ -146,6 +146,10 @@ function ModalRecord({ isOpen, onClose, userdata, Modalloading, setUsers }) {
       return "";
     }
 
+    if (/^https?:\/\//i.test(fileName)) {
+      return fileName;
+    }
+
     const wordpressBaseUrl = getWordPressBaseUrl(userdata);
 
     const displayName = String(
@@ -347,8 +351,7 @@ function ModalRecord({ isOpen, onClose, userdata, Modalloading, setUsers }) {
                 {documentItems.map((item) => (
                   <div key={item.key} style={documentCard}>
                     <h5 style={documentTitle}>{item.label}</h5>
-                    {meta.type_registrant === "0" ? renderDocumentPreview(item.value, item.alt) : item.value}
-                    {renderDocumentPreview(item.value, item.alt)} 
+                    {meta.type_registrant === "0" ? renderDocumentPreview(item.key, item.alt) : item.value}
                   </div>
                 ))}
               </div>
