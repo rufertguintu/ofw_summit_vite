@@ -924,8 +924,8 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     <p>No Passport uploaded</p>
                 )}
                     <br />
-                    {/* <input type="file" name="passport" onChange={handleFileChange} /> */}
-                    Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={isPresented(formData.meta.passport_checked)} onChange={handleChange} />
+                    <input type="file" name="passport" onChange={handleFileChange} />
+                    {/* Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={isPresented(formData.meta.passport_checked)} onChange={handleChange} /> */}
                 </div>
                 <div><label>Married Certificate:</label> 
                     {documentData.married_cert ? (
@@ -948,7 +948,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.married_cert || 0} type="file" name="married_cert" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="married_cert_checked" data-type="meta" checked={isPresented(formData.meta.married_cert_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="married_cert_checked" data-type="meta" checked={isPresented(formData.meta.married_cert_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>OFW Birth Certificate:</label> 
@@ -972,7 +972,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.ofw_birthcert || 0} type="file" name="ofw_birthcert" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="ofw_birthcert_checked" data-type="meta" checked={isPresented(formData.meta.ofw_birthcert_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="ofw_birthcert_checked" data-type="meta" checked={isPresented(formData.meta.ofw_birthcert_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Valid ID:</label> 
@@ -996,7 +996,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.valid_id || 0} type="file" name="valid_id" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="valid_id_checked" data-type="meta" checked={isPresented(formData.meta.valid_id_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="valid_id_checked" data-type="meta" checked={isPresented(formData.meta.valid_id_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Seaman Book:</label> 
@@ -1020,7 +1020,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.seaman_book || 0} type="file" name="seaman_book" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="seaman_book_checked" data-type="meta" checked={isPresented(formData.meta.seaman_book_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="seaman_book_checked" data-type="meta" checked={isPresented(formData.meta.seaman_book_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Employment Contract:</label> 
@@ -1044,7 +1044,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.employment_contract || 0} type="file" name="employment_contract" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="employment_contract_checked" data-type="meta" checked={isPresented(formData.meta.employment_contract_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="employment_contract_checked" data-type="meta" checked={isPresented(formData.meta.employment_contract_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Working Visa:</label> 
@@ -1068,7 +1068,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.visa || 0} type="file" name="visa" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="visa_checked" data-type="meta" checked={isPresented(formData.meta.visa_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="visa_checked" data-type="meta" checked={isPresented(formData.meta.visa_checked)} onChange={handleChange} /> */}
 
                 </div>
 
@@ -1093,7 +1093,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.owwa_poea || 0} type="file" name="owwa_poea" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="owwa_poea_checked" data-type="meta" checked={isPresented(formData.meta.owwa_poea_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="owwa_poea_checked" data-type="meta" checked={isPresented(formData.meta.owwa_poea_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Remittance:</label> 
@@ -1117,7 +1117,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.remittance || 0} type="file" name="remittance" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="remittance_checked" data-type="meta" checked={isPresented(formData.meta.remittance_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="remittance_checked" data-type="meta" checked={isPresented(formData.meta.remittance_checked)} onChange={handleChange} /> */}
                 </div>
 
                 <div><label>Allotment:</label> 
@@ -1141,7 +1141,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     )}
                     <br />
                     <input key={fileInputVersions.allotment || 0} type="file" name="allotment" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
-                    Presented: <input type="checkbox" name="allotment_checked" data-type="meta" checked={isPresented(formData.meta.allotment_checked)} onChange={handleChange} />
+                    {/* Presented: <input type="checkbox" name="allotment_checked" data-type="meta" checked={isPresented(formData.meta.allotment_checked)} onChange={handleChange} /> */}
                 </div>
             </div>
           </>
