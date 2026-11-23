@@ -14,7 +14,7 @@ import all_home from "../assets/all-home.png";
 import petron_logo from "../assets/petron.png";
 import allday from "../assets/all-day.png";
 import instruction from "../assets/instruction-2026.png";
-
+import paalala from "../assets/paalala-2026.jpeg";
 
 const heroStyle = {
   backgroundImage: `url(${banner})`,
@@ -74,15 +74,7 @@ const Home = () => {
                     </div>
 
                     <div className="right-column-content">
-                        <h3>Kung kayo ay magreregister, <strong>huwag nyo pong kalimutan magdala ng alinman sa mga sumusunod na mga dokumento</strong></h3>
-                        <ul>
-                            <li>Kopya ng passport ng OFW o kapamilya na OFW kasama ang working visa;</li>
-                            <li>Proof of remittances;</li>
-                            <li>Seaman's book:</li>
-                            <li>Job contract;</li>
-                            <li>Kopya ng mga dokumento a magpapatunay na ikaw ay kamag-anak ng OFW (Marriage Certificate, Birth Certificate, etc.);</li>
-                            <li>Kung ang kamag-anak ang attend upang kumatawan sa OFW, magdala ng karagdagang dokumento batay sa mga sumusunod:</li>
-                        </ul>
+                        <img src={paalala} alt="Paalala 2026" width={700} />
                     </div>
                 </div>
                 <div className="table-cont">
