@@ -922,7 +922,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     <p>No Passport uploaded</p>
                 )}
                     <br />
-                    <input type="file" name="passport" onChange={handleFileChange} />
+                    <input key={fileInputVersions.passport || 0} type="file" name="passport" accept="image/png,image/jpeg,application/pdf" disabled={submitting} onChange={handleFileChange} />
                     {/* Presented: <input type="checkbox" name="passport_checked" data-type="meta" checked={isPresented(formData.meta.passport_checked)} onChange={handleChange} /> */}
                 </div>
                 <div><label>Married Certificate:</label> 
