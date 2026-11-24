@@ -26,7 +26,7 @@ const OwwaRegistration = () => {
 
     try {
       const formData = new FormData(form);
-      formData.set("type_registrant", "3");
+      formData.set("type_registrant", "4");
       formData.set("registrant_type", "OWWA");
       formData.set("attend_type", formData.get("attend_type") || "Onsite");
 
