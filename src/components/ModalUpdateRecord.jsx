@@ -903,7 +903,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
                     class="form-control"
                 /></div>
                 <div><label>Passport:</label> 
-                {documentData?.passport ? (
+                {documentData.passport ? (
                     documentData.passport.toLowerCase().endsWith(".pdf") ? (
                     <embed
                         src={documentData.passport}

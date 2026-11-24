@@ -323,12 +323,12 @@ const Dashboard = () => {
                     <h3>Attendee Overview</h3>
                     <ul>
                         <li>
-                            <Link to={`/attendee-filtered/${attendee_yes}`}>
+                            <Link to={`/attendee-filtered/yes`}>
                                 <h5>Yes: <strong>{attendee_yes?.toLocaleString()}</strong></h5>
                             </Link>
                         </li>
                         <li>
-                            <Link to={`/attendee-filtered/${attendee_no}`}>
+                            <Link to={`/attendee-filtered/no`}>
                                 <h5>No: <strong>{attendee_no?.toLocaleString()}</strong></h5>
                             </Link>
                         </li>
