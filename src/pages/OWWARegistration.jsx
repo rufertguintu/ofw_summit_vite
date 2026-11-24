@@ -7,10 +7,12 @@ const textFields = [
   ["firstname", "First Name (Pangalan)"],
   ["middlename", "Middle Name"],
   ["lastname", "Last Name (Apelyido)"],
-  ["date_birth", "Date of Birth (Araw ng kapanganakan)"],
+  ["date_birth", "Date of Birth (Format: MM/DD/YYYY)"],
   ["emailaddress", "Email Address", "email"],
   ["mobile", "Mobile Number"],
   ["address", "Address", "text"],
+  ["owwa_ofw_id", "OWWA ID", "text"],
+  ["ofw_type", "OFW Type (Value 0 for OFW and 1 for Relative)", "text"],
 ];
 
 const OwwaRegistration = () => {
