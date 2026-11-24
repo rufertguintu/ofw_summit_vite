@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { fetchApi } from "../store/api";
 
 const documentFields = [
-    "married_cert", "ofw_birthcert", "valid_id", "seaman_book",
+    "passport", "married_cert", "ofw_birthcert", "valid_id", "seaman_book",
     "employment_contract", "visa", "owwa_poea", "remittance", "allotment",
 ];
 const isPresented = value => value === "1" || value === "presented";
