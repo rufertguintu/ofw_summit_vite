@@ -718,5 +718,17 @@
             gap: 20px;
         }
     }
+
+    .update-modal-form{
+        input[type="file"]{
+            display: block;
+            border: 1px solid #ff902b;
+            background-color: #ff902b;
+            padding: 10px 20px;
+            color: #fff;
+            border-radius: 10px;
+            
+        }
+    }
     
 }

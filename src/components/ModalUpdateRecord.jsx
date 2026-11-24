@@ -279,7 +279,7 @@ function ModalUpdateRecord({ isOpen, onClose, userdata, ModalEditloading, setUse
           <p>Please wait . . . .</p>
         ) : userdata ? (
           <>
-            <div className="update-form">
+            <div className="update-form update-modal-form">
                 <div><label>User ID:</label> {userdata.meta.custom_id}</div>
                 <div><label style={{ display: "block" }}>OFW Type: </label> 
                 
