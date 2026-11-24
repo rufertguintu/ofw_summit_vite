@@ -417,7 +417,7 @@ function ViewProfile() {
             </div>
           ) : null}
 
-          {/* <div style={fieldCard}>
+          <div style={fieldCard}>
             <label style={fieldLabel} htmlFor="attendance">
               Attendance
             </label>
@@ -452,7 +452,7 @@ function ViewProfile() {
               style={fieldControl}
               placeholder="Enter number of companion"
             />
-          </div> */}
+          </div>
         </div>
 
         {submitError ? <div style={errorBanner}>{submitError}</div> : null}
