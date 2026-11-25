@@ -147,7 +147,7 @@ function ViewProfile() {
 
   let documentItems = [];
 
-  if ((meta.type_registrant === "0") || (meta.type_registrant === "1")) {
+  if ((meta.type_registrant === "0") || (meta.type_registrant === "1"  )) {
     documentItems = [
       { key: "passport", label: "Passport", value: meta.passport, alt: "passport" },
       { key: "married_cert", label: "Married Certificate", value: meta.married_cert, alt: "married certificate" },
@@ -162,7 +162,7 @@ function ViewProfile() {
       { key: "allotment", label: "Allotment", value: meta.allotment, alt: "allotment" },
             { key: "other_doc_1", label: meta.other_doc_1_label || "Other Document 1", value: meta.other_doc_1, alt: meta.other_doc_1_label || "other document 1" },
             { key: "other_doc_2", label: meta.other_doc_2_label || "Other Document 2", value: meta.other_doc_2, alt: meta.other_doc_2_label || "other document 2" },    ];
-  } else if (meta.type_registrant === "2") {
+  } else if ((meta.type_registrant === "2") || (meta.type_registrant === "3") || (meta.type_registrant === "4")) {
     documentItems = [
       { key: "passport", label: "Passport", value: meta.passport_checked },
       { key: "married_cert", label: "Married Certificate", value: meta.married_cert_checked },
@@ -515,7 +515,7 @@ function ViewProfile() {
               {documentItems.map((item) => (
                 <div key={item.key} style={documentCard}>
                   <h5 style={documentTitle}>{item.label}</h5>
-                  {(meta.type_registrant === "0" || meta.type_registrant === "1")
+                  {(meta.type_registrant === "0" || meta.type_registrant === "1" || meta.type_registrant === "3")
                     ? (meta[`${item.key}_checked`]
                       ? "Presented"
                       : renderDocumentPreview(item.value, item.alt))

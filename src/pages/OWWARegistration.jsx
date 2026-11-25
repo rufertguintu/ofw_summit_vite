@@ -32,7 +32,7 @@ const OwwaRegistration = () => {
       formData.set("registrant_type", "OWWA");
       formData.set("attend_type", formData.get("attend_type") || "Onsite");
 
-      const response = await fetchApi("/wp-json/custom/v1/submit-form-networker", {
+      const response = await fetchApi("/wp-json/custom/v1/submit-form-owwa", {
         method: "POST",
         body: formData,
       });
