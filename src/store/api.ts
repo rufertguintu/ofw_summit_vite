@@ -1,5 +1,4 @@
-export const API_BASE_URL =
-    "https://ofwsummit-sandbox.villarfoundation.com.ph";
+export const API_BASE_URL = "https://ofwsummit-sandbox.villarfoundation.com.ph";
  
 // export const API_BASE_URL = "http://localhost:8005";
  
