@@ -29,7 +29,7 @@ const Home = () => {
             <div className="hero-content">
                 <img src={whiteLogo2026} alt="OFW Summit 2026" />
                 <h3>Itaguyod ang Kabuhayang Pangmatagalan sa Sariling Bayan</h3>
-                <Link to="/online-register">Register Here</Link>
+                {/* <Link to="/online-register">Register Here</Link> */}
             </div>
             
             

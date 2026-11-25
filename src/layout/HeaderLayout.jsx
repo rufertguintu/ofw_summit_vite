@@ -38,7 +38,7 @@ const HeaderLayout = () => {
                                             <li><Link to="/online-register">Online Register</Link></li>
                                         </ul>
                                     </li> */}
-                                    <li><Link to="/online-register">Join Event</Link></li>
+                                    {/* <li><Link to="/online-register">Join Event</Link></li> */}
                                     <li><Link to="/login">Login</Link></li>
                                 </>
                             )}
