@@ -73,7 +73,7 @@ const OwwaRegistration = () => {
 
   return (
     <div className="registration-page join-now-page onsite-registration-page">
-      <div className="onsite-registration-container">
+      {/* <div className="onsite-registration-container">
         <div className="onsite-registration-heading">
           <h2>OWWA Registration</h2>
           <p>Please complete any information available. All fields are optional.</p>
@@ -91,7 +91,7 @@ const OwwaRegistration = () => {
           </div>
           {message && <p className="onsite-registration-message" role="status">{message}</p>}
         </form>
-      </div>
+      </div> */}
     </div>
   );
 };

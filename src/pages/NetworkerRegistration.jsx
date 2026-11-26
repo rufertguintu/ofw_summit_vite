@@ -217,10 +217,12 @@ const NetworkerRegistration = () => {
       <div className="onsite-registration-container">
         <div className="onsite-registration-heading">
           <h2>Networker Registration</h2>
-          <p>Please complete any information available. All fields are optional.</p>
+          {/* <p>Please complete any information available. All fields are optional.</p> */}
+
+          <p>Temporarily Closed.</p>
         </div>
 
-        <form className="reg_fields onsite-registration-form" onSubmit={handleSubmit}>
+        {/* <form className="reg_fields onsite-registration-form" onSubmit={handleSubmit}>
           <section>
             <h3>Registrant Information</h3>
             <div className="onsite-registration-grid">{textFields.map(renderTextField)}</div>
@@ -240,10 +242,6 @@ const NetworkerRegistration = () => {
             <h3>Address and Personal Information</h3>
             <div className="onsite-registration-grid">
               <div className="reg_field-cont onsite-registration-wide"><label htmlFor="address">Full Address</label><textarea id="address" name="address" rows="3" /></div>
-              {/* <div className="reg_field-cont">
-                <label htmlFor="current_location">Current Location (Country)</label>
-                <input id="current_location" name="current_location" />
-              </div> */}
               <div className="reg_field-cont">
                 <label htmlFor="region">Region</label>
                 <select id="region" value={selectedRegion} onChange={handleRegionChange}>
@@ -320,7 +318,7 @@ const NetworkerRegistration = () => {
             <button type="submit" disabled={isSubmitting}>{isSubmitting ? "Submitting..." : "Submit Onsite Registration"}</button>
           </div>
           {message && <p className="onsite-registration-message" role="status">{message}</p>}
-        </form>
+        </form> */}
       </div>
     </div>
   );
