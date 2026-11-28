@@ -191,7 +191,9 @@ const Dashboard = () => {
                             </li>
                             <li>
                                 <h6>Attendance</h6>
+                                <Link to="/attendance-filtered/">
                                 <h3>{filteredData?.attendance?.toLocaleString() ?? attendance?.toLocaleString()} Attendance</h3>
+                                </Link>
                             </li>
                             <li>
                                 <h6>Companions</h6>

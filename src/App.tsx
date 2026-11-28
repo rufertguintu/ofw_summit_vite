@@ -30,6 +30,7 @@ import NetworkerRegistration from "./pages/NetworkerRegistration";
 import StatusFiltered from "./pages/StatusFiltered";
 import RetrievedFiltered from "./pages/RetrievedFiltered";
 import AttendeeFiltered from "./pages/AttendeeFiltered";
+import AttendanceAnalytics from "./pages/AttendanceFiltered";
 import RegistrantTypeFiltered from "./pages/RegistrantTypeFiltered";
 import OptionsPage from "./pages/OptionsPage";
 import RegistrationAvailability from "./components/RegistrationAvailability";
@@ -62,6 +63,7 @@ const PAGE_TITLES: [RegExp, string][] = [
   [/^\/status-filtered/, "Status Filtered"],
   [/^\/retrieved-filtered/, "Retrieved Account Filtered"],
   [/^\/attendee-filtered/, "Attendee Overview Filtered"],
+  [/^\/attendance-filtered/, "Attendance Filtered"],
   [/^\/registrant-type-filtered/, "Registrant Type Filtered"],
 ];
 
@@ -137,6 +139,7 @@ function App() {
           <Route path="/export-data" element={<ExportData />} />
           <Route path="/status-filtered/:status" element={<StatusFiltered />} />
           <Route path="/attendee-filtered/:attendee" element={<AttendeeFiltered />} />
+          <Route path="/attendance-filtered/" element={<AttendanceAnalytics />} />
           <Route path="/retrieved-filtered/" element={<RetrievedFiltered />} />
           <Route path="/registrant-type-filtered/:type" element={<RegistrantTypeFiltered />} />
         </Route>
